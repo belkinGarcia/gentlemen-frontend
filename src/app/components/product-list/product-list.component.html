@@ -1,0 +1,40 @@
+<div class="list-container">
+  <div class="content-wrapper">
+      <h2>BARBERIA Y TIENDA DE PRODUCTOS PARA EL CUIDADO</h2>
+      <h1>DE BARBA Y CABELLO</h1>
+    <!-- Estos títulos solo se mostrarán si NO es un carrusel -->
+    <ng-container *ngIf="!isCarousel">
+    
+    </ng-container>
+
+    <!-- VISTA DE CARRUSEL (para la página de inicio) -->
+    <div *ngIf="isCarousel" class="carousel-container">
+      <div class="carousel-inner">
+        <!-- El *ngFor que faltaba ahora está aquí -->
+        <div class="carousel-track" [style.transform]="'translateX(-' + (currentIndex * (100 / 3)) + '%)'">
+          <app-product-card *ngFor="let product of products" [product]="product"></app-product-card>
+        </div>
+      </div>
+      <!-- Navegación personalizada del carrusel -->
+      <div class="carousel-nav">
+        <button mat-icon-button (click)="prev()" [disabled]="currentIndex === 0"><mat-icon>arrow_back</mat-icon></button>
+        <span class="nav-line"></span><span class="nav-line active"></span><span class="nav-line"></span>
+        <button mat-icon-button (click)="next()"><mat-icon>arrow_forward</mat-icon></button>
+      </div>
+    </div>
+
+    <!-- VISTA DE GRILLA (para la página de la tienda) -->
+    <div *ngIf="!isCarousel" class="products-grid">
+      <app-product-card *ngFor="let product of products" [product]="product"></app-product-card>
+    </div>
+
+    <!-- Botón para ir a la tienda (solo en el carrusel) -->
+    <a *ngIf="isCarousel" mat-flat-button class="view-all-btn" routerLink="/tienda">VER TODOS LOS PRODUCTOS</a>
+
+    <!-- Paginador (solo en la grilla) -->
+<app-custom-paginator *ngIf="!isCarousel"
+  [length]="totalProducts"
+  [pageSize]="pageSize"
+  (pageChange)="onPageChange($event)"> </app-custom-paginator>
+  </div>
+</div>

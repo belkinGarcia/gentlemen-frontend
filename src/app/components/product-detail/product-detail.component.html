@@ -1,0 +1,44 @@
+<div *ngIf="product">
+
+  <div class="product-hero-banner">
+    <div class="content-wrapper">
+      <h1>{{ product.name }}</h1>
+    </div>
+  </div>
+  <div class="detail-container">
+    <div class="product-image">
+      <img [src]="product.imageUrl" [alt]="product.name">
+    </div>
+    <div class="product-info">
+      <p class="price">{{ product.price | currency:'S/ ' }}</p>
+      <div class="quantity-selector">
+        <button mat-icon-button><mat-icon>remove</mat-icon></button>
+        <input type="number" value="1" min="1">
+        <button mat-icon-button><mat-icon>add</mat-icon></button>
+      </div>
+      <button mat-flat-button color="accent" class="add-to-cart-btn">AGREGAR AL CARRITO</button>
+      <div class="meta-info">
+        <p><strong>Categoría:</strong> {{ product.category }}</p>
+        <p><strong>Marca:</strong> {{ product.brand }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="description-container">
+    <h3>DESCRIPCIÓN</h3>
+    <p>{{ product.description }}</p>
+  </div>
+
+<div class="related-products">
+  <h2>PRODUCTOS RELACIONADOS</h2>
+  <app-product-list 
+    [showFilterBar]="false"
+    [isCarousel]="true"
+    [products]="relatedProducts">
+  </app-product-list>
+</div>
+<app-testimonials></app-testimonials>
+   
+
+</div>
+<app-info-section></app-info-section>

@@ -1,0 +1,15 @@
+.content-wrapper {
+  padding: 80px 20px;
+  text-align: center;
+}
+img {
+  max-width: 600px;
+  width: 100%;
+  margin-bottom: 30px;
+}
+p {
+  color: #aaa;
+  font-size: 1.2em;
+  max-width: 600px;
+  margin: 0 auto;
+}

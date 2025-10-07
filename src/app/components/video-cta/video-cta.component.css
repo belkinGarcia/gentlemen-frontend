@@ -1,0 +1,72 @@
+.video-cta-container {
+  background-image: url('https://cdn.midjourney.com/a487fd78-9455-461a-94b7-83b3fcc70906/0_1.png');
+  background-size: cover;
+  background-position: center;
+  height: 400px; /* Altura del banner */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  position: relative;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+.video-cta-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Overlay oscuro */
+}
+.video-cta-container .content-wrapper {
+  position: relative;
+  z-index: 2;
+}
+.video-cta-container h2 {
+  font-size: 1.5em;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 300;
+  color: #d4c39a;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.video-cta-container h1 {
+  font-size: 3em;
+  font-family: 'Oswald', sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+.video-cta-container .separator {
+  width: 60px;
+  height: 2px;
+  background-color: white;
+  margin: 0 auto 30px;
+}
+.video-button {
+  background-color: transparent !important;
+  border: 2px solid #d4c39a !important;
+  color: #d4c39a !important;
+  padding: 10px 25px !important;
+  font-weight: bold;
+  font-size: 1em;
+  transition: all 0.3s ease;
+}
+.video-button:hover {
+  background-color: #d4c39a !important;
+  color: #121212 !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .video-cta-container {
+    height: 300px;
+  }
+  .video-cta-container h1 {
+    font-size: 2em;
+  }
+}

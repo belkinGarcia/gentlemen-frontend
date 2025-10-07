@@ -1,0 +1,26 @@
+<div class="about-page-wrapper">
+  <div class="content-wrapper about-story-section">
+    <div class="text-column">
+      <h2>Nuestra Historia</h2>
+      <p>
+        Inspirados en la barbería clásica con un toque contemporáneo, The Barber Company nació del deseo de crear un espacio único para el hombre moderno. Nuestro equipo de barberos experimentados se dedica a perfeccionar el arte del corte y el afeitado.
+      </p>
+      <p>
+        Creemos que una visita a la barbería es más que un simple corte de pelo; es una experiencia. Por eso, ofrecemos un ambiente moderno, buena música y bebidas de cortesía para que te relajes y disfrutes.
+      </p>
+    </div>
+    <div class="image-column">
+      <img src="https://cdn.midjourney.com/825badc2-9b7f-4a34-9e3a-724084be878f/0_0.png" alt="Interior de la barbería">
+    </div>
+  </div>
+
+  <app-product-list 
+    [isCarousel]="true"
+    [showFilterBar]="false"
+    [products]="previewProducts">
+  </app-product-list>
+
+  <app-testimonials></app-testimonials>
+
+  <app-info-section></app-info-section>
+</div>

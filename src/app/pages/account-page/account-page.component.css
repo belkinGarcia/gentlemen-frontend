@@ -1,0 +1,98 @@
+/* ======================================================= */
+/* ===== ESTILOS PARA EL MODO GRID (PÁGINA PRINCIPAL) ==== */
+/* ======================================================= */
+
+:host(.grid-mode) .content-wrapper {
+  padding: 80px 20px;
+}
+
+:host(.grid-mode) .forms-container {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 80px;
+}
+
+:host(.grid-mode) h2 {
+  font-family: 'Oswald', sans-serif;
+  font-size: 2em;
+  color: #fff;
+  margin-bottom: 30px;
+}
+
+/* ... Aquí puedes pegar el resto de tus estilos originales para la página /account ... */
+:host(.grid-mode) form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+:host(.grid-mode) .form-row {
+  display: flex;
+  gap: 15px;
+}
+
+:host(.grid-mode) .form-row mat-form-field {
+  flex: 1;
+}
+
+
+/* ======================================================= */
+/* ===== ESTILOS PARA EL MODO TABS (MODAL DE RESERVA) ==== */
+/* ======================================================= */
+
+:host(.tabs-mode) .form-toggle-header {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+:host(.tabs-mode) .toggle-option {
+  padding-bottom: 15px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 500;
+  color: #757575;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease-in-out;
+}
+
+:host(.tabs-mode) .toggle-option.active {
+  color: #000000;
+  font-weight: 600;
+  border-bottom-color: #000000;
+}
+
+:host(.tabs-mode) form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding-top: 10px;
+}
+
+:host(.tabs-mode) .form-row {
+  display: flex;
+  gap: 15px;
+}
+
+:host(.tabs-mode) .form-row mat-form-field {
+  flex: 1;
+}
+
+:host(.tabs-mode) .login-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+:host(.tabs-mode) .login-actions a {
+  font-size: 0.9em;
+  color: #3f51b5;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+:host(.tabs-mode) button[mat-flat-button] {
+  padding: 18px 0;
+}

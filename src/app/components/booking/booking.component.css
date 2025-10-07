@@ -1,0 +1,307 @@
+/* --- Estructura Principal de 3 Columnas --- */
+.step-container {
+  display: flex;
+  gap: 30px;
+  min-height: 450px;
+}
+
+/* Columna 1: Información (Izquierda) */
+.step-info {
+  flex: 1;
+  text-align: center;
+  padding: 20px;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.step-info mat-icon {
+  font-size: 50px;
+  width: 50px;
+  height: 50px;
+  margin-bottom: 20px;
+  color: #3f51b5;
+}
+.step-info h2 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+.step-info p {
+  color: #777;
+}
+.whatsapp-link {
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+  width: 100%;
+}
+
+/* Columna 2: Contenido Principal (Centro) */
+.step-content {
+  flex: 1.5;
+  max-height: 450px;
+  overflow-y: auto;
+  padding-right: 15px;
+}
+
+/* Columna 3: Resumen (Derecha) */
+.step-summary {
+  flex: 1;
+  border-left: 1px solid #eee;
+  padding-left: 30px;
+}
+.step-summary h4 {
+  letter-spacing: 2px;
+  color: #777;
+  padding-bottom: 10px;
+  border-bottom: 2px dotted #ccc;
+  margin-bottom: 20px;
+}
+.summary-item {
+  margin-bottom: 20px;
+}
+.summary-item span {
+  display: block;
+  font-size: 0.8em;
+  color: #999;
+  text-transform: uppercase;
+}
+.summary-item strong {
+  font-size: 1.1em;
+  color: #333;
+}
+.summary-item.total {
+  margin-top: 30px;
+}
+.summary-item.total strong {
+  font-size: 1.5em;
+  color: #3f51b5;
+}
+
+/* --- Estilos para las Tarjetas de Selección --- */
+.location-card, .category-card, .service-card {
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+}
+.location-card:hover, .category-card:hover, .service-card:hover {
+  border-color: #3f51b5;
+  transform: translateY(-2px);
+}
+.location-card.selected, .service-card.selected {
+  border-color: #3f51b5;
+  background-color: #e8eaf6;
+  border-width: 2px;
+}
+.location-card img {
+  width: 60px;
+  height: 60px;
+  border-radius: 4px;
+  margin-right: 15px;
+}
+.service-details p {
+  font-size: 0.9em;
+  color: #777;
+  margin-top: 5px;
+}
+.service-price {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+.back-button-small {
+  margin-bottom: 20px;
+}
+
+/* --- Estilos para la Selección de Fecha y Hora --- */
+.unavailable-date .mat-calendar-body-cell-content {
+  background-color: #fce8e6;
+  color: #a50e0e;
+  border-radius: 50%;
+}
+.available-date .mat-calendar-body-cell-content {
+  border: 1px solid #c5e1a5;
+  border-radius: 50%;
+}
+.time-slots-container {
+  margin-top: 20px;
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+}
+.time-slots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+}
+.time-slots-grid button {
+  border: 1px solid #c5e1a5;
+  color: #33691e;
+}
+.time-slots-grid button.selected {
+  background-color: #33691e;
+  color: white;
+}
+.no-times-message {
+  background-color: #fce8e6;
+  color: #a50e0e;
+  padding: 15px;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* --- Estilos para la Pantalla de Confirmación --- */
+.confirmation-view .step-info {
+  justify-content: flex-start;
+  text-align: center;
+}
+.confirmation-view .success-icon {
+  font-size: 60px;
+  width: 60px;
+  height: 60px;
+  color: #4caf50;
+  margin: 20px 0;
+}
+.confirmation-details {
+  max-height: none;
+  overflow-y: visible;
+  padding: 20px 30px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+.confirmation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.confirmation-header h3 {
+  font-size: 1.4em;
+  font-weight: 600;
+  margin: 0;
+}
+.confirmation-label {
+  font-size: 0.8em;
+  color: #888;
+  letter-spacing: 1px;
+}
+.confirmation-number {
+  font-size: 2.5em;
+  font-weight: bold;
+  margin: 5px 0 20px 0;
+}
+.confirmation-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+.confirmation-actions button {
+  border-color: #ddd;
+  color: #555;
+  font-size: 0.9em;
+}
+.detail-section {
+  padding: 20px 0;
+  border-top: 1px solid #e0e0e0;
+}
+.detail-section h4 {
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.1em;
+}
+.detail-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px 20px;
+  align-items: center;
+}
+.detail-grid span {
+  font-size: 0.9em;
+  color: #666;
+  text-align: left;
+}
+.detail-grid strong {
+  font-size: 1em;
+  font-weight: 500;
+  text-align: left;
+}
+
+/* --- Botones de Acción (Siguiente/Atrás) --- */
+.step-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+booking.component.css .step-actions button {
+  min-width: 100px;
+}
+
+/* ... todos tus estilos existentes ... */
+
+/* --- Contenedor para el Ticket Oculto del PDF --- */
+.pdf-ticket-wrapper {
+  position: absolute;
+  left: -9999px; /* Mueve el ticket fuera de la pantalla */
+  top: 0;
+}
+
+.pdf-ticket-container {
+  width: 550px; /* Ancho fijo para un buen formato de PDF */
+  background: #fff;
+  color: #000;
+  padding: 30px;
+  font-family: Arial, sans-serif; /* Fuente segura para PDF */
+  border: 1px solid #ccc;
+}
+
+.pdf-ticket-container h3 {
+  font-size: 24px;
+  margin-top: 0;
+  font-weight: bold;
+}
+
+.pdf-ticket-container .pdf-label {
+  font-size: 12px;
+  color: #555;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.pdf-ticket-container .pdf-number {
+  font-size: 42px;
+  font-weight: bold;
+  margin: 0 0 20px 0;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 20px;
+}
+
+.pdf-ticket-container .pdf-section h4 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 20px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 5px;
+}
+
+.pdf-ticket-container .pdf-grid {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 8px;
+}
+
+.pdf-ticket-container .pdf-grid span {
+  color: #444;
+}
+
+.pdf-ticket-container .pdf-grid strong {
+  font-weight: bold;
+}

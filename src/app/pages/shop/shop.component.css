@@ -1,0 +1,29 @@
+.shop-page-wrapper {
+  background-color: #121212;
+  min-height: 100vh;
+}
+
+.shop-nav-bar {
+  background-color: #1e45f0;
+  color: white;
+  border-bottom: 1px solid #444;
+}
+
+.desktop-nav {
+  display: flex;
+  gap: 15px;
+}
+
+.mobile-nav {
+  display: none;
+}
+
+/* --- Responsive Logic --- */
+@media (max-width: 768px) {
+  .desktop-nav {
+    display: none;
+  }
+  .mobile-nav {
+    display: block;
+  }
+}

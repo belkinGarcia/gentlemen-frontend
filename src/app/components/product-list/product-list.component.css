@@ -1,0 +1,92 @@
+/* --- Estilos para la VISTA DE CARRUSEL --- */
+.carousel-container {
+  /* New: Add position relative for the nav */
+  position: relative;
+  padding-bottom: 80px; /* Space for the navigation */
+}
+
+.carousel-inner {
+  overflow: hidden;
+  width: 100%;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.carousel-track app-product-card {
+  flex: 0 0 33.333%; /* Muestra 3 items en escritorio */
+  padding: 0 15px;
+  box-sizing: border-box;
+}
+
+/* --- New Custom Navigation Styles --- */
+.carousel-nav {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.carousel-nav button {
+  color: #d4c39a;
+}
+
+.nav-line {
+  display: block;
+  width: 50px;
+  height: 1px;
+  background-color: #555;
+}
+
+.nav-line.active {
+  background-color: #d4c39a;
+}
+
+/* ... (Your styles for .filter-bar, .list-container, etc.) ... */
+
+/* --- VISTA DE GRILLA (PARA LA TIENDA) --- */
+.products-grid {
+  display: grid;
+  /* Por defecto, 3 columnas para escritorio */
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+/* --- VISTA DE CARRUSEL (PARA LA PÁGINA DE INICIO) --- */
+.carousel-container {
+  position: relative;
+  padding-bottom: 80px;
+}
+/* ... (El resto de tus estilos de carrusel) ... */
+
+
+/* ========================================= */
+/* ===== ESTILOS RESPONSIVOS ===== */
+/* ========================================= */
+@media (max-width: 992px) {
+  .products-grid {
+    /* 2 columnas para tablets */
+    grid-template-columns: repeat(2, 1fr);
+  }
+  /* ... (tus otros estilos responsivos) ... */
+}
+
+@media (max-width: 768px) {
+  .products-grid {
+    /* 2 columnas también para móviles más grandes */
+    grid-template-columns: repeat(2, 1fr);
+  }
+  /* ... (tus otros estilos responsivos) ... */
+}
+
+@media (max-width: 480px) {
+  .products-grid {
+    /* 1 columna para móviles pequeños */
+    grid-template-columns: 1fr;
+  }
+}

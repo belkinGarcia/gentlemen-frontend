@@ -1,0 +1,29 @@
+<div class="content-wrapper">
+  <div *ngIf="view === 'categories'" class="services-grid">
+    <div class="category-card" *ngFor="let categoryGroup of servicesByCategory" (click)="selectCategory(categoryGroup)">
+      <h3>{{ categoryGroup.category }}</h3>
+      <p>{{ categoryGroup.items.length }} servicios disponibles</p>
+    </div>
+  </div>
+
+  <div *ngIf="view === 'services' && selectedCategory">
+    <button mat-stroked-button (click)="backToCategories()" class="back-button">
+      <mat-icon>arrow_back</mat-icon>
+      Volver a Categorías
+    </button>
+
+    <div class="category-section">
+      <h2>{{ selectedCategory.category }}</h2>
+      <div class="services-grid">
+        <div class="service-card" *ngFor="let service of selectedCategory.items">
+          <img [src]="service.imageUrl" [alt]="service.name">
+          <div class="card-content">
+            <h3>{{ service.name }}</h3>
+            <p>{{ service.description }}</p>
+            <a mat-stroked-button [routerLink]="['/servicios', service.id]">VER MÁS ></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

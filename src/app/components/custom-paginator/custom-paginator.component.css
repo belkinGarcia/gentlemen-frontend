@@ -1,0 +1,25 @@
+.paginator-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 50px;
+}
+
+.page-numbers button {
+  color: #aaa;
+  min-width: 40px;
+}
+
+.page-numbers button.active {
+  color: #d4c39a; /* Color dorado para la página activa */
+  font-weight: bold;
+}
+
+.paginator-container > button {
+  color: #aaa;
+}
+
+.paginator-container > button:disabled {
+  color: #555;
+}

@@ -1,0 +1,16 @@
+<div class="testimonials-container">
+  <div class="content-wrapper">
+    <h2>TESTIMONIOS DE NUESTROS CLIENTES</h2>
+    <div class="separator"></div>
+    <div class="testimonials-grid" (mouseenter)="stopCarousel()" (mouseleave)="startCarousel()">
+      <div class="testimonial-card" *ngFor="let testimonial of testimonials | slice:currentIndex:currentIndex + 3">
+        <mat-icon class="quote-icon">format_quote</mat-icon>
+        <div class="rating">
+          <mat-icon *ngFor="let i of [1,2,3,4,5]">star</mat-icon>
+        </div>
+        <p class="quote">{{ testimonial.quote }}</p>
+        <p class="author">{{ testimonial.author }}</p>
+      </div>
+    </div>
+  </div>
+</div>

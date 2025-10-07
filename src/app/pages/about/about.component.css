@@ -1,0 +1,44 @@
+.about-page-wrapper {
+  background-color: #121212;
+}
+
+.about-story-section {
+  display: flex;
+  gap: 50px;
+  align-items: center;
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+
+.text-column {
+  flex: 1;
+  color: #aaa;
+}
+
+.text-column h2 {
+  color: #d4c39a;
+  font-size: 2.5em;
+  font-family: 'Oswald', sans-serif;
+  margin-bottom: 20px;
+}
+
+.text-column p {
+  font-size: 1.1em;
+  line-height: 1.8;
+}
+
+.image-column {
+  flex: 1;
+}
+
+.image-column img {
+  width: 100%;
+  height: auto;
+}
+
+/* Responsive styles for mobile */
+@media (max-width: 768px) {
+  .about-story-section {
+    flex-direction: column-reverse; /* Puts the image on top */
+  }
+}

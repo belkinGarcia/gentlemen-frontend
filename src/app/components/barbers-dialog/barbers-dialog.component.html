@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Barberos en {{ data.locationName }}</h2>
+<mat-dialog-content>
+  <div class="barber-grid">
+    <a *ngFor="let barber of data.barbers"
+       class="barber-card"
+       [routerLink]="['/barberos', barber.id]"
+       (click)="onBarberClick()">
+      <img [src]="barber.imageUrl" [alt]="barber.name">
+      <span>{{ barber.name }}</span>
+    </a>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>

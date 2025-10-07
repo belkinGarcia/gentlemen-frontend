@@ -1,0 +1,10 @@
+<div class="barber-grid">
+  <div 
+    *ngFor="let barber of barbers" 
+    class="barber-card"
+    (click)="selectBarber(barber)"
+    [class.selected]="barber.id === selectedBarberId">
+    <img [src]="barber.imageUrl" [alt]="barber.name">
+    <span>{{ barber.name }}</span>
+  </div>
+</div>  

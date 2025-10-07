@@ -1,0 +1,52 @@
+.info-container {
+  background-color: #121212;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  padding: 80px 0;
+  flex-wrap: wrap; /* Allows cards to stack on smaller screens */
+}
+.info-cards-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.info-card {
+  background-color: #212121;
+  color: #fff;
+  padding: 40px;
+  text-align: center;
+  max-width: 350px;
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+h2 {
+  color: #d4c39a; /* Gold color */
+  font-size: 1.5em;
+  margin-bottom: 15px;
+}
+
+p {
+  color: #aaa;
+  font-size: 1em;
+  line-height: 1.6;
+  flex-grow: 1; /* Pushes the button to the bottom */
+}
+
+a[mat-button] {
+  color: #d4c39a;
+  font-weight: bold;
+}
+@media (max-width: 768px) {
+  .info-container {
+    flex-direction: column; /* Apila las tarjetas verticalmente */
+  }
+}

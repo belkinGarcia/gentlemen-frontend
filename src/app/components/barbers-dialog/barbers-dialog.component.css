@@ -1,0 +1,19 @@
+.barber-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 20px;
+}
+.barber-card {
+  text-align: center;
+}
+.barber-card img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.barber-card span {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}

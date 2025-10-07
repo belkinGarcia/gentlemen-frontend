@@ -1,0 +1,35 @@
+<mat-toolbar class="main-header">
+  <div class="content-wrapper">
+    <a routerLink="/" class="logo-link">
+      <img 
+        src="https://cdn.midjourney.com/a3d72ee2-72b5-408a-8a02-c823e06247fe/0_2.png" 
+        alt="Gentlemen Frontend Logo" 
+        class="header-logo">
+    </a>
+
+    <span class="spacer"></span>
+
+    <div class="desktop-menu">
+      <a mat-button (click)="openBookingDialog()">Reservar cita</a>
+      <a mat-button routerLink="/tienda">Tienda</a>
+      <a mat-button routerLink="/servicios">Servicios</a>
+      <a mat-button routerLink="/ubicaciones">Ubicaciones</a>
+      <a mat-button routerLink="/mi-cuenta">Mi Cuenta</a>
+    </div>
+
+    <button mat-icon-button class="cart-button" aria-label="Botón de carrito de compras">
+      <mat-icon>shopping_cart</mat-icon>
+    </button>
+
+    <button mat-icon-button class="mobile-menu-button" [matMenuTriggerFor]="mobileMenu">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <mat-menu #mobileMenu="matMenu">
+      <button mat-menu-item (click)="openBookingDialog()">Reservar cita</button>
+      <button mat-menu-item routerLink="/tienda">Tienda</button>
+      <button mat-menu-item routerLink="/servicios">Servicios</button>
+      <button mat-menu-item routerLink="/ubicaciones">Ubicaciones</button>
+      <button mat-menu-item routerLink="/mi-cuenta">Mi Cuenta</button>
+    </mat-menu>
+  </div>
+</mat-toolbar>

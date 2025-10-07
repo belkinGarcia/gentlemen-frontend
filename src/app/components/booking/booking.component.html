@@ -1,0 +1,336 @@
+<mat-stepper #stepper linear (selectionChange)="onStepChange($event)">
+
+  <!-- Step 1: Local -->
+  <mat-step label="Local" [completed]="!!selectedLocation">
+    <div class="step-container">
+      <div class="step-info">
+        <mat-icon>location_on</mat-icon>
+        <h2>Seleccionar local</h2>
+        <p>Selecciona el local de tu reserva</p>
+        <div class="whatsapp-link">
+          <h3>¿Consultas?</h3>
+          <p>Escríbenos al WhatsApp</p>
+          <a href="#">995 515 022</a>
+        </div>
+      </div>
+      <div class="step-content">
+        <div *ngFor="let location of locations" 
+             class="location-card" 
+             (click)="selectLocation(location)"
+             [class.selected]="location.id === selectedLocation?.id">
+          <img [src]="location.imageUrl" [alt]="location.name">
+          <div class="location-details">
+            <strong>{{ location.name }}</strong>
+            <span>{{ location.address }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="step-summary" *ngIf="stepper.selectedIndex > 0"></div>
+    </div>
+    <div class="step-actions">
+      <button mat-button matStepperNext [disabled]="!selectedLocation">Siguiente</button>
+    </div>
+  </mat-step>
+
+  <!-- Step 2: Servicio -->
+  <mat-step label="Servicio" [completed]="!!selectedService">
+    <div class="step-container">
+      <div class="step-info">
+        <mat-icon>auto_stories</mat-icon>
+        <h2>Selecciona tu servicio</h2>
+        <p>Seleccione un servicio para el que desea programar una cita</p>
+        </div>
+      <div class="step-content">
+        <div *ngIf="serviceStepView === 'categories'">
+          <div *ngFor="let category of servicesByCategory" class="category-card" (click)="selectCategory(category)">
+            <span>{{ category.category }}</span>
+            <div class="category-details">
+              <span>{{ category.items.length }} Servicios</span>
+              <mat-icon>add</mat-icon>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="serviceStepView === 'services'">
+          <button mat-button (click)="backToCategories()" class="back-button-small">
+            <mat-icon>arrow_back</mat-icon> Atrás
+          </button>
+          <div *ngFor="let service of selectedCategoryServices" 
+               class="service-card"
+               (click)="selectService(service)"
+               [class.selected]="service.id === selectedService?.id">
+            <div class="service-details">
+              <strong>{{ service.name }}</strong>
+              <p>{{ service.description }}</p>
+            </div>
+            <strong class="service-price">{{ service.price | currency:'S/ ' }}</strong>
+          </div>
+        </div>
+      </div>
+      <div class="step-summary" *ngIf="stepper.selectedIndex > 0">
+        <h4>RESUMEN</h4>
+        <div class="summary-item">
+          <span>UBICACIÓN</span>
+          <strong>{{ selectedLocation?.name }}</strong>
+        </div>
+        <div class="summary-item" *ngIf="selectedService">
+          <span>SERVICIO</span>
+          <strong>{{ selectedService?.name }}</strong>
+        </div>
+        <div class="summary-item total" *ngIf="selectedService">
+          <span>PRECIO TOTAL</span>
+          <strong>{{ selectedService?.price | currency:'S/ ' }}</strong>
+        </div>
+      </div>
+    </div>
+    <div class="step-actions">
+      <button mat-button matStepperPrevious>Atrás</button>
+      <button mat-button matStepperNext [disabled]="!selectedService">Siguiente</button>
+    </div>
+  </mat-step>
+
+  <!-- Step 3: Barbero -->
+  <mat-step label="Barbero" [completed]="!!selectedBarber">
+    <div class="step-container">
+       <div class="step-info">
+        <mat-icon>content_cut</mat-icon>
+        <h2>Selecciona al barbero</h2>
+        <p>Elige un barbero o selecciona "Cualquier agente" para asignarte uno automáticamente.</p>
+        </div>
+      <div class="step-content">
+        <app-barber-selector 
+          [barbers]="barbersForLocation"
+          [selectedBarberId]="selectedBarber?.id"
+          (selectionChange)="selectBarber($event)">
+        </app-barber-selector>
+      </div>
+      <div class="step-summary" *ngIf="stepper.selectedIndex > 0">
+        <h4>RESUMEN</h4>
+        <div class="summary-item">
+          <span>UBICACIÓN</span>
+          <strong>{{ selectedLocation?.name }}</strong>
+        </div>
+        <div class="summary-item">
+          <span>SERVICIO</span>
+          <strong>{{ selectedService?.name }}</strong>
+        </div>
+         <div class="summary-item" *ngIf="selectedBarber">
+          <span>BARBERO</span>
+          <strong>{{ selectedBarber?.name }}</strong>
+        </div>
+        <div class="summary-item total">
+          <span>PRECIO TOTAL</span>
+          <strong>{{ selectedService?.price | currency:'S/ ' }}</strong>
+        </div>
+      </div>
+    </div>
+    <div class="step-actions">
+      <button mat-button matStepperPrevious>Atrás</button>
+      <button mat-button matStepperNext [disabled]="!selectedBarber">Siguiente</button>
+    </div>
+  </mat-step>
+
+  <!-- Step 4: Fecha y Hora -->
+  <mat-step label="Fecha y Hora" [completed]="!!selectedDate && !!selectedTime">
+    <div class="step-container">
+      <div class="step-info">
+        <mat-icon>calendar_today</mat-icon>
+        <h2>Selecciona fecha & hora</h2>
+        <p>Haga clic en una fecha para ver las franjas horarias disponibles. Haga clic en una franja horaria verde para reservarla.</p>
+        <div class="whatsapp-link">
+          <h3>¿Consultas?</h3>
+          <p>Escríbenos al WhatsApp</p>
+          <a href="#">995 515 022</a>
+        </div>
+      </div>
+      <div class="step-content">
+        <mat-calendar 
+          [selected]="selectedDate"
+          (selectedChange)="onDateSelect($event)"
+          [dateClass]="dateClass"
+          [minDate]="minDate">
+        </mat-calendar>
+        <div *ngIf="selectedDate" class="time-slots-container">
+          <h4>Elija la hora de la cita para {{ selectedDate | date: 'longDate' }}</h4>
+          <div *ngIf="availableTimes.length > 0; else noTimes" class="time-slots-grid">
+            <button 
+              *ngFor="let time of availableTimes" 
+              mat-stroked-button
+              (click)="selectTime(time)"
+              [class.selected]="time === selectedTime">
+              {{ time }}
+            </button>
+          </div>
+          <ng-template #noTimes>
+            <div class="no-times-message">
+              No disponible
+            </div>
+          </ng-template>
+        </div>
+      </div>
+      <div class="step-summary" *ngIf="stepper.selectedIndex > 0">
+        <h4>RESUMEN</h4>
+        <div class="summary-item">
+          <span>UBICACIÓN</span>
+          <strong>{{ selectedLocation?.name }}</strong>
+        </div>
+        <div class="summary-item">
+          <span>SERVICIO</span>
+          <strong>{{ selectedService?.name }}</strong>
+        </div>
+        <div class="summary-item">
+          <span>BARBERO</span>
+          <strong>{{ selectedBarber?.name }}</strong>
+        </div>
+        <div class="summary-item" *ngIf="selectedDate">
+          <span>FECHA</span>
+          <strong>{{ selectedDate | date:'longDate' }}</strong>
+        </div>
+        <div class="summary-item total">
+          <span>PRECIO TOTAL</span>
+          <strong>{{ selectedService?.price | currency:'S/ ' }}</strong>
+        </div>
+      </div>
+    </div>
+    <div class="step-actions">
+      <button mat-button matStepperPrevious>Atrás</button>
+      <button mat-button matStepperNext [disabled]="!selectedTime">Siguiente</button>
+    </div>
+  </mat-step>
+
+  <!-- Step 5: Información -->
+  <mat-step label="Información" [stepControl]="informationForm">
+    <div class="step-container">
+      <div class="step-info">
+        <mat-icon>person</mat-icon>
+        <h2>Ingresa tu información</h2>
+        <p>Inicia sesión o crea una cuenta para continuar con tu reserva.</p>
+      </div>
+      <div class="step-content">
+        <app-account-page 
+          [displayMode]="'tabs'" 
+          (loginSuccess)="handleAuthentication($event)"
+          (registerSuccess)="handleAuthentication($event)">
+        </app-account-page>
+      </div>
+      <div class="step-summary" *ngIf="stepper.selectedIndex > 0">
+        <h4>RESUMEN</h4>
+        <div class="summary-item">
+          <span>UBICACIÓN</span>
+          <strong>{{ selectedLocation?.name }}</strong>
+        </div>
+        <div class="summary-item">
+          <span>SERVICIO</span>
+          <strong>{{ selectedService?.name }}</strong>
+        </div>
+        <div class="summary-item">
+          <span>BARBERO</span>
+          <strong>{{ selectedBarber?.name }}</strong>
+        </div>
+        <div class="summary-item" *ngIf="selectedDate">
+          <span>FECHA</span>
+          <strong>{{ selectedDate | date:'longDate' }}</strong>
+        </div>
+        <div class="summary-item" *ngIf="selectedTime">
+          <span>HORA</span>
+          <strong>{{ selectedTime }}</strong>
+        </div>
+        <div class="summary-item total">
+          <span>PRECIO TOTAL</span>
+          <strong>{{ selectedService?.price | currency:'S/ ' }}</strong>
+        </div>
+      </div>
+    </div>
+    <div class="step-actions">
+      <button mat-button matStepperPrevious>Atrás</button>
+      <button mat-button (click)="confirmAppointment()" [disabled]="informationForm.invalid">Siguiente</button>
+    </div>
+  </mat-step>
+
+  <!-- Step 6: Confirmación -->
+  <mat-step label="Confirmación">
+    <div class="step-container confirmation-view">
+      <div class="step-info">
+        <mat-icon class="success-icon">verified_user</mat-icon>
+        <h2>Confirmación</h2>
+        <p>Su cita se ha programado correctamente. Conserve esta confirmación para su registro.</p>
+        <div class="whatsapp-link">
+          <h3>¿Consultas?</h3>
+          <p>Escríbenos al WhatsApp</p>
+          <a href="https://wa.me/51995515022" target="_blank">995 515 022</a>
+        </div>
+      </div>
+      <div class="step-content confirmation-details" id="confirmationContent">
+        <div class="confirmation-header">
+          <h3>Confirmación de la cita</h3>
+        </div>
+        <span class="confirmation-label">CONFIRMATION #</span>
+        <h2 class="confirmation-number">{{ confirmationNumber }}</h2>
+        <div class="confirmation-actions">
+          <button mat-stroked-button (click)="downloadConfirmationAsPDF()">
+            <mat-icon>download</mat-icon> Descargar PDF
+          </button>
+        </div>
+        <div class="detail-section">
+          <h4>Información de la cita</h4>
+          <div class="detail-grid">
+            <span>Fecha:</span>         <strong>{{ selectedDate | date:'longDate' }}</strong>
+            <span>Hora:</span>          <strong>{{ selectedTime }}</strong>
+            <span>Ubicación:</span>      <strong>{{ selectedLocation?.name }}</strong>
+            <span>Barbero:</span>       <strong>{{ selectedBarber?.name }}</strong>
+            <span>Servicio:</span>      <strong>{{ selectedService?.name }}</strong>
+          </div>
+        </div>
+        <div class="detail-section">
+          <h4>Información del cliente</h4>
+          <div class="detail-grid">
+            <span>Nombre:</span>        <strong>{{ informationForm.get('firstName')?.value }} {{ informationForm.get('lastName')?.value }}</strong>
+            <span>Teléfono:</span>      <strong>{{ informationForm.get('phone')?.value }}</strong>
+            <span>Correo electrónico:</span> <strong>{{ informationForm.get('email')?.value }}</strong>
+          </div>
+        </div>
+        <div class="detail-section">
+          <h4>Información de pago</h4>
+          <div class="detail-grid">
+            <span>Precio:</span>        <strong>{{ selectedService?.price | currency:'S/ ' }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-step>
+
+</mat-stepper>
+
+<!-- ***** EL CAMBIO ESTÁ AQUÍ ***** -->
+<!-- Este contenedor ahora existe siempre, pero está oculto con CSS -->
+<div class="pdf-ticket-wrapper">
+  <div id="pdf-ticket" class="pdf-ticket-container">
+      <h3>Confirmación de la cita</h3>
+      <p class="pdf-label">Confirmation #</p>
+      <p class="pdf-number">{{ confirmationNumber }}</p>
+      <div class="pdf-section">
+          <h4>Información de la cita</h4>
+          <div class="pdf-grid">
+              <span>Fecha:</span>         <strong>{{ selectedDate | date:'longDate' }}</strong>
+              <span>Hora:</span>          <strong>{{ selectedTime }}</strong>
+              <span>Ubicación:</span>      <strong>{{ selectedLocation?.name }}</strong>
+              <span>Barbero:</span>       <strong>{{ selectedBarber?.name }}</strong>
+              <span>Servicio:</span>      <strong>{{ selectedService?.name }}</strong>
+          </div>
+      </div>
+      <div class="pdf-section">
+          <h4>Información del cliente</h4>
+          <div class="pdf-grid">
+              <span>Nombre:</span>        <strong>{{ informationForm.get('firstName')?.value }} {{ informationForm.get('lastName')?.value }}</strong>
+              <span>Teléfono:</span>      <strong>{{ informationForm.get('phone')?.value }}</strong>
+              <span>Correo electrónico:</span> <strong>{{ informationForm.get('email')?.value }}</strong>
+          </div>
+      </div>
+      <div class="pdf-section">
+          <h4>Información de pago</h4>
+          <div class="pdf-grid">
+              <span>Precio:</span>        <strong>{{ selectedService?.price | currency:'S/ ' }}</strong>
+          </div>
+      </div>
+  </div>
+</div>
+

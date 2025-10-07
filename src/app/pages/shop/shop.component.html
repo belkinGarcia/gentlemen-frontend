@@ -1,0 +1,49 @@
+<div class="shop-page-wrapper">
+  <mat-toolbar class="shop-nav-bar">
+    <div class="content-wrapper">
+
+      <div class="desktop-nav">
+        <ng-container *ngFor="let item of menuItems">
+          <button mat-button [matMenuTriggerFor]="menu">
+            <span>{{ item.name }}</span>
+            <mat-icon>expand_more</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button *ngFor="let child of item.children" mat-menu-item>{{ child.name }}</button>
+          </mat-menu>
+        </ng-container>
+      </div>
+
+      <div class="mobile-nav">
+        <button mat-button [matMenuTriggerFor]="mobileMenu">
+          <mat-icon>menu</mat-icon>
+          <span>Menú</span>
+        </button>
+        <mat-menu #mobileMenu="matMenu">
+          <ng-container *ngFor="let item of menuItems">
+            <button mat-menu-item [matMenuTriggerFor]="subMenu">{{ item.name }}</button>
+            <mat-menu #subMenu="matMenu">
+              <button *ngFor="let child of item.children" mat-menu-item>{{ child.name }}</button>
+            </mat-menu>
+          </ng-container>
+        </mat-menu>
+      </div>
+      </div>
+  </mat-toolbar>
+
+  <div class="content-wrapper">
+    <app-product-list
+      [isCarousel]="false"
+      [showFilterBar]="false"
+      [products]="products"
+      [totalProducts]="totalProducts"
+      [pageSize]="pageSize"
+      (pageChange)="onPageChange($event)">
+    </app-product-list>
+    
+   
+  </div>
+</div>
+<app-testimonials></app-testimonials>    
+
+  <app-info-section></app-info-section>

@@ -1,0 +1,14 @@
+<div class="locations-container">
+  <div class="location-card" *ngFor="let location of locations" (click)="showBarbers(location)">
+    <img [src]="location.imageUrl" [alt]="'Foto de ' + location.name">
+    <div class="card-content">
+      <h3>{{ location.name }}</h3>
+      <p>{{ location.address }}</p>
+      <a class="map-link" [href]="location.mapLink" target="_blank">Ver en el mapa</a>
+      <a class="phone-link" [href]="'tel:' + location.phone">
+        <span>{{ location.phone }}</span>
+        <mat-icon>chevron_right</mat-icon>
+      </a>
+    </div>
+  </div>
+</div>

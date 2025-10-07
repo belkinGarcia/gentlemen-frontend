@@ -1,0 +1,19 @@
+<div class="barber-detail-page" *ngIf="barber">
+  <div class="content-wrapper bio-section">
+    <div class="text-column">
+      <h2>{{ barber.name }}</h2>
+      <p>{{ barber.bio }}</p>
+    </div>
+    <div class="image-column">
+      <img [src]="barber.imageUrl" [alt]="barber.name">
+    </div>
+  </div>
+
+  <app-product-list 
+    [isCarousel]="true"
+    [showFilterBar]="false"
+    [products]="previewProducts">
+  </app-product-list>
+
+  <app-info-section></app-info-section>
+</div>

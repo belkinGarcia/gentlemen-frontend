@@ -1,0 +1,56 @@
+.main-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: transparent !important;
+  color: white;
+  display: flex;
+  justify-content: center;
+}
+
+.content-wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.main-header a[mat-button] {
+  color: white;
+  font-size: 16px;
+}
+
+.logo-link {
+  line-height: 0; /* Removes extra space around the image link */
+}
+
+.header-logo {
+  height: 40px;
+  width: auto;
+}
+
+.spacer {
+  flex: 1 1 auto; /* Pushes items to the sides */
+}
+
+/* --- ESTILOS RESPONSIVOS PARA EL HEADER --- */
+
+.desktop-menu {
+  display: block; /* Muestra el menú de escritorio por defecto */
+}
+
+.mobile-menu-button {
+  display: none; /* Oculta el botón de hamburguesa por defecto */
+}
+
+/* Cuando la pantalla sea de 768px o menos */
+@media (max-width: 768px) {
+  .desktop-menu {
+    display: none; /* Oculta el menú de escritorio */
+  }
+
+  .mobile-menu-button {
+    display: block; /* Muestra el botón de hamburguesa */
+  }
+}
