@@ -2,6 +2,7 @@ import { Component, OnInit, EventEmitter, Output, Input, HostBinding } from '@an
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,7 +14,7 @@ import { UiStateService } from '../../services/ui-state.service';
   selector: 'app-account-page',
   standalone: true,
   imports: [
-    CommonModule, ReactiveFormsModule, MatFormFieldModule,
+    CommonModule, ReactiveFormsModule, HttpClientModule, MatFormFieldModule,
     MatInputModule, MatButtonModule, MatCheckboxModule, MatIconModule, RouterModule // Add Icon Module
   ],
   templateUrl: './account-page.component.html',
@@ -28,7 +29,7 @@ export class AccountPageComponent implements OnInit {
   @Output() registerSuccess = new EventEmitter<any>();
   @Input() displayMode: 'tabs' | 'grid' = 'grid';
 
-    activeView: 'register' | 'login' = 'register';
+  activeView: 'register' | 'login' = 'register';
   
   // 3. AÑADE HOSTBINDING: Esto agrega una clase CSS al componente mismo
   // para que podamos aplicar estilos diferentes desde afuera.
@@ -41,7 +42,8 @@ export class AccountPageComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private uiStateService: UiStateService
+    private uiStateService: UiStateService,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -52,7 +54,7 @@ export class AccountPageComponent implements OnInit {
     });
 
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      username: ['', Validators.required],
       password: ['', Validators.required],
       rememberMe: [false]
     });
@@ -73,20 +75,41 @@ export class AccountPageComponent implements OnInit {
   onSubmitLogin(): void {
     if (this.loginForm.valid) {
       console.log('Login exitoso en AccountPage:', this.loginForm.value);
+      const loginPayload = {
+        username: this.loginForm.value.username,
+        password: this.loginForm.value.password
+      };
+      this.http.post('http://localhost:8080/api/v1/auth/login', loginPayload).subscribe({
+        next: response => console.log('Respuesta del login:', response),
+        error: error => console.error('Error al realizar login:', error)
+      });
       // 3. Emite el evento con los datos del formulario
       // En un caso real, esto iría dentro de la respuesta exitosa de tu servicio de autenticación
       this.loginSuccess.emit(this.loginForm.value);
     }
   }
- onSubmitRegister(): void {
+  onSubmitRegister(): void {
     if (this.registerForm.valid) {
       console.log('Registro exitoso en AccountPage:', this.registerForm.value);
+      const registerPayload = {
+        nombres: this.registerForm.value.firstName,
+        apellidos: this.registerForm.value.lastName,
+        dni: this.registerForm.value.dni,
+        email: this.registerForm.value.email,
+        celular: this.registerForm.value.phone,
+        contrasena: this.registerForm.value.password,
+        tipoUsuario: 'CLIENTE'
+      };
+      this.http.post('http://localhost:8080/api/v1/usuarios', registerPayload).subscribe({
+        next: response => console.log('Respuesta del registro:', response),
+        error: error => console.error('Error al realizar registro:', error)
+      });
       // 4. Emite el evento con los datos del formulario
       // En un caso real, esto iría después de que el API confirme el registro
       this.registerSuccess.emit(this.registerForm.value);
     }
   }
-   setActiveView(view: 'register' | 'login'): void {
+  setActiveView(view: 'register' | 'login'): void {
     this.activeView = view;
   }
 
