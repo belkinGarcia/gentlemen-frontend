@@ -60,7 +60,28 @@
   background-color: #d4c39a !important;
   color: #121212 !important;
 }
+/* Estilos globales para el panel del diálogo de video.
+  Esto elimina el fondo blanco y el padding de MatDialog.
+*/
+.video-dialog-container .mat-mdc-dialog-container {
+  /* Fondo negro/transparente */
+  background-color: #000;
+  
+  /* Eliminar padding y bordes */
+  padding: 0 !important;
+  border-radius: 0 !important;
+  
+  /* Eliminar sombra (opcional, pero más elegante) */
+  box-shadow: none !important;
+  
+  /* Asegura que el iframe no se desborde */
+  overflow: hidden;
+}
 
+/* Oculta el panel "CDK-overlay" para que no haya fondo gris */
+.video-dialog-container .cdk-overlay-backdrop {
+   background: rgba(0, 0, 0, 0.85) !important; /* Más oscuro */
+}
 /* Responsive */
 @media (max-width: 768px) {
   .video-cta-container {

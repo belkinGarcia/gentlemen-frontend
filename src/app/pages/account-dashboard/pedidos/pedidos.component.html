@@ -1,0 +1,48 @@
+<div class="pedidos-container">
+  <h2>Mis Pedidos</h2>
+  <p>Consulta el estado y los detalles de tus compras de productos.</p>
+
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z2">
+
+    <ng-container matColumnDef="orderId">
+      <th mat-header-cell *matHeaderCellDef> Pedido # </th>
+      <td mat-cell *matCellDef="let order"> <strong>{{order.orderId}}</strong> </td>
+    </ng-container>
+
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef> Fecha </th>
+      <td mat-cell *matCellDef="let order"> {{order.date | date:'mediumDate'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef> Estado </th>
+      <td mat-cell *matCellDef="let order">
+        <mat-chip [color]="getStatusChipColor(order.status)" selected>
+          {{order.status}}
+        </mat-chip>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="total">
+      <th mat-header-cell *matHeaderCellDef> Total </th>
+      <td mat-cell *matCellDef="let order"> {{order.total | currency:'S/ '}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let order">
+        <button mat-icon-button (click)="viewOrderDetails(order.orderId)">
+          <mat-icon>visibility</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <div *ngIf="dataSource.length === 0" class="empty-state">
+    <mat-icon>shopping_bag</mat-icon>
+    <p>Aún no has realizado ningún pedido.</p>
+  </div>
+</div>

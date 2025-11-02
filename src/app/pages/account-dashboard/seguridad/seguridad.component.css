@@ -1,0 +1,44 @@
+.seguridad-container {
+  padding: 20px;
+}
+
+h2 {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+p {
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.password-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 450px;
+  gap: 15px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+button[mat-flat-button] {
+  padding: 10px 0;
+  font-weight: 600;
+}
+
+.alert {
+  padding: 15px;
+  border-radius: 4px;
+  font-weight: 500;
+  margin-top: 5px;
+}
+.alert-success {
+  background-color: #e8f5e9; /* Verde claro */
+  color: #2e7d32; /* Verde oscuro */
+}
+.alert-error {
+  background-color: #ffebee; /* Rojo claro */
+  color: #c62828; /* Rojo oscuro */
+}

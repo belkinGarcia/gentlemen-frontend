@@ -1,0 +1,75 @@
+<div class="order-management-container">
+  <h2>Gestión de Pedidos</h2>
+  <p>Revisa y actualiza el estado de los pedidos de productos de la tienda.</p>
+
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z2">
+
+    <ng-container matColumnDef="orderId">
+      <th mat-header-cell *matHeaderCellDef> Pedido # </th>
+      <td mat-cell *matCellDef="let order">
+        <strong>{{ order.orderId }}</strong>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef> Fecha </th>
+      <td mat-cell *matCellDef="let order">
+        {{ order.date | date:'mediumDate' }}
+        <span class="sub-text">{{ order.date | date:'shortTime' }}</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="client">
+      <th mat-header-cell *matHeaderCellDef> Cliente </th>
+      <td mat-cell *matCellDef="let order">
+        <strong>{{ order.shippingInfo.firstName }} {{ order.shippingInfo.lastName }}</strong>
+        <span class="sub-text">{{ order.shippingInfo.email }}</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="total">
+      <th mat-header-cell *matHeaderCellDef> Total </th>
+      <td mat-cell *matCellDef="let order">
+        {{ order.total | currency:'S/ ' }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef> Estado </th>
+      <td mat-cell *matCellDef="let order">
+        
+        <mat-form-field appearance="outline" class="status-select">
+          <mat-select 
+            [value]="order.status"
+            (selectionChange)="onStatusChange(order, $event.value)">
+            <mat-option value="Procesando">
+              <mat-icon>pending</mat-icon> Procesando
+            </mat-option>
+            <mat-option value="Enviado">
+              <mat-icon>local_shipping</mat-icon> Enviado
+            </mat-option>
+            <mat-option value="Entregado">
+              <mat-icon>check_circle</mat-icon> Entregado
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let order">
+        <a 
+          mat-icon-button
+          [routerLink]="['/mi-cuenta/pedidos', order.orderId]"
+          matTooltip="Ver detalle del pedido">
+          <mat-icon>visibility</mat-icon>
+        </a>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

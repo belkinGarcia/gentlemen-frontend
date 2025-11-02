@@ -25,4 +25,6 @@ export class LocationsPageComponent implements OnInit {
       imageUrl: 'https://cdn.midjourney.com/c0d03bc8-50cc-4dc3-9199-1abd30f85020/0_0.png'
     });
   }
+
+  
 }

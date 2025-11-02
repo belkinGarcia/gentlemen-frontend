@@ -29,33 +29,19 @@ import { UiStateService } from '../../services/ui-state.service';
   styleUrls: ['./shop.component.css']
 })
 export class ShopComponent implements OnInit {
-  // --- Propiedades para el Menú ---
-  menuItems = [
-    {
-      name: 'Categoría',
-      children: [
-        { name: 'Lavado y cuidado de cabello' },
-        { name: 'Promociones' },
-        { name: 'Afeitado' },
-        { name: 'Crecimiento y cuidado de barba' },
-      ]
-    },
-    {
-      name: 'Marca',
-      children: [
-        { name: 'American Crew' },
-        { name: 'MUK' },
-        { name: 'The Barber Company' },
-        { name: 'Vikingo' }
-      ]
-    }
-  ];
-  activeSubItems: string[] = [];
-  activeMenuName: string = '';
+  
+  // --- Propiedades para el Menú (AHORA DINÁMICAS) ---
+  allProducts: any[] = []; // Almacenará todos los productos
+  categories: string[] = []; // Lista única de categorías
+  brands: string[] = []; // Lista única de marcas
+
+  // --- Propiedades para el Filtro ---
+  selectedCategory: string | null = null;
+  selectedBrand: string | null = null;
 
   // --- Propiedades para la Paginación ---
-  products: any[] = [];
-  totalProducts = 0;
+  products: any[] = []; // Productos para la página actual
+  totalProducts = 0; // Total de productos *después* de filtrar
   pageSize = 12;
   currentPage = 1;
 
@@ -65,21 +51,56 @@ export class ShopComponent implements OnInit {
     private uiStateService: UiStateService
   ) {}
 
-  // Al iniciar, configuramos el banner y cargamos los productos
-ngOnInit(): void {
-  this.uiStateService.setHeroState({
-    type: 'banner',
-    title: 'TIENDA', // The title for the shop page banner
-    imageUrl: 'https://cdn.midjourney.com/c0d03bc8-50cc-4dc3-9199-1abd30f85020/0_0.png' // A relevant background image
-  });
-  this.loadProducts();
-}
+  // Al iniciar, configuramos el banner, cargamos TODOS los productos y construimos los filtros
+  ngOnInit(): void {
+    this.uiStateService.setHeroState({
+      type: 'banner',
+      title: 'TIENDA', // The title for the shop page banner
+      imageUrl: 'https://cdn.midjourney.com/c0d03bc8-50cc-4dc3-9199-1abd30f85020/0_0.png' // A relevant background image
+    });
+    
+    // 1. Carga todos los productos para construir los filtros
+    this.allProducts = this.productService.getAllProductsList();
+    
+    // 2. Construye los filtros
+    this.buildFilters();
+    
+    // 3. Carga la primera página de productos (sin filtro)
+    this.loadProducts();
+  }
 
-  // Carga los productos para la página actual
+  // Extrae categorías y marcas únicas de la lista de productos
+  buildFilters(): void {
+    // Usamos Set para obtener valores únicos automáticamente
+    const categorySet = new Set<string>(this.allProducts.map(p => p.category));
+    const brandSet = new Set<string>(this.allProducts.map(p => p.brand));
+
+    // Convertimos los Sets de nuevo a arrays
+    this.categories = [...categorySet].sort();
+    this.brands = [...brandSet].sort();
+  }
+
+  // Carga los productos para la página actual, aplicando filtros
   loadProducts(): void {
-    const pageData = this.productService.getProducts(this.currentPage, this.pageSize);
-    this.products = pageData.products;
-    this.totalProducts = pageData.totalProducts;
+    let filteredProducts = this.allProducts;
+
+    // 1. Aplicar filtro de categoría si existe
+    if (this.selectedCategory) {
+      filteredProducts = filteredProducts.filter(p => p.category === this.selectedCategory);
+    }
+    
+    // 2. Aplicar filtro de marca si existe
+    if (this.selectedBrand) {
+      filteredProducts = filteredProducts.filter(p => p.brand === this.selectedBrand);
+    }
+
+    // 3. Actualizar el total de productos (para la paginación)
+    this.totalProducts = filteredProducts.length;
+
+    // 4. Aplicar paginación a la lista filtrada
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.products = filteredProducts.slice(startIndex, endIndex);
   }
 
   // Se activa al cambiar de página
@@ -88,14 +109,27 @@ ngOnInit(): void {
     this.loadProducts();
   }
   
-  // --- Métodos para el Menú ---
-  showSubItems(item: any): void {
-    this.activeSubItems = item.children.map((child: any) => child.name);
-    this.activeMenuName = item.name;
+  // --- Métodos para el Menú de Filtro ---
+
+  /**
+   * Filtra la lista por una categoría.
+   * Si se pasa 'null', se limpia el filtro.
+   */
+  selectCategory(category: string | null): void {
+    this.selectedCategory = category;
+    this.selectedBrand = null; // Solo permitimos un filtro a la vez
+    this.currentPage = 1; // Reseteamos a la página 1
+    this.loadProducts();
   }
 
-  clearSubItems(): void {
-    this.activeSubItems = [];
-    this.activeMenuName = '';
+  /**
+   * Filtra la lista por una marca.
+   * Si se pasa 'null', se limpia el filtro.
+   */
+  selectBrand(brand: string | null): void {
+    this.selectedBrand = brand;
+    this.selectedCategory = null; // Solo permitimos un filtro a la vez
+    this.currentPage = 1; // Reseteamos a la página 1
+    this.loadProducts();
   }
 }

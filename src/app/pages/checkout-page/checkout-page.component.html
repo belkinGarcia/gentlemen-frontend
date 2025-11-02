@@ -1,0 +1,124 @@
+<div class="checkout-page-wrapper">
+  
+  <div class="checkout-stepper">
+    <mat-stepper orientation="vertical" [linear]="true" #stepper>
+      
+      <mat-step [stepControl]="step1_identificationForm">
+        <ng-template matStepLabel>Identificación</ng-template>
+        <form [formGroup]="step1_identificationForm" class="step-form">
+          <p>Ingresa tu correo electrónico para continuar.</p>
+          <mat-form-field appearance="outline">
+            <mat-label>Correo Electrónico</mat-label>
+            <input matInput formControlName="email" type="email" required>
+          </mat-form-field>
+          
+          <div class="step-actions">
+            <button mat-flat-button color="accent" matStepperNext>Continuar</button>
+          </div>
+        </form>
+      </mat-step>
+
+      <mat-step [stepControl]="step2_shippingForm">
+        <ng-template matStepLabel>Información de Envío</ng-template>
+        <form [formGroup]="step2_shippingForm" class="step-form grid-form">
+          
+          <mat-form-field appearance="outline" class="col-span-1">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="firstName" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="col-span-1">
+            <mat-label>Apellido</mat-label>
+            <input matInput formControlName="lastName" required>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline" class="col-span-1">
+            <mat-label>DNI/CE</mat-label>
+            <input matInput formControlName="dni" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="col-span-1">
+            <mat-label>Teléfono</mat-label>
+            <input matInput formControlName="phone" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="col-span-2">
+            <mat-label>Dirección</mat-label>
+            <input matInput formControlName="address" placeholder="Ej. Av. Primavera 123, Dpto 401" required>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline" class="col-span-1">
+            <mat-label>Ciudad</mat-label>
+            <input matInput formControlName="city" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="col-span-1">
+            <mat-label>Región</mat-label>
+            <input matInput formControlName="region" required>
+          </mat-form-field>
+
+          <mat-checkbox class="col-span-2" [(ngModel)]="useSameAddressForBilling" [ngModelOptions]="{standalone: true}">
+            Usar esta dirección para facturación
+          </mat-checkbox>
+          
+          <div class="step-actions col-span-2">
+            <button mat-button matStepperPrevious>Atrás</button>
+            <button mat-flat-button color="accent" matStepperNext>Continuar al Pago</button>
+          </div>
+        </form>
+      </mat-step>
+      
+      <mat-step>
+        <ng-template matStepLabel>Método de Pago</ng-template>
+        
+        <p>Serás redirigido a Mercado Pago para completar tu compra de forma segura.</p>
+        
+        <div id="mercado-pago-container">
+          <p>Cargando pasarela de pago...</p>
+        </div>
+
+        <div class="step-actions">
+          <button mat-button matStepperPrevious>Atrás</button>
+          <button mat-flat-button color="accent" (click)="proceedToPayment()">Simular Pago</button>
+        </div>
+      </mat-step>
+      
+      <mat-step>
+        <ng-template matStepLabel>Confirmación</ng-template>
+        <p>¡Este paso es para la página de "Gracias" después de que el pago sea exitoso!</p>
+        <a mat-button routerLink="/">Volver al inicio</a>
+      </mat-step>
+      
+    </mat-stepper>
+  </div>
+  
+<div class="order-summary" *ngIf="cartItems.length > 0">
+  <div class="summary-totals">
+    <div class="summary-row">
+      <span>Subtotal</span>
+      <span>{{ subtotal | currency:'S/ ' }}</span>
+    </div>
+    
+    <div class="summary-row">
+      <span>Envío</span>
+      <span>
+        <strong *ngIf="shippingCost === 0">GRATIS</strong>
+        <strong *ngIf="shippingCost > 0">{{ shippingCost | currency:'S/ ' }}</strong>
+      </span>
+    </div>
+    
+    <div class="summary-row total">
+      <strong>Total</strong>
+      <strong>{{ (subtotal + shippingCost) | currency:'S/ ' }}</strong>
+    </div>
+    
+    <p *ngIf="shippingCost > 0" class="shipping-message">
+        Te faltan {{ (shippingService.getFreeShippingThreshold() - subtotal) | currency:'S/ ' }} para ENVÍO GRATUITO!
+    </p>
+    <p *ngIf="shippingCost === 0" class="shipping-message free">
+        ¡Tu envío es GRATIS!
+    </p>
+
+  </div>
+  </div>
+</div>

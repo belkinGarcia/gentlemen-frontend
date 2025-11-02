@@ -12,3 +12,23 @@ body {
   padding: 0 20px;
   box-sizing: border-box;
 }
+
+/* Estilos globales para el panel del diálogo de video. */
+.video-dialog-container .mat-mdc-dialog-container {
+  background-color: #000 !important; /* Fondo completamente negro */
+  padding: 0 !important;
+  border-radius: 0 !important; /* Bordes cuadrados */
+  box-shadow: none !important;
+  overflow: hidden !important; /* --- MODIFICADO: Evita barras de scroll en el diálogo --- */
+}
+
+/* Oculta el panel "CDK-overlay" para que no haya fondo gris */
+.video-dialog-container .cdk-overlay-backdrop {
+   background: rgba(0, 0, 0, 0.95) !important; /* Fondo de overlay aún más oscuro */
+}
+.dark-theme-dialog-container .mat-mdc-dialog-container .mdc-dialog__surface {
+  background: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  border-radius: 8px !important; /* Asegúrate que coincida con tu CSS */
+}

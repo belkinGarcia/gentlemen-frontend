@@ -1,0 +1,43 @@
+.profile-container {
+  padding: 20px;
+}
+
+h2 {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+p {
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  gap: 15px;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+}
+
+.form-row mat-form-field {
+  flex: 1;
+}
+
+button[mat-flat-button] {
+  padding: 10px 0;
+  font-weight: 600;
+  max-width: 200px;
+}
+.alert-success {
+  color: #2e7d32; /* Verde */
+  background-color: #e8f5e9;
+  padding: 10px 15px;
+  border-radius: 4px;
+  margin-top: 15px;
+  font-weight: 500;
+}

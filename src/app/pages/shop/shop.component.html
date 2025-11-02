@@ -3,15 +3,29 @@
     <div class="content-wrapper">
 
       <div class="desktop-nav">
-        <ng-container *ngFor="let item of menuItems">
-          <button mat-button [matMenuTriggerFor]="menu">
-            <span>{{ item.name }}</span>
-            <mat-icon>expand_more</mat-icon>
+        
+        <button mat-button [matMenuTriggerFor]="categoryMenu">
+          <span>{{ selectedCategory || 'Categoría' }}</span>
+          <mat-icon>expand_more</mat-icon>
+        </button>
+        <mat-menu #categoryMenu="matMenu">
+          <button mat-menu-item (click)="selectCategory(null)">Ver Todas</button>
+          <button *ngFor="let cat of categories" mat-menu-item (click)="selectCategory(cat)">
+            {{ cat }}
           </button>
-          <mat-menu #menu="matMenu">
-            <button *ngFor="let child of item.children" mat-menu-item>{{ child.name }}</button>
-          </mat-menu>
-        </ng-container>
+        </mat-menu>
+
+        <button mat-button [matMenuTriggerFor]="brandMenu">
+          <span>{{ selectedBrand || 'Marca' }}</span>
+          <mat-icon>expand_more</mat-icon>
+        </button>
+        <mat-menu #brandMenu="matMenu">
+          <button mat-menu-item (click)="selectBrand(null)">Ver Todas</button>
+          <button *ngFor="let brand of brands" mat-menu-item (click)="selectBrand(brand)">
+            {{ brand }}
+          </button>
+        </mat-menu>
+
       </div>
 
       <div class="mobile-nav">
@@ -20,12 +34,27 @@
           <span>Menú</span>
         </button>
         <mat-menu #mobileMenu="matMenu">
-          <ng-container *ngFor="let item of menuItems">
-            <button mat-menu-item [matMenuTriggerFor]="subMenu">{{ item.name }}</button>
-            <mat-menu #subMenu="matMenu">
-              <button *ngFor="let child of item.children" mat-menu-item>{{ child.name }}</button>
-            </mat-menu>
-          </ng-container>
+          
+          <button mat-menu-item [matMenuTriggerFor]="mobileCategoryMenu">
+            {{ selectedCategory || 'Categoría' }}
+          </button>
+          <mat-menu #mobileCategoryMenu="matMenu">
+            <button mat-menu-item (click)="selectCategory(null)">Ver Todas</button>
+            <button *ngFor="let cat of categories" mat-menu-item (click)="selectCategory(cat)">
+              {{ cat }}
+            </button>
+          </mat-menu>
+
+          <button mat-menu-item [matMenuTriggerFor]="mobileBrandMenu">
+            {{ selectedBrand || 'Marca' }}
+          </button>
+          <mat-menu #mobileBrandMenu="matMenu">
+            <button mat-menu-item (click)="selectBrand(null)">Ver Todas</button>
+            <button *ngFor="let brand of brands" mat-menu-item (click)="selectBrand(brand)">
+              {{ brand }}
+            </button>
+          </mat-menu>
+          
         </mat-menu>
       </div>
       </div>

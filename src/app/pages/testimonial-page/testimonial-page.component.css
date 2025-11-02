@@ -1,0 +1,88 @@
+.testimonial-page-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 80px 20px;
+    min-height: 80vh;
+    background-color: #f4f4f4; /* Fondo claro */
+}
+
+.review-card, .success-card {
+    max-width: 550px;
+    width: 100%;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+mat-card-title {
+    font-size: 1.5em;
+    font-weight: 600;
+    color: #333;
+}
+
+mat-card-subtitle {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.review-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-top: 20px;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+/* --- Estilos de Calificación (Rating) --- */
+.rating-stars {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.star-icon {
+    font-size: 30px;
+    width: 30px;
+    height: 30px;
+    color: #ccc; /* Estrellas inactivas */
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.star-icon.active {
+    color: #ffc107; /* Color dorado */
+}
+
+.rating-error {
+    color: #f44336;
+    font-size: 0.8em;
+    margin-left: 10px;
+}
+
+/* --- Mensaje de Éxito --- */
+.success-card {
+    text-align: center;
+}
+
+.success-icon {
+    font-size: 60px;
+    width: 60px;
+    height: 60px;
+    color: #4caf50;
+    margin-bottom: 20px;
+}
+
+.success-card h2 {
+    font-size: 1.8em;
+    font-weight: 600;
+    color: #333;
+}
+
+.success-card p {
+    color: #666;
+    margin-bottom: 30px;
+}

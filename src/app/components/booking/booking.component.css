@@ -1,58 +1,82 @@
+/* ========================================= */
+/* ===== NUEVO TEMA CLARO (LIGHT THEME) ===== */
+/* ========================================= */
+
 /* --- Estructura Principal de 3 Columnas --- */
 .step-container {
   display: flex;
-  gap: 30px;
-  min-height: 450px;
+  gap: 0; /* Sin espacio, los fondos se tocan */
+  min-height: 500px;
+  background-color: #ffffff; /* Fondo blanco para el contenido */
+  color: #000; /* Texto negro por defecto */
 }
 
 /* Columna 1: Información (Izquierda) */
 .step-info {
   flex: 1;
-  text-align: center;
-  padding: 20px;
+  text-align: left;
+  padding: 40px 30px;
+  background-color: #f4f4f4; /* Fondo gris pálido */
   color: #333;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start; /* Alineado a la izquierda */
+  border-right: 1px solid #e0e0e0;
 }
 .step-info mat-icon {
-  font-size: 50px;
-  width: 50px;
-  height: 50px;
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
   margin-bottom: 20px;
-  color: #3f51b5;
+  color: #333; /* Icono oscuro */
 }
 .step-info h2 {
   font-size: 1.5em;
   margin-bottom: 10px;
+  color: #000;
 }
 .step-info p {
   color: #777;
+  font-size: 0.9em;
+  line-height: 1.5;
 }
 .whatsapp-link {
-  margin-top: auto;
+  margin-top: auto; /* Empuja esto al fondo */
   padding-top: 20px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid #e0e0e0;
   width: 100%;
+}
+.whatsapp-link h3 {
+  font-size: 1em;
+  font-weight: bold;
+  margin: 0;
+}
+.whatsapp-link a {
+  color: #000; /* Teléfono en negro */
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.1em;
 }
 
 /* Columna 2: Contenido Principal (Centro) */
 .step-content {
-  flex: 1.5;
-  max-height: 450px;
+  flex: 2; /* Más espacio para el contenido */
+  max-height: 500px;
   overflow-y: auto;
-  padding-right: 15px;
+  padding: 40px 30px;
 }
 
 /* Columna 3: Resumen (Derecha) */
 .step-summary {
   flex: 1;
-  border-left: 1px solid #eee;
-  padding-left: 30px;
+  background-color: #f4f4f4; /* Fondo gris pálido */
+  border-left: 1px solid #e0e0e0;
+  padding: 40px 30px;
 }
 .step-summary h4 {
-  letter-spacing: 2px;
-  color: #777;
+  letter-spacing: 3px;
+  font-size: 0.8em;
+  color: #555;
   padding-bottom: 10px;
   border-bottom: 2px dotted #ccc;
   margin-bottom: 20px;
@@ -63,25 +87,22 @@
 .summary-item span {
   display: block;
   font-size: 0.8em;
-  color: #999;
+  color: #777;
   text-transform: uppercase;
 }
 .summary-item strong {
   font-size: 1.1em;
-  color: #333;
-}
-.summary-item.total {
-  margin-top: 30px;
+  color: #000;
 }
 .summary-item.total strong {
   font-size: 1.5em;
-  color: #3f51b5;
+  color: #000;
 }
 
 /* --- Estilos para las Tarjetas de Selección --- */
 .location-card, .category-card, .service-card {
-  padding: 15px;
-  border: 1px solid #ddd;
+  padding: 15px 20px;
+  border: 1px solid #e0e0e0;
   border-radius: 8px;
   margin-bottom: 15px;
   cursor: pointer;
@@ -90,49 +111,50 @@
   justify-content: space-between;
   align-items: center;
   text-align: left;
+  background-color: #fff;
 }
 .location-card:hover, .category-card:hover, .service-card:hover {
-  border-color: #3f51b5;
-  transform: translateY(-2px);
+  border-color: #000;
 }
 .location-card.selected, .service-card.selected {
-  border-color: #3f51b5;
-  background-color: #e8eaf6;
+  border-color: #000;
+  background-color: #f4f4f4;
   border-width: 2px;
 }
 .location-card img {
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   border-radius: 4px;
   margin-right: 15px;
 }
-.service-details p {
-  font-size: 0.9em;
+.location-details strong, .service-details strong, .category-card span {
+  color: #000;
+  font-weight: bold;
+}
+.location-details span, .service-details p, .category-details span {
   color: #777;
-  margin-top: 5px;
+  font-size: 0.9em;
 }
 .service-price {
   font-size: 1.2em;
   font-weight: bold;
+  color: #000;
 }
 .back-button-small {
   margin-bottom: 20px;
+  color: #000;
 }
 
-/* --- Estilos para la Selección de Fecha y Hora --- */
-.unavailable-date .mat-calendar-body-cell-content {
-  background-color: #fce8e6;
-  color: #a50e0e;
-  border-radius: 50%;
-}
-.available-date .mat-calendar-body-cell-content {
-  border: 1px solid #c5e1a5;
-  border-radius: 50%;
-}
+/* --- Estilos para Fecha y Hora (ref: image_a4cf06.png) --- */
 .time-slots-container {
   margin-top: 20px;
   border-top: 1px solid #eee;
   padding-top: 20px;
+}
+.time-slots-container h4 {
+  font-size: 1em;
+  font-weight: bold;
+  margin-bottom: 15px;
 }
 .time-slots-grid {
   display: grid;
@@ -140,61 +162,32 @@
   gap: 10px;
 }
 .time-slots-grid button {
-  border: 1px solid #c5e1a5;
-  color: #33691e;
+  background-color: #e0f2f1; /* Verde pálido */
+  color: #004d40; /* Verde oscuro */
+  border: 1px solid transparent;
 }
 .time-slots-grid button.selected {
-  background-color: #33691e;
+  background-color: #004d40; /* Verde oscuro */
   color: white;
-}
-.no-times-message {
-  background-color: #fce8e6;
-  color: #a50e0e;
-  padding: 15px;
-  border-radius: 4px;
-  text-align: center;
-  font-weight: bold;
+  border-color: #004d40;
 }
 
-/* --- Estilos para la Pantalla de Confirmación --- */
+/* --- Estilos para la Confirmación (ref: image_a4d26b.png) --- */
 .confirmation-view .step-info {
   justify-content: flex-start;
-  text-align: center;
-}
-.confirmation-view .success-icon {
-  font-size: 60px;
-  width: 60px;
-  height: 60px;
-  color: #4caf50;
-  margin: 20px 0;
+  text-align: left;
 }
 .confirmation-details {
   max-height: none;
   overflow-y: visible;
-  padding: 20px 30px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-}
-.confirmation-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-.confirmation-header h3 {
-  font-size: 1.4em;
-  font-weight: 600;
-  margin: 0;
-}
-.confirmation-label {
-  font-size: 0.8em;
-  color: #888;
-  letter-spacing: 1px;
+  padding: 0; /* Sin padding extra */
+  background-color: #fff;
 }
 .confirmation-number {
   font-size: 2.5em;
   font-weight: bold;
   margin: 5px 0 20px 0;
+  color: #000;
 }
 .confirmation-actions {
   display: flex;
@@ -202,35 +195,12 @@
   margin-bottom: 25px;
 }
 .confirmation-actions button {
-  border-color: #ddd;
-  color: #555;
-  font-size: 0.9em;
+  border-color: #ccc;
+  color: #333;
 }
 .detail-section {
   padding: 20px 0;
   border-top: 1px solid #e0e0e0;
-}
-.detail-section h4 {
-  font-weight: 600;
-  margin-top: 0;
-  margin-bottom: 15px;
-  font-size: 1.1em;
-}
-.detail-grid {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 10px 20px;
-  align-items: center;
-}
-.detail-grid span {
-  font-size: 0.9em;
-  color: #666;
-  text-align: left;
-}
-.detail-grid strong {
-  font-size: 1em;
-  font-weight: 500;
-  text-align: left;
 }
 
 /* --- Botones de Acción (Siguiente/Atrás) --- */
@@ -239,69 +209,173 @@
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-}
-booking.component.css .step-actions button {
-  min-width: 100px;
+  background-color: #fff;
+  border-top: 1px solid #e0e0e0;
+  padding: 20px 30px;
 }
 
-/* ... todos tus estilos existentes ... */
-
-/* --- Contenedor para el Ticket Oculto del PDF --- */
+/* --- Ticket Oculto (sin cambios) --- */
 .pdf-ticket-wrapper {
   position: absolute;
-  left: -9999px; /* Mueve el ticket fuera de la pantalla */
+  left: -9999px; 
   top: 0;
 }
-
 .pdf-ticket-container {
-  width: 550px; /* Ancho fijo para un buen formato de PDF */
-  background: #fff;
-  color: #000;
-  padding: 30px;
-  font-family: Arial, sans-serif; /* Fuente segura para PDF */
-  border: 1px solid #ccc;
+  width: 550px; 
 }
 
-.pdf-ticket-container h3 {
-  font-size: 24px;
+
+/* === INICIO: NUEVOS ESTILOS PARA CONFIRMACIÓN === */
+
+/* --- Estilos específicos para la vista de Confirmación (Imagen 1) --- */
+.confirmation-details {
+  padding: 30px 40px; /* Añadir padding al contenido de confirmación */
+}
+
+.confirmation-label {
+  display: block;
+  font-size: 0.8em;
+  color: #888;
+  margin-bottom: 5px;
+  letter-spacing: 1px;
+}
+
+.confirmation-number {
+  font-size: 2.2em;
+  font-weight: 600; /* Menos negrita que el h2 general */
   margin-top: 0;
-  font-weight: bold;
+  margin-bottom: 25px;
+  color: #333; /* Color más oscuro para el número */
 }
 
-.pdf-ticket-container .pdf-label {
-  font-size: 12px;
-  color: #555;
-  text-transform: uppercase;
-  margin: 0;
+.confirmation-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 40px;
 }
 
-.pdf-ticket-container .pdf-number {
-  font-size: 42px;
-  font-weight: bold;
-  margin: 0 0 20px 0;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 20px;
+.confirmation-actions button {
+  background-color: #f0f0f0; /* Fondo gris claro */
+  color: #333; /* Texto oscuro */
+  border: 1px solid #ccc; /* Borde sutil */
+  font-size: 0.9em;
+  padding: 8px 15px;
+  border-radius: 5px;
 }
 
-.pdf-ticket-container .pdf-section h4 {
+.confirmation-actions button mat-icon {
+  margin-right: 5px;
   font-size: 18px;
-  font-weight: bold;
-  margin-top: 20px;
-  margin-bottom: 15px;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 5px;
+  height: 18px;
+  width: 18px;
+  color: #555;
 }
 
-.pdf-ticket-container .pdf-grid {
+.detail-section {
+  margin-bottom: 30px; /* Más espacio entre secciones */
+  border-top: none; /* Eliminar borde superior si ya hay margin */
+  padding-top: 0;
+}
+
+.detail-section h4 {
+  font-size: 1.1em;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #333;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee; /* Separador sutil */
+}
+
+.detail-grid {
   display: grid;
-  grid-template-columns: 150px 1fr;
-  gap: 8px;
+  grid-template-columns: 1fr 1fr; /* Dos columnas por defecto */
+  gap: 15px 30px; /* Espacio vertical y horizontal */
 }
 
-.pdf-ticket-container .pdf-grid span {
-  color: #444;
+.grid-item {
+  display: flex;
+  flex-direction: column; /* Etiqueta arriba, valor abajo */
 }
 
-.pdf-ticket-container .pdf-grid strong {
+.grid-item.full-width {
+  grid-column: 1 / -1; /* Ocupa todo el ancho si es necesario */
+}
+
+.grid-label {
+  font-size: 0.75em; /* Más pequeño para la etiqueta */
+  color: #888;
+  margin-bottom: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.grid-value {
+  font-size: 1em; /* Tamaño normal para el valor */
+  color: #333;
   font-weight: bold;
 }
+
+/* Ajustes para el PDF para que coincida con el layout */
+.pdf-ticket-container {
+    padding: 30px; /* Añade padding para que no se vea tan pegado */
+}
+.pdf-ticket-container h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    color: #333;
+}
+.pdf-label {
+    font-size: 0.8em;
+    color: #888;
+    margin-bottom: 5px;
+    text-align: center;
+}
+.pdf-number {
+    font-size: 2em;
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 30px;
+    color: #333;
+    text-align: center;
+}
+.pdf-section {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+.pdf-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+.pdf-section h4 {
+    font-size: 1.1em;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #333;
+}
+.pdf-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 20px;
+}
+.pdf-grid .grid-item { /* Reutiliza el estilo de grid-item para PDF */
+    display: flex;
+    flex-direction: column;
+}
+.pdf-grid .grid-item span {
+    font-size: 0.8em;
+    color: #888;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+}
+.pdf-grid .grid-item strong {
+    font-size: 0.95em;
+    color: #333;
+    font-weight: bold;
+}
+.pdf-grid .full-width {
+  grid-column: 1 / -1;
+}
+
+/* === FIN: NUEVOS ESTILOS PARA CONFIRMACIÓN === */

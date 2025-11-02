@@ -1,19 +1,64 @@
+/* src/app/components/barbers-dialog/barbers-dialog.component.css */
+
+:host {
+  display: block;
+  background-color: #000000; /* Fondo
+
+
+/* ... (Estilo del Título h2 está bien) ... */
+h2[mat-dialog-title] {
+  color: #d4c39a;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-align: center;
+  border-bottom: 1px solid #000000;
+  padding-bottom: 16px;
+  margin-bottom: 0;
+  background-color: #000000; 
+}
+
+mat-dialog-content {
+  background-color: transparent;
+  padding: 24px;
+}
+
+/* --- CAMBIOS AQUÍ para centrar --- */
 .barber-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  display: flex;            /* Cambiado de 'grid' a 'flex' */
+  flex-wrap: wrap;          /* Para que bajen a la siguiente línea si no caben */
+  justify-content: center;  /* ¡Esto los centra horizontalmente! */
   gap: 20px;
 }
+
+/* Estilo de cada Barbero */
 .barber-card {
   text-align: center;
+  text-decoration: none;
+  color: #fff;
+  transition: transform 0.2s ease;
+  
+  /* --- AÑADIDO --- */
+  /* Dales un ancho base para que flexbox funcione bien */
+  flex-basis: 100px; 
 }
+
 .barber-card img {
   width: 80px;
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
+  border: 3px solid #d4c39a;
 }
+
 .barber-card span {
   display: block;
   margin-top: 10px;
   font-weight: bold;
+}
+
+/* --- CAMBIO DE COLOR DEL BOTÓN --- */
+mat-dialog-actions button {
+  color: #ffffff; /* <-- CAMBIADO A BLANCO para que se vea */
+  font-weight: bold;
+}
 }

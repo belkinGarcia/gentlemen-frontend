@@ -1,0 +1,13 @@
+.barber-management-container {
+  padding: 20px;
+}
+/* ... (otros estilos) ... */
+
+/* --- Estilos para la Imagen en la Tabla --- */
+.barber-image {
+  width: 50px; /* Reducido a un tamaño de ícono */
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%; /* Opcional: hacerlo circular */
+  margin: 5px 0;
+}

@@ -1,8 +1,43 @@
+/* --- Contenedor Principal --- */
+.list-container {
+  /* Fondo oscuro y padding */
+  background-color: #1a1a1a;
+  padding: 60px 0;
+  color: #fff;
+}
+
+.content-wrapper {
+  /* Centra el contenido */
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  text-align: center;
+}
+
+/* --- Títulos (como en la imagen) --- */
+.list-container h2 {
+  color: #fff;
+  font-size: 1.5rem; /* Ajusta el tamaño según sea necesario */
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 0;
+  text-transform: uppercase;
+}
+
+.list-container h1 {
+  color: #d4c39a; /* Color dorado */
+  font-size: 2rem; /* Ajusta el tamaño según sea necesario */
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-top: 5px;
+  margin-bottom: 40px; /* Espacio antes de los productos */
+  text-transform: uppercase;
+}
+
 /* --- Estilos para la VISTA DE CARRUSEL --- */
 .carousel-container {
-  /* New: Add position relative for the nav */
   position: relative;
-  padding-bottom: 80px; /* Space for the navigation */
+  /* Ya no necesitamos padding-bottom */
 }
 
 .carousel-inner {
@@ -21,72 +56,91 @@
   box-sizing: border-box;
 }
 
-/* --- New Custom Navigation Styles --- */
+/* --- Navegación del Carrusel (Actualizada) --- */
 .carousel-nav {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  position: static; /* Ya no es absoluta */
+  left: auto;
+  bottom: auto;
+  transform: none; /* Ya no se centra con transform */
+  
   display: flex;
+  justify-content: center; /* Centra los botones */
   align-items: center;
   gap: 15px;
+  margin-top: 30px; /* Espacio después de las tarjetas */
 }
 
 .carousel-nav button {
-  color: #d4c39a;
+  color: #d4c39a; /* Botones dorados */
+  background-color: transparent;
 }
 
+/* Ocultamos las líneas, ya que no están en el nuevo diseño */
 .nav-line {
-  display: block;
-  width: 50px;
-  height: 1px;
-  background-color: #555;
+  display: none;
 }
 
-.nav-line.active {
-  background-color: #d4c39a;
+/* --- Botón "VER TODOS LOS PRODUCTOS" (Actualizado) --- */
+.view-all-btn {
+  /* Sobreescribimos estilos de Material */
+  background-color: transparent !important;
+  border: 2px solid #d4c39a;
+  color: #d4c39a !important; /* !important para sobreescribir color de <a> */
+  
+  padding: 10px 30px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-top: 30px; /* Espacio después de la nav del carrusel */
+  display: inline-block;
+  text-decoration: none;
+  transition: all 0.3s ease;
 }
 
-/* ... (Your styles for .filter-bar, .list-container, etc.) ... */
+.view-all-btn:hover {
+  background-color: #d4c39a !important;
+  color: #1a1a1a !important;
+}
 
 /* --- VISTA DE GRILLA (PARA LA TIENDA) --- */
 .products-grid {
   display: grid;
-  /* Por defecto, 3 columnas para escritorio */
   grid-template-columns: repeat(3, 1fr);
   gap: 30px;
 }
 
-/* --- VISTA DE CARRUSEL (PARA LA PÁGINA DE INICIO) --- */
-.carousel-container {
-  position: relative;
-  padding-bottom: 80px;
-}
-/* ... (El resto de tus estilos de carrusel) ... */
-
-
 /* ========================================= */
-/* ===== ESTILOS RESPONSIVOS ===== */
+/* ===== ESTILOS RESPONSIVOS (Igual que antes) ===== */
 /* ========================================= */
+
+/* --- Reponsivo para CARRUSEL --- */
 @media (max-width: 992px) {
-  .products-grid {
-    /* 2 columnas para tablets */
-    grid-template-columns: repeat(2, 1fr);
+  .carousel-track app-product-card {
+    flex: 0 0 50%; /* Muestra 2 items en tablet */
   }
-  /* ... (tus otros estilos responsivos) ... */
 }
 
 @media (max-width: 768px) {
+  .carousel-track app-product-card {
+    flex: 0 0 100%; /* Muestra 1 item en móvil */
+  }
+}
+
+/* --- Responsivo para GRILLA --- */
+@media (max-width: 992px) {
   .products-grid {
-    /* 2 columnas también para móviles más grandes */
     grid-template-columns: repeat(2, 1fr);
   }
-  /* ... (tus otros estilos responsivos) ... */
 }
+
+/* =================================
+  == MEJORA APLICADA:
+  == Se eliminó el bloque @media (max-width: 768px) 
+  == que era redundante con el de 992px.
+  =================================
+*/
 
 @media (max-width: 480px) {
   .products-grid {
-    /* 1 columna para móviles pequeños */
     grid-template-columns: 1fr;
   }
 }

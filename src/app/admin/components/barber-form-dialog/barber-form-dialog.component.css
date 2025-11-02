@@ -1,0 +1,44 @@
+.barber-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Espacio entre secciones */
+  padding: 10px 0;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Espacio entre filas */
+}
+
+.form-row {
+  display: flex;
+  gap: 15px; /* Espacio entre campos en una fila */
+  flex-wrap: wrap; /* Para que los campos se envuelvan en pantallas pequeñas */
+}
+
+.flex-50 {
+  flex: 1 1 calc(50% - 10px); /* Dos columnas con un pequeño margen */
+  box-sizing: border-box; /* Incluye padding y border en el tamaño total */
+}
+
+/* Asegura que los campos ocupen el 100% de su contenedor */
+mat-form-field {
+  width: 100%;
+}
+
+h3 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: #3f51b5; /* Un color de Material Design */
+  font-weight: 500;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 5px;
+}
+
+.note {
+  font-size: 0.85em;
+  color: #666;
+  margin-top: -10px;
+  margin-left: 5px;
+}

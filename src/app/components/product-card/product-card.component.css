@@ -1,34 +1,65 @@
+/* --- Estilo para el 'wrapper' del enlace --- */
+.card-link-wrapper {
+  text-decoration: none; /* Quita el subrayado del enlace */
+  display: block;
+  /* --- NUEVO: Asegura que el enlace tenga la altura --- */
+  height: 100%;
+}
+
+/* --- MODIFICADO: Tu .product-card --- */
 .product-card {
   max-width: 300px;
   background-color: #212121;
-  color: #fff;
   text-align: center;
   padding-bottom: 16px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  /* --- NUEVO: Requerimientos del usuario --- */
+  color: #fff !important; /* Forzar todo el texto a blanco */
+  font-weight: bold; /* Forzar todo el texto a negrita */
+
+  /* --- NUEVO: Misma altura para todas las tarjetas --- */
+  height: 100%; /* Ocupa toda la altura del contenedor padre (la fila) */
+  display: flex; /* Permite alinear contenido interno */
+  flex-direction: column; /* Apila los elementos verticalmente */
+  /* --- FIN NUEVO --- */
 }
 
+/* --- Efecto Hover (sin cambios) --- */
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+/* --- MODIFICADO: Título hereda los estilos --- */
 mat-card-title {
   font-size: 1em;
-  font-weight: normal;
-  color: #d4c39a; /* Gold color */
+  color: inherit; 
+  font-weight: inherit;
+}
+
+/* --- MODIFICADO: Contenido --- */
+mat-card-content {
+  /* --- NUEVO: Hacer que esta sección crezca --- */
+  flex-grow: 1; /* Ocupa el espacio extra, empujando el botón hacia abajo */
 }
 
 mat-card-content p {
   font-size: 0.8em;
   min-height: 40px;
-  color: #aaa;
+  /* --- MODIFICADO: Hereda color y peso --- */
+  color: inherit;
+  font-weight: inherit;
 }
 
+/* --- MODIFICADO: Precio hereda los estilos --- */
 .price {
   font-size: 1.2em;
-  font-weight: bold;
-  color: #fff;
+  color: inherit;
+  font-weight: inherit;
 }
 
-button {
-  border-color: #d4c39a;
-  color: #d4c39a;
-  width: 80%;
-}
 @media (max-width: 768px) {
   .detail-container {
     flex-direction: column; /* Apila la imagen y la información */

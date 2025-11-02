@@ -1,0 +1,70 @@
+<div class="schedule-management-container">
+  <button mat-stroked-button routerLink="/admin/barberos">
+    <mat-icon>arrow_back</mat-icon> Volver a Staff
+  </button>
+  
+  <h1 *ngIf="barber">Horario de {{ barber.name }}</h1>
+  <p *ngIf="!barber" class="loading-state">Cargando información del barbero...</p>
+
+  <div *ngIf="barber" class="schedule-grid">
+    
+    <mat-card class="calendar-card">
+      <mat-card-title>Seleccionar Fecha de Prueba</mat-card-title>
+      <mat-calendar
+        [selected]="selectedDate"
+        (selectedChange)="loadScheduleData($event)" [minDate]="minDate">
+      </mat-calendar>
+      <p class="legend">Citas programadas: {{ reservations.length }}</p>
+    </mat-card>
+
+    <mat-card class="slots-card">
+      <mat-card-title>Disponibilidad de Citas</mat-card-title>
+      
+      <p class="subtitle-horario">Horas laborales configurables (00:00 - 23:00)</p>
+      
+<div class="time-slots-grid">
+        <ng-container *ngFor="let time of scheduleService.getAvailableTimesFor(selectedDate, barberId, 30)"> <button 
+            mat-flat-button
+            [class.booked]="checkTimeBooked(time)"
+            [disabled]="checkTimeBooked(time)"
+            matTooltip="{{ checkTimeBooked(time) ? '¡Hora reservada!' : 'Hora disponible' }}">
+            
+            <mat-icon *ngIf="checkTimeBooked(time)">lock</mat-icon>
+            {{ time }}
+          </button>
+        </ng-container>
+      </div>
+      
+      <mat-card-title class="mt-4">Horario Fijo Semanal (8 horas)</mat-card-title>
+      <div class="schedule-editor">
+        <table class="schedule-table">
+          <thead>
+            <tr>
+              <th>Hora</th>
+              <th *ngFor="let day of daysOfWeek">{{ day }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let time of timeSlots">
+              <td class="time-label">{{ time }}</td>
+              <td *ngFor="let day of daysOfWeek" 
+                  class="day-slot"
+                  [class.active]="isWorkHour(day, time)"
+                  (click)="toggleWorkHour(day, time)">
+                  <mat-icon *ngIf="isWorkHour(day, time)">check</mat-icon>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+    </mat-card>
+  </div>
+  
+  <div class="schedule-actions">
+    <span class="hours-summary">Horas seleccionadas para LUNES: {{ workSchedule[0]?.hours?.length || 0 }} / 8</span>
+    <button mat-flat-button color="primary" (click)="saveWorkSchedule()">
+      Guardar Horario Laboral
+    </button>
+  </div>
+</div>

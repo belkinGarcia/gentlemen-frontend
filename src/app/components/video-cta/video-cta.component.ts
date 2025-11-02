@@ -10,7 +10,6 @@ import {
   MatDialogRef
 } from '@angular/material/dialog';
 
-// --- This is the component for the banner with the "VER VIDEO" button ---
 @Component({
   selector: 'app-video-cta',
   standalone: true,
@@ -26,32 +25,34 @@ import {
 export class VideoCtaComponent {
   videoUrl: SafeResourceUrl;
 
-constructor(public dialog: MatDialog, private sanitizer: DomSanitizer) {
-  // This is the special URL for embedding
-  this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl("https://www.youtube.com/embed/qKhkeEz9k1Y");
-}
+  constructor(public dialog: MatDialog, private sanitizer: DomSanitizer) {
+    const unsafeUrl = "https://www.youtube.com/embed/qKhkeEz9k1Y?autoplay=1&rel=0&modestbranding=1&showinfo=0&controls=1";
+    this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(unsafeUrl);
+  }
 
   openVideoDialog(): void {
     this.dialog.open(VideoPlayerDialogComponent, {
+      // --- MODIFICADO: Volvemos a las dimensiones originales ---
       width: '90vw',
       maxWidth: '1200px',
       height: '90vh',
+      // --- FIN MODIFICADO ---
       panelClass: 'video-dialog-container',
-      data: { videoUrl: this.videoUrl } // Pass the safe URL to the dialog
+      data: { videoUrl: this.videoUrl } 
     });
   }
 }
 
-
-// --- This is the component that will be displayed INSIDE the dialog pop-up ---
 @Component({
   selector: 'app-video-player-dialog',
   standalone: true,
   imports: [
     CommonModule,
     MatButtonModule,
-    MatDialogModule // This module is required for the dialog template elements
+    MatDialogModule,
+    MatIconModule
   ],
+  // --- MODIFICADO: Se quita el 'style' inline del iframe ---
   template: `
     <mat-dialog-content>
       <iframe 
@@ -63,16 +64,56 @@ constructor(public dialog: MatDialog, private sanitizer: DomSanitizer) {
         allowfullscreen>
       </iframe>
     </mat-dialog-content>
-    <mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close cdkFocusInitial>Cerrar</button>
-    </mat-dialog-actions>
+    
+    <button mat-icon-button class="close-button" mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
   `,
+  // --- MODIFICADO: Se añaden los estilos del iframe aquí ---
   styles: [`
-    :host { display: flex; flex-direction: column; height: 100%; }
-    mat-dialog-content { padding: 0; flex-grow: 1; }
-    iframe { width: 100%; height: 100%; border: none; }
-    mat-dialog-actions { padding: 8px 16px; background-color: #212121; }
-    mat-dialog-actions button { color: #fff; }
+    :host { 
+      display: flex; 
+      flex-direction: column; 
+      height: 100%;
+      background: #000;
+      position: relative; 
+      overflow: hidden !important; /* Evita cualquier scrollbar */
+    }
+    
+    mat-dialog-content { 
+      padding: 0; 
+      flex-grow: 1; 
+      overflow: hidden !important; /* Evita cualquier scrollbar */
+      display: flex; 
+    }
+    
+    iframe { 
+      width: 100%; 
+      height: 100%; 
+      display: block; 
+      
+      /* --- AÑADIDO: Estilos movidos desde el HTML --- */
+      border: 1cm solid #1a1a1a; /* Tu marco de 1cm */
+      box-sizing: border-box;    /* <-- LA CORRECCIÓN CLAVE */
+    }
+    
+    /* Estilos del botón (sin cambios) */
+    .close-button {
+      position: absolute;
+      top: -25px; 
+      right: -25px; 
+      z-index: 10;
+      color: white;
+      background-color: rgba(0, 0, 0, 0.7);
+      border-radius: 50%;
+      width: 40px; 
+      height: 40px; 
+      font-size: 24px; 
+    }
+    .close-button mat-icon {
+        font-size: 24px;
+        line-height: 1;
+    }
   `]
 })
 export class VideoPlayerDialogComponent {

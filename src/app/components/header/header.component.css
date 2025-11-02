@@ -1,13 +1,23 @@
 .main-header {
-  position: fixed;
+  /* --- CAMBIO 1: Fondo transparente --- */
+  background: transparent; 
+  color: white;
+  
+  /* --- CAMBIO 2: Posicionamiento absoluto --- */
+  /* Esto saca al header del flujo normal y lo superpone */
+  position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  z-index: 1000;
-  background: transparent !important;
-  color: white;
+  width: 100%;
+  z-index: 100; /* Asegura que esté por encima del contenido */
+
+  /* --- CAMBIO 3: Borde sutil (opcional) --- */
+  /* Un borde sólido se verá extraño, uno semitransparente se integra mejor */
+
+
   display: flex;
   justify-content: center;
+  /* Se eliminó !important de la regla de background original */
 }
 
 .content-wrapper {
@@ -22,7 +32,7 @@
 }
 
 .logo-link {
-  line-height: 0; /* Removes extra space around the image link */
+  line-height: 0; 
 }
 
 .header-logo {
@@ -31,26 +41,28 @@
 }
 
 .spacer {
-  flex: 1 1 auto; /* Pushes items to the sides */
+  flex: 1 1 auto; 
 }
 
-/* --- ESTILOS RESPONSIVOS PARA EL HEADER --- */
+.cart-button {
+  color: white;
+}
 
+/* --- ESTILOS RESPONSIVOS (Sin cambios) --- */
 .desktop-menu {
-  display: block; /* Muestra el menú de escritorio por defecto */
+  display: block; 
 }
 
 .mobile-menu-button {
-  display: none; /* Oculta el botón de hamburguesa por defecto */
+  display: none; 
 }
 
-/* Cuando la pantalla sea de 768px o menos */
 @media (max-width: 768px) {
   .desktop-menu {
-    display: none; /* Oculta el menú de escritorio */
+    display: none; 
   }
 
   .mobile-menu-button {
-    display: block; /* Muestra el botón de hamburguesa */
+    display: block; 
   }
 }

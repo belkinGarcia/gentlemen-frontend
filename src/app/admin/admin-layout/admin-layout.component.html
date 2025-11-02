@@ -1,0 +1,64 @@
+<div class="admin-wrapper">
+
+  <nav class="admin-sidebar">
+    <ul class="nav-links">
+   <li>
+    <a routerLink="dashboard" routerLinkActive="active-link"> 
+        <mat-icon>dashboard</mat-icon> <span>Dashboard</span>
+    </a>
+</li>
+      
+      <li>
+          <a routerLink="/admin/barberos" routerLinkActive="active-link"> 
+              <mat-icon>person_pin</mat-icon>
+              <span>Staff / Barberos</span>
+          </a>
+      </li>
+      
+      <li>
+        <a routerLink="/admin/usuarios" routerLinkActive="active-link"> 
+          <mat-icon>group</mat-icon>
+          <span>Usuarios</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/admin/reservas" routerLinkActive="active-link">
+          <mat-icon>calendar_month</mat-icon>
+          <span>Citas (Reservas)</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/admin/pedidos" routerLinkActive="active-link">
+          <mat-icon>shopping_bag</mat-icon>
+          <span>Pedidos (Tienda)</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="sedes" routerLinkActive="active-link">
+          <mat-icon>storefront</mat-icon>
+          <span>Sedes / Locales</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="servicios" routerLinkActive="active-link">
+          <mat-icon>cut</mat-icon>
+          <span>Servicios</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="testimonios" routerLinkActive="active-link">
+          <mat-icon>rate_review</mat-icon>
+          <span>Testimonios</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/" routerLinkActive="active-link"> <mat-icon>home</mat-icon>
+          <span>Ir al Sitio</span>
+        </a>
+      </li>
+    </ul>
+    </nav>
+  <main class="admin-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

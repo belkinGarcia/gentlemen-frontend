@@ -1,0 +1,28 @@
+.location-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 10px 0;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px; 
+  flex-wrap: wrap;
+}
+
+.flex-50 {
+  flex: 1 1 calc(50% - 7.5px); 
+}
+
+.full-width {
+  width: 100%;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-divider {
+  margin: 5px 0 10px 0;
+}

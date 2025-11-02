@@ -1,0 +1,39 @@
+<div class="account-page-wrapper">
+  <mat-sidenav-container class="account-container">
+    
+    <mat-sidenav mode="side" opened class="side-menu">
+      <div class="user-greet">
+        Hola,
+        <strong>{{ (currentUser$ | async)?.firstName || 'Usuario' }}</strong>
+      </div>
+      
+      <mat-nav-list>
+        <a mat-list-item routerLink="perfil" routerLinkActive="active-link">
+          <mat-icon>person</mat-icon>
+          <span>Mi Perfil</span>
+        </a>
+        <a mat-list-item routerLink="reservas" routerLinkActive="active-link">
+          <mat-icon>calendar_today</mat-icon>
+          <span>Mis Reservas</span>
+        </a>
+        <a mat-list-item routerLink="pedidos" routerLinkActive="active-link">
+          <mat-icon>shopping_bag</mat-icon>
+          <span>Mis Pedidos</span>
+        </a>
+        <a mat-list-item routerLink="seguridad" routerLinkActive="active-link">
+          <mat-icon>lock</mat-icon>
+          <span>Seguridad</span>
+        </a>
+        <a mat-list-item (click)="logout()" class="logout-button">
+          <mat-icon>logout</mat-icon>
+          <span>Cerrar Sesión</span>
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="account-content">
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+
+  </mat-sidenav-container>
+</div>

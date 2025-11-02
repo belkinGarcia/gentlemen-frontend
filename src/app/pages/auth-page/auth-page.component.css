@@ -1,0 +1,168 @@
+/* ======================================================= */
+/* ===== VISTA 1: MODO GRID (PÁGINA OSCURA / PÚRPURA) ==== */
+/* ======================================================= */
+:host(.grid-mode) .content-wrapper {
+  padding: 80px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+:host(.grid-mode) .forms-container {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 80px;
+}
+:host(.grid-mode) h2 {
+  font-family: 'Oswald', sans-serif;
+  font-size: 2em;
+  color: #fff;
+  margin-bottom: 30px;
+}
+:host(.grid-mode) form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+:host(.grid-mode) .form-row {
+  display: flex;
+  gap: 15px;
+}
+:host(.grid-mode) .form-row mat-form-field {
+  flex: 1;
+}
+
+/* --- Estilos de Form-Field (Oscuro/Púrpura) --- */
+:host(.grid-mode) ::ng-deep .mat-mdc-form-field .mat-mdc-text-field-wrapper {
+  background-color: #2d2d33;
+  border-radius: 8px 8px 0 0;
+}
+:host(.grid-mode) ::ng-deep .mat-mdc-form-field-underline {
+  display: none;
+}
+:host(.grid-mode) ::ng-deep .mat-mdc-input-element {
+  color: #ffffff !important;
+  caret-color: #a879ff;
+}
+:host(.grid-mode) ::ng-deep .mat-mdc-form-field-label {
+  color: rgba(255, 255, 255, 0.7);
+}
+:host(.grid-mode) ::ng-deep .mat-icon-button .mat-icon {
+  color: rgba(255, 255, 255, 0.7);
+}
+:host(.grid-mode) ::ng-deep .mat-form-field.mat-focused .mat-mdc-form-field-label {
+  color: #a879ff;
+}
+:host(.grid-mode) button[mat-flat-button] {
+  background-color: #7b34ff;
+  color: #ffffff;
+  padding: 20px 0;
+  font-weight: 600;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+:host(.grid-mode) mat-checkbox ::ng-deep .mdc-label {
+  color: #ffffff !important;
+}
+:host(.grid-mode) mat-checkbox a,
+:host(.grid-mode) .extra-links a {
+  color: #a879ff;
+  text-decoration: none;
+}
+
+/* --- Estilos de Error (Oscuro/Púrpura) --- */
+:host(.grid-mode) ::ng-deep .mat-form-field.ng-invalid.ng-touched .mat-mdc-form-field-label {
+  color: #ff8a80;
+}
+:host(.grid-mode) ::ng-deep .mat-form-field.ng-invalid.ng-touched .mat-mdc-text-field-wrapper {
+  background-color: #3f2d2d;
+}
+:host(.grid-mode) mat-error {
+  color: #ff8a80;
+  background-color: #3f2d2d;
+}
+
+/* ======================================================= */
+/* ===== VISTA 2: MODO TABS (DIÁLOGO CLARO / NEGRO) ==== */
+/* ======================================================= */
+:host(.tabs-mode) .form-toggle-header {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #e0e0e0;
+}
+:host(.tabs-mode) .toggle-option {
+  padding-bottom: 15px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 500;
+  color: #757575;
+  border-bottom: 2px solid transparent;
+}
+:host(.tabs-mode) .toggle-option.active {
+  color: #000000;
+  font-weight: 600;
+  border-bottom-color: #000000;
+}
+:host(.tabs-mode) form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding-top: 10px;
+}
+:host(.tabs-mode) .form-row {
+  display: flex;
+  gap: 15px;
+}
+:host(.tabs-mode) .form-row mat-form-field {
+  flex: 1;
+}
+
+/* --- Estilos de Form-Field (Claro/Negro) --- */
+:host(.tabs-mode) ::ng-deep .mat-mdc-form-field .mat-mdc-text-field-wrapper {
+  background-color: #f0f0f0; /* Fondo gris claro para campos */
+  border-radius: 8px 8px 0 0;
+}
+:host(.tabs-mode) ::ng-deep .mat-mdc-form-field-underline {
+  display: none;
+}
+:host(.tabs-mode) ::ng-deep .mat-mdc-input-element {
+  color: #000 !important; /* Texto negro */
+  caret-color: #000;
+}
+:host(.tabs-mode) ::ng-deep .mat-mdc-form-field-label {
+  color: #757575; /* Label gris */
+}
+:host(.tabs-mode) ::ng-deep .mat-icon-button .mat-icon {
+  color: #757575;
+}
+:host(.tabs-mode) ::ng-deep .mat-form-field.mat-focused .mat-mdc-form-field-label {
+  color: #000; /* Label se vuelve negra */
+}
+
+/* --- Botón (Claro/Negro) --- */
+:host(.tabs-mode) button[mat-flat-button] {
+  padding: 18px 0;
+  background-color: #000; /* Botón negro */
+  color: #fff;
+  border-radius: 8px;
+}
+:host(.tabs-mode) .login-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 10px;
+}
+:host(.tabs-mode) .login-actions a {
+  font-size: 0.9em;
+  color: #000; /* Enlace negro */
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/* --- Checkbox (Claro/Negro) --- */
+:host(.tabs-mode) mat-checkbox ::ng-deep .mdc-label {
+  color: #000 !important; /* Texto negro */
+}
+:host(.tabs-mode) mat-checkbox a {
+  color: #000;
+  text-decoration: underline;
+}

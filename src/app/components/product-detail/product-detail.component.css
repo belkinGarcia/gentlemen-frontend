@@ -48,7 +48,9 @@
   margin: 30px 0;
 }
 
-.quantity-selector input {
+/* === INICIO DE ESTILOS ACTUALIZADOS === */
+/* Se cambió 'input' a 'input.quantity-input' y se añadieron nuevas propiedades */
+.quantity-selector input.quantity-input {
   width: 50px;
   text-align: center;
   background: #333;
@@ -56,7 +58,17 @@
   color: white;
   font-size: 1.2em;
   padding: 5px;
+  -moz-appearance: textfield; /* Para Firefox */
 }
+
+/* Oculta las flechas por defecto del input numérico, ya que tenemos botones */
+.quantity-selector input.quantity-input::-webkit-outer-spin-button,
+.quantity-selector input.quantity-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* === FIN DE ESTILOS ACTUALIZADOS === */
+
 
 .add-to-cart-btn {
   padding: 15px 30px;
@@ -83,7 +95,6 @@
   font-size: 2em;
   margin-bottom: 40px;
 }
-/* ... tus estilos de .detail-container ... */
 
 @media (max-width: 768px) {
   .detail-container {

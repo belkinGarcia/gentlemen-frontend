@@ -27,15 +27,16 @@ export class LocationsComponent implements OnInit {
   }
 
   showBarbers(location: any): void {
-  // By not passing a second argument, it defaults to 'false'
   const barbers = this.barberService.getBarbersByLocationId(location.id);
 
   this.dialog.open(BarbersDialogComponent, {
-    width: '600px',
     data: { 
       barbers: barbers,
       locationName: location.name 
-    }
+    },
+      width: '800px',        
+      maxWidth: '900px',   
+      panelClass: 'square-dialog'
   });
 }
 }

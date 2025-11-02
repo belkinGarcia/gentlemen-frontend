@@ -11,12 +11,19 @@
     </div>
     <div class="product-info">
       <p class="price">{{ product.price | currency:'S/ ' }}</p>
+      
       <div class="quantity-selector">
-        <button mat-icon-button><mat-icon>remove</mat-icon></button>
-        <input type="number" value="1" min="1">
-        <button mat-icon-button><mat-icon>add</mat-icon></button>
+        <button mat-icon-button (click)="decreaseQuantity()">
+          <mat-icon>remove</mat-icon>
+        </button>
+        <input type="number" [(ngModel)]="quantity" min="1" class="quantity-input">
+        <button mat-icon-button (click)="increaseQuantity()">
+          <mat-icon>add</mat-icon>
+        </button>
       </div>
-      <button mat-flat-button color="accent" class="add-to-cart-btn">AGREGAR AL CARRITO</button>
+      <button mat-flat-button color="accent" class="add-to-cart-btn" (click)="addToCart()">
+        AGREGAR AL CARRITO
+      </button>
       <div class="meta-info">
         <p><strong>Categoría:</strong> {{ product.category }}</p>
         <p><strong>Marca:</strong> {{ product.brand }}</p>

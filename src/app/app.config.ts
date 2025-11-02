@@ -1,22 +1,35 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter, withInMemoryScrolling } from '@angular/router';
+import { ApplicationConfig } from '@angular/core';
+// 1. IMPORTA 'withInMemoryScrolling'
+import { provideRouter, withRouterConfig, withInMemoryScrolling } from '@angular/router';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './auth-interceptor'; 
 
 import { routes } from './app.routes';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-
-import { provideNativeDateAdapter } from '@angular/material/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideBrowserGlobalErrorListeners(),
-    provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
-
-      provideRouter(
+    
+    // 2. CONFIGURA EL ROUTER ASÍ
+    provideRouter(
       routes,
-      withInMemoryScrolling({ scrollPositionRestoration: 'top' })
+      // Esta función es para otras opciones, como 'onSameUrlNavigation'
+      withRouterConfig({}), 
+      
+      // Esta es la función correcta para el scroll
+      withInMemoryScrolling({ 
+        scrollPositionRestoration: 'top' 
+      })
     ),
-    provideAnimationsAsync(),
+
+    // Tu configuración de HttpClient e Interceptor (esta parte está bien)
+    provideHttpClient(withInterceptorsFromDi()), 
+    { 
+      provide: HTTP_INTERCEPTORS, 
+      useClass: AuthInterceptor, 
+      multi: true 
+    },
     provideNativeDateAdapter()
   ]
 };

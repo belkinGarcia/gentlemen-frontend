@@ -1,0 +1,50 @@
+.user-management-container {
+  padding: 20px;
+}
+
+h2 {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+p {
+  color: #666;
+  margin-bottom: 30px;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-mdc-table {
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05) !important;
+}
+
+.mat-mdc-header-cell {
+  background-color: #f9f9f9;
+  font-weight: bold;
+  color: #333;
+}
+
+.you-badge {
+  font-size: 0.8em;
+  font-weight: bold;
+  color: #8e44ad; /* Tu color púrpura */
+  margin-left: 8px;
+}
+
+/* Estilos para el dropdown en la tabla */
+.role-select {
+  /* Anula el padding extra para que quepa en la fila */
+  --mat-form-field-subscript-wrapper-padding: 0;
+  --mat-form-field-padding-bottom: 0;
+  margin-top: 10px;
+  width: 150px;
+}
+
+:host ::ng-deep .role-select .mdc-text-field--outlined .mdc-notched-outline__trailing {
+    border-radius: 0 4px 4px 0;
+}
+:host ::ng-deep .role-select .mdc-text-field--outlined .mdc-notched-outline__leading {
+    border-radius: 4px 0 0 4px;
+}

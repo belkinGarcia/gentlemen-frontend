@@ -1,11 +1,12 @@
-import { Component, OnInit, ViewChild,  ViewEncapsulation } from '@angular/core';
+// src/app/components/booking/booking.component.ts
+import { Component, OnInit, ViewChild,  ViewEncapsulation, Inject, Optional } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { LocationService } from '../../services/location.service';
-import { ServiceService } from '../../services/service.service';
+import { Service, ServiceService } from '../../services/service.service';
 import { BarberService } from '../../services/barber.service';
 import { BarberSelectorComponent } from '../barber-selector/barber-selector.component';
 import { ScheduleService } from '../../services/schedule.service';
@@ -14,9 +15,12 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { AccountPageComponent } from '../../pages/account-page/account-page.component';
+import { AuthPageComponent } from '../../pages/auth-page/auth-page.component';
+import { AuthService } from '../../services/auth.service';
+import { ReservationService, Reservation, ReservationData } from '../../services/reservation.service'; 
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
-// Le decimos a TypeScript que estas librerías existirán en el entorno global
 declare var html2canvas: any;
 
 @Component({
@@ -25,7 +29,7 @@ declare var html2canvas: any;
   imports: [
     CommonModule, MatStepperModule, MatButtonModule, MatIconModule, BarberSelectorComponent,
     MatDatepickerModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule,
-    MatCheckboxModule, AccountPageComponent
+    MatCheckboxModule, AuthPageComponent
   ],
   templateUrl: './booking.component.html',
   styleUrls: ['./booking.component.css'],
@@ -39,7 +43,7 @@ export class BookingComponent implements OnInit {
   servicesByCategory: any[] = [];
   serviceStepView: 'categories' | 'services' = 'categories';
   selectedCategoryServices: any[] = [];
-  selectedService: any | null = null;
+  selectedService: Service | null = null;
   minDate: Date; 
   selectedDate: Date | null = null;
   selectedTime: string | null = null;
@@ -48,6 +52,10 @@ export class BookingComponent implements OnInit {
   selectedBarber: any | null = null;
   informationForm!: FormGroup;
   confirmationNumber: string = '';
+  totalDuration: number = 0;
+
+  // Propiedad para guardar el ID de la cita a cancelar
+  private oldReservationIdToCancel: string | null = null; 
 
   constructor(
     private locationService: LocationService,
@@ -55,11 +63,18 @@ export class BookingComponent implements OnInit {
     private barberService: BarberService,
     private scheduleService: ScheduleService,
     private fb: FormBuilder,
+    private authService: AuthService,
+    private reservationService: ReservationService,
+    public dialogRef: MatDialogRef<BookingComponent>,
+    private router: Router,
+    // Inyección para recibir datos (para reagendar)
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: any 
   ) { this.minDate = new Date(); }
 
   ngOnInit(): void {
     this.locations = this.locationService.getLocations();
     this.servicesByCategory = this.serviceService.getServicesByCategory();
+    
     this.informationForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -67,69 +82,131 @@ export class BookingComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       phone: ['', Validators.required]
     });
+
+    // --- LÓGICA DE REAGENDAR ---
+    // Comprueba si el modal se abrió con datos de "Reagendar"
+   if (this.data && this.data.isReschedule) {
+      const oldRes: Reservation = this.data.reservationData;
+      this.oldReservationIdToCancel = oldRes.confirmationNumber;
+      this.selectedLocation = oldRes.location;
+      this.selectedService = oldRes.service;
+      this.selectedBarber = oldRes.barber;
+      this.totalDuration = oldRes.service.duration; // Aseguramos que la duración se cargue
+      
+      setTimeout(() => {
+        this.stepper.selectedIndex = 3; 
+      }, 0);
+    }
   }
 
   selectLocation(location: any): void { this.selectedLocation = location; }
   selectCategory(category: any): void { this.selectedCategoryServices = category.items; this.serviceStepView = 'services'; }
-  selectService(service: any): void { this.selectedService = service; }
+ selectService(service: Service): void {
+    this.selectedService = service;
+    this.totalDuration = service.duration; // Ya no es opcional, el servicio se ha seleccionado
+  }
+  
   backToCategories(): void { this.serviceStepView = 'categories'; this.selectedService = null; }
   
   onStepChange(event: StepperSelectionEvent): void { 
     if (event.selectedIndex === 2 && this.selectedLocation) { 
       this.barbersForLocation = this.barberService.getBarbersByLocationId(this.selectedLocation.id, true); 
-      this.selectedBarber = null; 
-    } 
+      if (!this.data?.isReschedule) {
+        this.selectedBarber = null; 
+      }
+    }
+    
+    if (event.selectedIndex === 4) { 
+      if (this.authService.isLoggedIn()) {
+        const currentUser = this.authService.getCurrentUser();
+        
+        if (currentUser) {
+          this.informationForm.patchValue(currentUser);
+          this._saveReservation(); 
+          setTimeout(() => {
+            this.stepper.next();
+          }, 0);
+        }
+      }
+    }
   }
 
-  selectBarber(barber: any): void { this.selectedBarber = barber; }
+ selectBarber(barber: any): void { 
+    this.selectedBarber = barber; 
+    this.selectedDate = null;
+    this.selectedTime = null;
+    this.availableTimes = [];
+  }
   
-  onDateSelect(date: Date | null): void { 
-    if (date) { 
+onDateSelect(date: Date | null): void { 
+    if (date && this.selectedBarber && this.selectedService) { 
       this.selectedDate = date; 
       this.selectedTime = null; 
-      this.availableTimes = this.scheduleService.getAvailableTimesForDate(date); 
-    } 
+      
+      // 1. Duración del servicio seleccionado
+      const appointmentDuration = this.selectedService.duration;
+      
+      // 2. Llama al scheduleService pasándole la duración
+      // NOTA: Debes cambiar el método en ScheduleService para que acepte la duración.
+      this.availableTimes = this.scheduleService.getAvailableTimesFor(
+        date, 
+        this.selectedBarber.id,
+        appointmentDuration // <-- ¡NUEVO PARÁMETRO!
+      );
+    
+    } else {
+      this.availableTimes = [];
+    }
   }
-
-  selectTime(time: string): void { this.selectedTime = time; }
   
+  selectTime(time: string): void { this.selectedTime = time; }
   dateClass = (d: Date): string => { 
     return this.scheduleService.isDateUnavailable(d) ? 'unavailable-date' : 'available-date'; 
   }
   
   handleAuthentication(userDataFromChild: any): void { 
-    let fullUserData; 
-    if (userDataFromChild.firstName) { 
-      fullUserData = userDataFromChild; 
-    } else { 
-      console.log('Es un login...'); 
-      fullUserData = { 
-        firstName: 'Juan', 
-        lastName: 'Pérez', 
-        dni: '12345678', 
-        email: userDataFromChild.email, 
-        phone: '987654321' 
-      }; 
-    } 
-    this.informationForm.patchValue(fullUserData); 
-    console.log('Nuevo estado de informationForm:', this.informationForm.status); 
+    this.informationForm.patchValue(userDataFromChild); 
   }
 
   confirmAppointment(): void {
-    if (this.informationForm.valid) {
-      this.confirmationNumber = Math.floor(100000 + Math.random() * 900000).toString();
+    if (this.informationForm.valid) { 
+      this._saveReservation();
       this.stepper.next();
+    } else {
+      this.informationForm.markAllAsTouched();
+    }
+  }
+  
+  private _saveReservation(): void {
+    this.confirmationNumber = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Objeto con los datos de la nueva reserva
+    const newReservationData: ReservationData = {
+      location: this.selectedLocation,
+      service: this.selectedService,
+      barber: this.selectedBarber,
+      date: this.selectedDate,
+      time: this.selectedTime,
+      user: this.informationForm.value,
+      confirmationNumber: this.confirmationNumber
+    };
+
+    // 1. Crea la NUEVA reserva
+    this.reservationService.createReservation(newReservationData);
+
+    // 2. ¡Cancela la ANTIGUA si estamos reagendando!
+    if (this.oldReservationIdToCancel) {
+          this.reservationService.cancelReservation(this.oldReservationIdToCancel);
+          this.oldReservationIdToCancel = null;
     }
   }
 
   downloadConfirmationAsPDF(): void {
     setTimeout(() => {
       const contentToCapture = document.getElementById('pdf-ticket');
-
       if (contentToCapture) {
         html2canvas(contentToCapture, { scale: 2, useCORS: true, backgroundColor: '#ffffff' })
           .then((canvas: HTMLCanvasElement) => {
-            // Lógica para blanco y negro
             const ctx = canvas.getContext('2d');
             if (ctx) {
               const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -140,28 +217,18 @@ export class BookingComponent implements OnInit {
               }
               ctx.putImageData(imageData, 0, 0);
             }
-
             const imgData = canvas.toDataURL('image/png');
-            
-            // ***** LA CORRECCIÓN MÁS IMPORTANTE ESTÁ AQUÍ *****
-            // Accedemos a jsPDF a través del objeto 'window'
             const { jsPDF } = (window as any).jspdf;
-            const pdf = new jsPDF({
-              orientation: 'portrait',
-              unit: 'pt',
-              format: [canvas.width, canvas.height]
-            });
-
+            const pdf = new jsPDF({ orientation: 'portrait', unit: 'pt', format: [canvas.width, canvas.height] });
             pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
             pdf.save(`Confirmacion-Cita-${this.confirmationNumber}.pdf`);
-          })
-          .catch((error: any) => {
-            console.error("¡ERROR! Ocurrió un problema al generar el canvas o el PDF:", error);
           });
-      } else {
-        console.error("Error Crítico: No se pudo encontrar el elemento #pdf-ticket.");
       }
-    }, 100); // Aumentamos ligeramente la espera por si acaso
+    }, 100);
+  }
+
+  closeAndNavigateToReservations(): void {
+    this.dialogRef.close();
+    this.router.navigate(['/mi-cuenta/reservas']);
   }
 }
-

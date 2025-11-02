@@ -1,0 +1,65 @@
+/* src/app/admin/pages/location-management/location-management.component.css */
+
+.location-management-container {
+  padding: 20px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.page-header h2 {
+  margin: 0;
+  font-size: 1.8em;
+  color: #333;
+}
+
+.page-header p {
+  margin: 5px 0 0;
+  color: #666;
+}
+
+.mat-elevation-z2 {
+  width: 100%;
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 
+              0 2px 2px 0 rgba(0, 0, 0, 0.14), 
+              0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+/* Estilos para la imagen del local */
+.location-image {
+  width: 60px;  /* Tamaño fijo para las imágenes en la tabla */
+  height: 60px; /* Asegura que la imagen sea cuadrada */
+  object-fit: cover; /* Recorta la imagen para que encaje sin distorsionarse */
+  border-radius: 4px; /* Bordes ligeramente redondeados */
+  margin-right: 8px; /* Espacio a la derecha del nombre */
+  vertical-align: middle; /* Alineación vertical con el texto */
+}
+
+/* Puedes añadir más estilos de tabla si es necesario */
+th.mat-header-cell {
+  background-color: #f5f5f5;
+  font-weight: bold;
+  color: #333;
+}
+
+td.mat-cell {
+  font-size: 0.95em;
+  color: #555;
+}
+
+/* Para un botón de añadir más grande y visible */
+button[mat-flat-button] {
+  padding: 8px 16px;
+  font-size: 0.9em;
+  min-width: unset;
+}
+
+button[mat-icon-button] {
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+}

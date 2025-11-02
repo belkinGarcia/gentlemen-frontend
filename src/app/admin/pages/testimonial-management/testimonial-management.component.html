@@ -1,0 +1,62 @@
+<div class="testimonial-management-container">
+  <h2>Gestión de Testimonios</h2>
+  <p>Modera los comentarios y aprueba aquellos que se mostrarán en la página pública.</p>
+
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z2">
+
+    <ng-container matColumnDef="clientName">
+      <th mat-header-cell *matHeaderCellDef> Cliente </th>
+      <td mat-cell *matCellDef="let t"> 
+        <strong>{{ t.clientName }}</strong> 
+        <span class="rating-display">({{ t.rating }} ★)</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="rating">
+      <th mat-header-cell *matHeaderCellDef> Calificación </th>
+      <td mat-cell *matCellDef="let t"> 
+        {{ t.rating }} / 5 
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="comment">
+      <th mat-header-cell *matHeaderCellDef> Comentario </th>
+      <td mat-cell *matCellDef="let t"> {{ t.comment | slice:0:70 }}... </td>
+    </ng-container>
+
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef> Fecha </th>
+      <td mat-cell *matCellDef="let t"> {{ t.date | date:'shortDate' }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef> Estado </th>
+      <td mat-cell *matCellDef="let t">
+        <mat-chip [color]="getStatusColor(t.status)" selected>
+          {{ t.status | titlecase }}
+        </mat-chip>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let t">
+        
+        <button mat-icon-button color="primary" *ngIf="t.status !== 'approved'" (click)="approve(t)" matTooltip="Aprobar y publicar">
+          <mat-icon>thumb_up</mat-icon>
+        </button>
+        
+        <button mat-icon-button color="accent" *ngIf="t.status !== 'rejected'" (click)="reject(t)" matTooltip="Rechazar/Ocultar">
+          <mat-icon>thumb_down</mat-icon>
+        </button>
+
+        <button mat-icon-button color="warn" (click)="delete(t.id)" matTooltip="Eliminar permanentemente">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

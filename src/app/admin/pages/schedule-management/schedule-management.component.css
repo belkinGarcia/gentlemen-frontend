@@ -1,0 +1,95 @@
+.schedule-management-container {
+  padding: 20px;
+}
+
+.subtitle {
+  color: #666;
+  margin-top: -10px;
+  margin-bottom: 30px;
+}
+
+h1 {
+  font-weight: 600;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+/* --- Tabla de Horarios (Editor) --- */
+.schedule-editor {
+  max-width: 100%;
+  overflow-x: auto; /* Permite scroll horizontal */
+}
+
+.schedule-table {
+  width: 100%;
+  min-width: 1000px; /* Asegura que la tabla sea visible */
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: white;
+}
+
+.schedule-table th, .schedule-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.schedule-table th {
+  background-color: #f1f5f9;
+  color: #1e293b;
+  font-weight: bold;
+}
+
+.time-label {
+  font-weight: bold;
+  background-color: #f9f9f9;
+  width: 80px;
+  color: #333;
+}
+
+.day-slot {
+  width: 100px;
+  height: 40px;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+  user-select: none;
+}
+
+.day-slot:hover {
+  background-color: #f0f8ff; /* Azul pálido al pasar el mouse */
+}
+
+/* Estilo para las horas seleccionadas (Laboral) */
+.day-slot.active {
+  background-color: #4f46e5; /* Color de acento (azul) */
+  color: white;
+  font-weight: bold;
+}
+
+.day-slot.active mat-icon {
+  font-size: 18px;
+  color: white;
+}
+
+/* Estilo para las horas ocupadas por reservas (UX) */
+.day-slot.booked-slot {
+  background-color: #fecaca; /* Rojo pálido */
+  color: #b91c1c;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+/* --- Acciones y Resumen --- */
+.schedule-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.hours-summary {
+  font-weight: bold;
+  color: #4f46e5;
+}

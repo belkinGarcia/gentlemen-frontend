@@ -1,0 +1,82 @@
+<div class="reservas-container">
+  <h2>Mis Reservas</h2>
+
+  <mat-tab-group animationDuration="0ms">
+    <mat-tab label="Próximas ({{upcomingReservations.length}})">
+      <ng-template matTabContent>
+        <div class="reservas-list">
+          <mat-card *ngFor="let res of upcomingReservations" class="reserva-card">
+            <mat-card-header>
+              <mat-card-title>{{ res.service?.name }}</mat-card-title> 
+              <mat-card-subtitle>{{ res.barber?.name }}</mat-card-subtitle> 
+            </mat-card-header>
+            <mat-card-content>
+              <div class="reserva-detail">
+                <mat-icon>calendar_today</mat-icon>
+                <span>{{ res.date | date:'longDate' }} - {{ res.time }}</span>
+              </div>
+              <div class="reserva-detail">
+                <mat-icon>location_on</mat-icon>
+                 <span>{{ res.location?.name }}</span>
+              </div>
+              <div class="reserva-detail price">
+                <mat-icon>payments</mat-icon>
+                 <span>{{ res.service?.price | currency:'S/ ' }}</span>
+              </div>
+            </mat-card-content>
+            
+            <mat-card-actions align="end">
+              <button mat-button (click)="cancelReservation(res.confirmationNumber)">CANCELAR</button>
+              
+              <button mat-flat-button color="primary" (click)="reschedule(res)">
+                REAGENDAR
+              </button>
+            </mat-card-actions>
+          </mat-card>
+          
+          <div *ngIf="upcomingReservations.length === 0" class="empty-state">
+            <mat-icon>event_busy</mat-icon>
+            <p>No tienes próximas reservas.</p>
+          </div>
+        </div>
+      </ng-template>
+    </mat-tab>
+
+    <mat-tab label="Historial ({{pastReservations.length}})">
+      <ng-template matTabContent>
+        <div class="reservas-list">
+          <mat-card *ngFor="let res of pastReservations" class="reserva-card past">
+            
+            <mat-card-header>
+              <mat-card-title>{{ res.service?.name }}</mat-card-title>
+              <mat-card-subtitle>{{ res.barber?.name }}</mat-card-subtitle>
+              <mat-chip 
+                [color]="getStatusColor(res.status)" 
+                selected 
+                class="status-chip">
+                {{ getStatusChip(res.status) }}
+              </mat-chip>
+            </mat-card-header>
+            
+            <mat-card-content>
+              <div class="reserva-detail">
+                <mat-icon>calendar_today</mat-icon>
+                <span>{{ res.date | date:'longDate' }} - {{ res.time }}</span>
+              </div>
+              <div class="reserva-detail">
+                <mat-icon>location_on</mat-icon>
+                <span>{{ res.location?.name }}</span>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <div *ngIf="pastReservations.length === 0" class="empty-state">
+            <mat-icon>history</mat-icon>
+            <p>Aún no tienes un historial de reservas.</p>
+          </div>
+        </div>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+
+</div>

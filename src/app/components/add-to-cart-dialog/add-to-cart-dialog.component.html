@@ -1,0 +1,54 @@
+<div class="add-to-cart-dialog-container">
+  
+  <div class="dialog-header">
+    <mat-icon class="check-icon">check_circle</mat-icon>
+    <h2 mat-dialog-title>Producto agregado a tu Carro</h2>
+    <button mat-icon-button (click)="onCloseDialog()" aria-label="Cerrar">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content class="dialog-content">
+    
+    <div class="added-product-summary">
+      <img [src]="addedProduct.imageUrl" [alt]="addedProduct.name" class="product-thumb">
+      
+      <div class="product-details">
+        <h3>{{ addedProduct.name }}</h3>
+        <p class="product-price">{{ addedProduct.price | currency:'S/ ' }}</p>
+      </div>
+
+      <div class="quantity-info">
+        <div class="quantity-selector">
+          <button mat-icon-button (click)="decreaseQuantity()">
+            <mat-icon>remove</mat-icon>
+          </button>
+          <span>{{ addedQuantity }}</span>
+          <button mat-icon-button (click)="increaseQuantity()">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="recommendations">
+      <h3>Quizás también te interese</h3>
+      
+      <app-product-list 
+        [products]="recommendedProducts" 
+        [isCarousel]="true" 
+        [showFilterBar]="false"
+        [showTitle]="false"
+        [showViewAllButton]="false"
+        [showNav]="true"
+        (click)="onCloseDialog()"> 
+      </app-product-list>
+    </div>
+
+    </div>
+
+  <div mat-dialog-actions class="dialog-actions">
+    <button mat-button (click)="onCloseDialog()">Seguir comprando</button>
+    <button mat-flat-button class="go-to-cart-btn" (click)="onGoToCart()">Ir al Carrito</button>
+  </div>
+</div>

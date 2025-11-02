@@ -1,0 +1,64 @@
+.order-management-container {
+  padding: 20px;
+}
+
+h2 {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+p {
+  color: #666;
+  margin-bottom: 30px;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-mdc-table {
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05) !important;
+}
+
+.mat-mdc-header-cell {
+  background-color: #f9f9f9;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Estilo para celdas con subtexto */
+.mat-mdc-cell {
+  padding-right: 20px;
+}
+
+.mat-mdc-cell strong {
+  display: block;
+}
+
+.mat-mdc-cell .sub-text {
+  display: block;
+  font-size: 0.85em;
+  color: #777;
+}
+
+/* Estilos para el dropdown en la tabla */
+.status-select {
+  --mat-form-field-subscript-wrapper-padding: 0;
+  --mat-form-field-padding-bottom: 0;
+  margin-top: 10px;
+  width: 160px;
+}
+
+.status-select mat-icon {
+  margin-right: 8px;
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+}
+
+:host ::ng-deep .status-select .mdc-text-field--outlined .mdc-notched-outline__trailing {
+    border-radius: 0 4px 4px 0;
+}
+:host ::ng-deep .status-select .mdc-text-field--outlined .mdc-notched-outline__leading {
+    border-radius: 4px 0 0 4px;
+}

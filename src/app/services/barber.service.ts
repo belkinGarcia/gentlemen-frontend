@@ -1,49 +1,137 @@
+// src/app/services/barber.service.ts
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { LocationService, Location } from './location.service';
+
+// Interfaz (simulada) para el horario fijo semanal
+export interface WorkSchedule {
+  day: 'Lunes' | 'Martes' | 'Miércoles' | 'Jueves' | 'Viernes' | 'Sábado' | 'Domingo';
+  hours: string[];
+}
+
+// Interfaz (simulada) para un Barbero
+export interface Barber {
+  id: number;
+  name: string;
+  locationId: number;
+  rating: number;
+  imageUrl: string;
+  bio: string;
+  isActive: boolean;
+  workSchedule?: WorkSchedule[]; 
+  dayOff: 'Lunes' | 'Martes' | 'Miércoles' | 'Jueves' | 'Viernes' | 'Sábado' | 'Domingo' | 'Ninguno';
+  shift: 'Full Time' | 'Part Time - Mañana' | 'Part Time - Tarde';
+}
+
+// Lista MOCK (Corregida con IDs únicos)
+const MOCK_BARBERS: Barber[] = [
+  { 
+    id: 1, name: 'Javier Mendoza', locationId: 1, rating: 4.8, imageUrl: 'url-javier.jpg', bio: 'Especialista en cortes fade.', isActive: true, workSchedule: [],
+    dayOff: 'Domingo', shift: 'Full Time' 
+  },
+  { 
+    id: 2, name: 'Carlos Ruiz', locationId: 1, rating: 4.5, imageUrl: 'url-carlos.jpg', bio: 'El mejor en afeitados clásicos.', isActive: true, workSchedule: [],
+    dayOff: 'Lunes', shift: 'Part Time - Tarde' 
+  },
+  { 
+    id: 3, name: 'Luis Torres', locationId: 2, rating: 4.9, imageUrl: 'url-luis.jpg', bio: 'Maestro del cabello rizado.', isActive: true, workSchedule: [],
+    dayOff: 'Ninguno', shift: 'Full Time'
+  },
+];
 
 @Injectable({
   providedIn: 'root'
 })
 export class BarberService {
-  // Separamos al "Cualquier agente" para un manejo especial
-  private anyAgent = { 
-    id: 1, 
-    name: 'Cualquier agente', 
-    bio: 'Deja que uno de nuestros talentosos barberos se encargue de tu estilo, garantizando siempre un servicio de primera calidad.', 
-    imageUrl: 'https://cdn.midjourney.com/c56b911a-6ccc-423a-a169-43af58dd0eee/0_1.png', 
-    availableAtLocationIds: [1, 2, 3] 
-  };
+
+  private readonly BARBER_KEY = 'barber_database';
   
-  // La propiedad correcta se llama 'barbers'
-  private barbers = [
-    { id: 2, name: 'JAIR', bio: 'Especialista en cortes clásicos y rituales de barba. Con más de 5 años de experiencia, JAIR combina técnica tradicional y arte moderno.', imageUrl: 'https://cdn.midjourney.com/c56b911a-6ccc-423a-a169-43af58dd0eee/0_1.png', availableAtLocationIds: [1] },
-    { id: 3, name: 'DANNY', bio: 'Experto en diseños fade y texturizados. DANNY se mantiene al día con las últimas tendencias para ofrecerte un look fresco y actual.', imageUrl: 'https://cdn.midjourney.com/c56b911a-6ccc-423a-a169-43af58dd0eee/0_1.png', availableAtLocationIds: [2] },
-    { id: 4, name: 'VYRO', bio: 'Con más de 5 años de experiencia, VYRO es un maestro de la navaja y el afeitado clásico.', imageUrl: 'https://cdn.midjourney.com/c56b911a-6ccc-423a-a169-43af58dd0eee/0_1.png', availableAtLocationIds: [1, 3] },
-    { id: 5, name: 'MIGUEL', bio: 'Apasionado por las últimas tendencias en estilismo masculino y cuidado capilar.', imageUrl: 'https://cdn.midjourney.com/c56b911a-6ccc-423a-a169-43af58dd0eee/0_1.png', availableAtLocationIds: [2, 3] },
-    { id: 6, name: 'CHRISTIAN', bio: 'Un barbero detallista y perfeccionista, ideal para quienes buscan un acabado impecable.', imageUrl: 'https://cdn.midjourney.com/c56b911a-6ccc-423a-a169-43af58dd0eee/0_1.png', availableAtLocationIds: [1, 2, 3] }
-  ];
+  private barbersSubject = new BehaviorSubject<Barber[]>([]);
+  public barbers$: Observable<Barber[]> = this.barbersSubject.asObservable();
 
-  constructor() { }
-
-  // Método para obtener barberos por local, con la opción de incluir "Cualquier agente"
-  getBarbersByLocationId(locationId: number, includeAnyAgent: boolean = false): any[] {
-    // Corregido para usar 'this.barbers'
-    const availableBarbers = this.barbers.filter(barber => barber.availableAtLocationIds.includes(locationId));
-    
-    if (includeAnyAgent) {
-      return [this.anyAgent, ...availableBarbers];
+  constructor(private locationService: LocationService) {
+    // Lógica para cargar desde localStorage
+    const barbersFromStorage = localStorage.getItem(this.BARBER_KEY);
+    if (barbersFromStorage) {
+      this.barbersSubject.next(JSON.parse(barbersFromStorage));
     } else {
-      return availableBarbers;
+      localStorage.setItem(this.BARBER_KEY, JSON.stringify(MOCK_BARBERS));
+      this.barbersSubject.next(MOCK_BARBERS);
     }
   }
-  
-  // Método para obtener todos los barberos, incluyendo "Cualquier agente"
-  getBarbers() {
-    return [this.anyAgent, ...this.barbers];
+
+  private _getBarbersFromStorage(): Barber[] {
+    return JSON.parse(localStorage.getItem(this.BARBER_KEY) || '[]');
   }
 
-  // Método para obtener un solo barbero por su ID de la lista completa
-  getBarberById(id: number) {
-    const allBarbers = [this.anyAgent, ...this.barbers];
-    return allBarbers.find(barber => barber.id === id);
+  private _saveToStorage(barbers: Barber[]): void {
+    localStorage.setItem(this.BARBER_KEY, JSON.stringify(barbers));
+    this.barbersSubject.next(barbers);
+  }
+
+  // --- MÉTODOS DE LECTURA ---
+  getBarbersByLocationId(locationId: number, includeInactive: boolean = false): Barber[] {
+      return this.barbersSubject.getValue().filter(b => 
+        b.locationId === locationId && (includeInactive || b.isActive)
+      );
+    }
+  // Obtiene barberos con el nombre de la sede
+  getBarbersWithLocationName(includeInactive: boolean = false): (Barber & { locationName: string })[] {
+    const allBarbers = this.barbersSubject.getValue().filter(b => (includeInactive || b.isActive));
+    
+    return allBarbers.map(barber => {
+      const location = this.locationService.getLocationById(barber.locationId);
+      return {
+        ...barber,
+        locationName: location ? location.name : 'Sede Desconocida'
+      };
+    });
+  }
+  
+  getBarberById(id: number): Barber | undefined {
+    return this.barbersSubject.getValue().find(b => b.id === id);
+  }
+  
+  // --- MÉTODOS CRUD ---
+
+  createBarber(barber: Omit<Barber, 'id'>): void {
+    const currentBarbers = this._getBarbersFromStorage();
+    const newId = Math.max(...currentBarbers.map(b => b.id), 0) + 1;
+    const newBarber: Barber = { ...barber as Barber, id: newId, workSchedule: [] }; // Asegura el array de horario
+    
+    this._saveToStorage([...currentBarbers, newBarber]);
+  }
+
+  updateBarber(updatedBarber: Barber): void {
+    const currentBarbers = this._getBarbersFromStorage();
+    const updatedList = currentBarbers.map(b => 
+      b.id === updatedBarber.id ? updatedBarber : b
+    );
+    this._saveToStorage(updatedList);
+  }
+
+  deleteBarber(id: number): void {
+    const currentBarbers = this._getBarbersFromStorage();
+    const updatedList = currentBarbers.filter(b => b.id !== id);
+    this._saveToStorage(updatedList);
+  }
+
+  // --- HORARIOS ---
+  saveBarberWorkSchedule(barberId: number, newSchedule: WorkSchedule[]): void {
+    const currentBarbers = this._getBarbersFromStorage();
+
+    const updatedList = currentBarbers.map(b => 
+      b.id === barberId ? { ...b, workSchedule: newSchedule } : b 
+    );
+
+    this._saveToStorage(updatedList);
+  }
+
+  getFixedHoursForDay(barberId: number, dayName: string): string[] {
+      const barber = this.getBarberById(barberId);
+      if (!barber || !barber.workSchedule) return [];
+
+      const daySchedule = barber.workSchedule.find((s: any) => s.day === dayName); 
+      return daySchedule ? daySchedule.hours : [];
   }
 }

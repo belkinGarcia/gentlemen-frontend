@@ -14,13 +14,29 @@
       <a mat-button routerLink="/tienda">Tienda</a>
       <a mat-button routerLink="/servicios">Servicios</a>
       <a mat-button routerLink="/ubicaciones">Ubicaciones</a>
-      <a mat-button routerLink="/mi-cuenta">Mi Cuenta</a>
-    </div>
 
-    <button mat-icon-button class="cart-button" aria-label="Botón de carrito de compras">
+      <ng-container *ngIf="isLoggedIn$ | async; else loggedOutMenu">
+        <a mat-button routerLink="/mi-cuenta">Mi Cuenta</a>
+        <a mat-button (click)="logout()">Cerrar Sesión</a>
+      </ng-container>
+
+      <ng-template #loggedOutMenu>
+        <a mat-button routerLink="/auth/login">Iniciar Sesión</a>
+      </ng-template>
+      </div>
+
+    <button 
+      mat-icon-button 
+      class="cart-button" 
+      aria-label="Botón de carrito de compras"
+      routerLink="/carrito" 
+      [matBadge]="cartItemCount > 0 ? cartItemCount : null"
+      matBadgeColor="warn"
+      matBadgePosition="after"
+      matBadgeSize="small">
       <mat-icon>shopping_cart</mat-icon>
     </button>
-
+    
     <button mat-icon-button class="mobile-menu-button" [matMenuTriggerFor]="mobileMenu">
       <mat-icon>menu</mat-icon>
     </button>
@@ -29,7 +45,15 @@
       <button mat-menu-item routerLink="/tienda">Tienda</button>
       <button mat-menu-item routerLink="/servicios">Servicios</button>
       <button mat-menu-item routerLink="/ubicaciones">Ubicaciones</button>
-      <button mat-menu-item routerLink="/mi-cuenta">Mi Cuenta</button>
+      
+      <ng-container *ngIf="isLoggedIn$ | async; else loggedOutMobileMenu">
+        <button mat-menu-item routerLink="/mi-cuenta">Mi Cuenta</button>
+        <button mat-menu-item (click)="logout()">Cerrar Sesión</button>
+      </ng-container>
+      <ng-template #loggedOutMobileMenu>
+        <button mat-menu-item routerLink="/auth/login">Iniciar Sesión</button>
+      </ng-template>
+      <button mat-menu-item routerLink="/carrito">Mi Carrito</button>
     </mat-menu>
   </div>
 </mat-toolbar>

@@ -4,10 +4,13 @@
     <div class="card-content">
       <h3>{{ location.name }}</h3>
       <p>{{ location.address }}</p>
-      <a class="map-link" [href]="location.mapLink" target="_blank">Ver en el mapa</a>
-      <a class="phone-link" [href]="'tel:' + location.phone">
+      
+      <a class="map-link" [href]="location.mapLink" target="_blank" (click)="$event.stopPropagation()">
+        Ver en el mapa
+      </a>
+      
+      <a class="phone-link" [href]="'tel:' + location.phone" (click)="$event.stopPropagation()">
         <span>{{ location.phone }}</span>
-        <mat-icon>chevron_right</mat-icon>
       </a>
     </div>
   </div>

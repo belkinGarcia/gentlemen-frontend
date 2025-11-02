@@ -2,15 +2,44 @@
   <div class="content-wrapper">
     <h2>TESTIMONIOS DE NUESTROS CLIENTES</h2>
     <div class="separator"></div>
-    <div class="testimonials-grid" (mouseenter)="stopCarousel()" (mouseleave)="startCarousel()">
+    
+    <div *ngIf="testimonials.length === 0" class="empty-state">
+        <p>Aún no hay testimonios aprobados para mostrar.</p>
+    </div>
+  <div class="call-to-action-review">
+        <a mat-flat-button routerLink="/dejar-testimonio" color="accent">
+            DEJA TU PROPIA RESEÑA
+        </a>
+    </div>
+    <div *ngIf="testimonials.length > 0" class="testimonials-grid" (mouseenter)="stopCarousel()" (mouseleave)="startCarousel()">
+      
       <div class="testimonial-card" *ngFor="let testimonial of testimonials | slice:currentIndex:currentIndex + 3">
         <mat-icon class="quote-icon">format_quote</mat-icon>
         <div class="rating">
-          <mat-icon *ngFor="let i of [1,2,3,4,5]">star</mat-icon>
+          <mat-icon *ngFor="let i of [1,2,3,4,5]" [color]="i <= testimonial.rating ? 'accent' : ''">star</mat-icon>
         </div>
-        <p class="quote">{{ testimonial.quote }}</p>
-        <p class="author">{{ testimonial.author }}</p>
+        <p class="quote">{{ testimonial.comment }}</p> 
+        <p class="author">{{ testimonial.clientName }}</p>
       </div>
     </div>
-  </div>
+
+    <div *ngIf="totalPages > 1" class="carousel-nav">
+      
+      <button mat-icon-button (click)="prev()" [disabled]="currentPage === 0">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+
+      <div class="nav-lines">
+        <span 
+          *ngFor="let page of pagesArray" 
+          class="nav-line" 
+          [class.active]="page === currentPage">
+        </span>
+      </div>
+
+      <button mat-icon-button (click)="next()" [disabled]="currentPage === totalPages - 1">
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+    </div>
+    </div>
 </div>

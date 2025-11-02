@@ -1,6 +1,5 @@
 <mat-stepper #stepper linear (selectionChange)="onStepChange($event)">
 
-  <!-- Step 1: Local -->
   <mat-step label="Local" [completed]="!!selectedLocation">
     <div class="step-container">
       <div class="step-info">
@@ -32,8 +31,7 @@
     </div>
   </mat-step>
 
-  <!-- Step 2: Servicio -->
-  <mat-step label="Servicio" [completed]="!!selectedService">
+<mat-step label="Servicio" [completed]="!!selectedService">
     <div class="step-container">
       <div class="step-info">
         <mat-icon>auto_stories</mat-icon>
@@ -56,8 +54,7 @@
           </button>
           <div *ngFor="let service of selectedCategoryServices" 
                class="service-card"
-               (click)="selectService(service)"
-               [class.selected]="service.id === selectedService?.id">
+               (click)="selectService(service)" [class.selected]="service.id === selectedService?.id">
             <div class="service-details">
               <strong>{{ service.name }}</strong>
               <p>{{ service.description }}</p>
@@ -74,12 +71,10 @@
         </div>
         <div class="summary-item" *ngIf="selectedService">
           <span>SERVICIO</span>
-          <strong>{{ selectedService?.name }}</strong>
-        </div>
+          <strong>{{ selectedService.name }}</strong> <span class="sub-text">Duración: {{ totalDuration }} min</span> </div>
         <div class="summary-item total" *ngIf="selectedService">
           <span>PRECIO TOTAL</span>
-          <strong>{{ selectedService?.price | currency:'S/ ' }}</strong>
-        </div>
+          <strong>{{ selectedService.price | currency:'S/ ' }}</strong> </div>
       </div>
     </div>
     <div class="step-actions">
@@ -88,7 +83,6 @@
     </div>
   </mat-step>
 
-  <!-- Step 3: Barbero -->
   <mat-step label="Barbero" [completed]="!!selectedBarber">
     <div class="step-container">
        <div class="step-info">
@@ -129,7 +123,6 @@
     </div>
   </mat-step>
 
-  <!-- Step 4: Fecha y Hora -->
   <mat-step label="Fecha y Hora" [completed]="!!selectedDate && !!selectedTime">
     <div class="step-container">
       <div class="step-info">
@@ -197,8 +190,7 @@
     </div>
   </mat-step>
 
-  <!-- Step 5: Información -->
-  <mat-step label="Información" [stepControl]="informationForm">
+  <mat-step label="Información">
     <div class="step-container">
       <div class="step-info">
         <mat-icon>person</mat-icon>
@@ -206,11 +198,11 @@
         <p>Inicia sesión o crea una cuenta para continuar con tu reserva.</p>
       </div>
       <div class="step-content">
-        <app-account-page 
+        <app-auth-page
           [displayMode]="'tabs'" 
           (loginSuccess)="handleAuthentication($event)"
           (registerSuccess)="handleAuthentication($event)">
-        </app-account-page>
+      </app-auth-page>
       </div>
       <div class="step-summary" *ngIf="stepper.selectedIndex > 0">
         <h4>RESUMEN</h4>
@@ -242,11 +234,10 @@
     </div>
     <div class="step-actions">
       <button mat-button matStepperPrevious>Atrás</button>
-      <button mat-button (click)="confirmAppointment()" [disabled]="informationForm.invalid">Siguiente</button>
+      <button mat-button (click)="confirmAppointment()">Siguiente</button>
     </div>
   </mat-step>
 
-  <!-- Step 6: Confirmación -->
   <mat-step label="Confirmación">
     <div class="step-container confirmation-view">
       <div class="step-info">
@@ -259,39 +250,75 @@
           <a href="https://wa.me/51995515022" target="_blank">995 515 022</a>
         </div>
       </div>
-      <div class="step-content confirmation-details" id="confirmationContent">
+      <div class="step-content confirmation-details">
         <div class="confirmation-header">
-          <h3>Confirmación de la cita</h3>
-        </div>
+          </div>
+
         <span class="confirmation-label">CONFIRMATION #</span>
         <h2 class="confirmation-number">{{ confirmationNumber }}</h2>
+        
         <div class="confirmation-actions">
           <button mat-stroked-button (click)="downloadConfirmationAsPDF()">
-            <mat-icon>download</mat-icon> Descargar PDF
+            <mat-icon>print</mat-icon> Imprimir
+          </button>
+
+          <button mat-flat-button color="primary" (click)="closeAndNavigateToReservations()">
+            <mat-icon>visibility</mat-icon>
+            Ver mis reservas
           </button>
         </div>
+
         <div class="detail-section">
           <h4>Información de la cita</h4>
           <div class="detail-grid">
-            <span>Fecha:</span>         <strong>{{ selectedDate | date:'longDate' }}</strong>
-            <span>Hora:</span>          <strong>{{ selectedTime }}</strong>
-            <span>Ubicación:</span>      <strong>{{ selectedLocation?.name }}</strong>
-            <span>Barbero:</span>       <strong>{{ selectedBarber?.name }}</strong>
-            <span>Servicio:</span>      <strong>{{ selectedService?.name }}</strong>
+            <div class="grid-item">
+              <span class="grid-label">FECHA:</span>         
+              <strong class="grid-value">{{ selectedDate | date:'d MMM, yyyy' }}</strong>
+            </div>
+            <div class="grid-item">
+              <span class="grid-label">HORA:</span>          
+              <strong class="grid-value">{{ selectedTime }}</strong>
+            </div>
+            <div class="grid-item full-width">
+              <span class="grid-label">UBICACIÓN:</span>      
+              <strong class="grid-value">{{ selectedLocation?.address }}</strong>
+            </div>
+            <div class="grid-item">
+              <span class="grid-label">BARBERO:</span>       
+              <strong class="grid-value">{{ selectedBarber?.name }}</strong>
+            </div>
+            <div class="grid-item full-width">
+              <span class="grid-label">SERVICIO:</span>      
+              <strong class="grid-value">{{ selectedService?.name }}</strong>
+            </div>
           </div>
         </div>
+
         <div class="detail-section">
           <h4>Información del cliente</h4>
           <div class="detail-grid">
-            <span>Nombre:</span>        <strong>{{ informationForm.get('firstName')?.value }} {{ informationForm.get('lastName')?.value }}</strong>
-            <span>Teléfono:</span>      <strong>{{ informationForm.get('phone')?.value }}</strong>
-            <span>Correo electrónico:</span> <strong>{{ informationForm.get('email')?.value }}</strong>
+            <div class="grid-item">
+              <span class="grid-label">NOMBRE:</span>        
+              <strong class="grid-value">{{ informationForm.get('firstName')?.value }} {{ informationForm.get('lastName')?.value }}</strong>
+            </div>
+            <div class="grid-item">
+              <span class="grid-label">TELÉFONO:</span>      
+              <strong class="grid-value">{{ informationForm.get('phone')?.value }}</strong>
+            </div>
+            <div class="grid-item full-width">
+              <span class="grid-label">CORREO ELECTRÓNICO:</span> 
+              <strong class="grid-value">{{ informationForm.get('email')?.value }}</strong>
+            </div>
           </div>
         </div>
+
         <div class="detail-section">
           <h4>Información de pago</h4>
           <div class="detail-grid">
-            <span>Precio:</span>        <strong>{{ selectedService?.price | currency:'S/ ' }}</strong>
+            <div class="grid-item">
+              <span class="grid-label">PRECIO:</span>        
+              <strong class="grid-value">{{ selectedService?.price | currency:'S/ ' }}</strong>
+            </div>
           </div>
         </div>
       </div>
@@ -300,8 +327,6 @@
 
 </mat-stepper>
 
-<!-- ***** EL CAMBIO ESTÁ AQUÍ ***** -->
-<!-- Este contenedor ahora existe siempre, pero está oculto con CSS -->
 <div class="pdf-ticket-wrapper">
   <div id="pdf-ticket" class="pdf-ticket-container">
       <h3>Confirmación de la cita</h3>
@@ -310,27 +335,44 @@
       <div class="pdf-section">
           <h4>Información de la cita</h4>
           <div class="pdf-grid">
-              <span>Fecha:</span>         <strong>{{ selectedDate | date:'longDate' }}</strong>
-              <span>Hora:</span>          <strong>{{ selectedTime }}</strong>
-              <span>Ubicación:</span>      <strong>{{ selectedLocation?.name }}</strong>
-              <span>Barbero:</span>       <strong>{{ selectedBarber?.name }}</strong>
-              <span>Servicio:</span>      <strong>{{ selectedService?.name }}</strong>
+              <div class="grid-item">
+                <span>Fecha:</span>         <strong>{{ selectedDate | date:'d MMM, yyyy' }}</strong>
+              </div>
+              <div class="grid-item">
+                <span>Hora:</span>          <strong>{{ selectedTime }}</strong>
+              </div>
+              <div class="grid-item full-width">
+                <span>Ubicación:</span>      <strong>{{ selectedLocation?.address }}</strong>
+              </div>
+              <div class="grid-item">
+                <span>Barbero:</span>       <strong>{{ selectedBarber?.name }}</strong>
+              </div>
+              <div class="grid-item full-width">
+                <span>Servicio:</span>      <strong>{{ selectedService?.name }}</strong>
+              </div>
           </div>
       </div>
       <div class="pdf-section">
           <h4>Información del cliente</h4>
           <div class="pdf-grid">
+            <div class="grid-item">
               <span>Nombre:</span>        <strong>{{ informationForm.get('firstName')?.value }} {{ informationForm.get('lastName')?.value }}</strong>
+            </div>
+            <div class="grid-item">
               <span>Teléfono:</span>      <strong>{{ informationForm.get('phone')?.value }}</strong>
+            </div>
+            <div class="grid-item full-width">
               <span>Correo electrónico:</span> <strong>{{ informationForm.get('email')?.value }}</strong>
+            </div>
           </div>
       </div>
       <div class="pdf-section">
           <h4>Información de pago</h4>
           <div class="pdf-grid">
+            <div class="grid-item">
               <span>Precio:</span>        <strong>{{ selectedService?.price | currency:'S/ ' }}</strong>
+            </div>
           </div>
       </div>
   </div>
 </div>
-

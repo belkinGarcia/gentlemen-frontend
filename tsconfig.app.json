@@ -8,7 +8,7 @@
   },
   "include": [
     "src/**/*.ts"
-  ],
+, "src/app/admin/pages/admin-dashboard/admin-dashboard.componentts"  ],
   "exclude": [
     "src/**/*.spec.ts"
   ]

@@ -1,0 +1,82 @@
+<h2 mat-dialog-title>
+  {{ data ? 'Editar Barbero' : 'Añadir Nuevo Barbero' }}
+</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="barberForm" class="barber-form">
+    
+    <div class="form-section">
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="flex-50">
+          <mat-label>Nombre Completo</mat-label>
+          <input matInput formControlName="name" required>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline" class="flex-50">
+          <mat-label>Sede</mat-label>
+          <mat-select formControlName="locationId" required>
+            <mat-option *ngFor="let loc of locations" [value]="loc.id">
+              {{ loc.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    
+    <mat-divider></mat-divider>
+    <h3>Información de Perfil</h3>
+    
+    <div class="form-section">
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="flex-50">
+          <mat-label>URL de Imagen</mat-label>
+          <input matInput formControlName="imageUrl">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="flex-50">
+          <mat-label>Biografía corta</mat-label>
+          <textarea matInput formControlName="bio" rows="2"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+    <h3>Horario de Trabajo</h3>
+
+    <div class="form-section">
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="flex-50">
+          <mat-label>Día de Descanso</mat-label>
+          <mat-select formControlName="dayOff" required>
+            <mat-option *ngFor="let day of daysOfWeek" [value]="day">
+              {{ day }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="flex-50">
+          <mat-label>Modalidad Laboral</mat-label>
+          <mat-select formControlName="shift" required>
+            <mat-option *ngFor="let s of shifts" [value]="s">
+              {{ s }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <p *ngIf="barberForm.get('shift')?.value.includes('Part Time')" class="note">
+        * Mañana: 8:00 AM - 2:00 PM (6 horas) | Tarde: 2:00 PM - 8:00 PM (6 horas)
+      </p>
+    </div>
+
+    <mat-divider></mat-divider>
+    
+    <mat-checkbox formControlName="isActive">Barbero Activo (Mostrar en sitio público)</mat-checkbox>
+    
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="barberForm.invalid">
+    Guardar
+  </button>
+</mat-dialog-actions>

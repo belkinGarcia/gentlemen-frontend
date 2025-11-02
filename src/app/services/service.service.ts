@@ -1,53 +1,142 @@
+// src/app/services/service.service.ts
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+
+// Interfaz para la estructura del Servicio
+export interface Service {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  duration: number; // <-- ¡CLAVE NUEVA! (Duración en minutos)
+}
+
+// Interfaz para la estructura de Categorías
+export interface Category {
+  category: string;
+  items: Service[];
+}
+
+// Datos MOCK iniciales (Base de datos)
+const MOCK_SERVICES: Category[] = [
+  {
+    category: 'Corte de Cabello',
+    items: [
+      { id: 101, name: 'Corte Clásico', description: 'Corte con máquina y tijera.', price: 50, duration: 40 },
+      { id: 102, name: 'Corte Fade Premium', description: 'Degradado profesional, incluye lavado.', price: 75, duration: 60 },
+    ]
+  },
+  {
+    category: 'Barba y Afeitado',
+    items: [
+      { id: 201, name: 'Arreglo de Barba', description: 'Perfilado y arreglo con máquina.', price: 30, duration: 30 },
+      { id: 202, name: 'Afeitado Clásico', description: 'Afeitado con navaja, toallas calientes.', price: 45, duration: 45 },
+    ]
+  },
+  {
+    category: 'Paquetes',
+    items: [
+      { id: 301, name: 'Corte + Barba Express', description: 'Corte rápido y perfilado de barba.', price: 80, duration: 70 }, // Duración 40+30=70
+    ]
+  }
+];
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServiceService {
-  private servicesByCategory = [
-    {
-      category: 'Servicios Individuales',
-      items: [
-        { id: 1, name: 'CORTE + LAVADO + PEINADO', description: 'Asesoría, corte, lavado y peinado para un look impecable.', price: 60, imageUrl: 'https://cdn.midjourney.com/06eea00b-3673-4d1e-9a02-21b559549bea/0_0.png' },
-        { id: 2, name: 'ARREGLO/AFEITADO DE BARBA', description: 'Delineado, afeitado con toalla caliente e hidratación.', price: 40, imageUrl: 'https://cdn.midjourney.com/d6dbadc2-9f7f-48a7-98b3-3c3ec3dca6d4/0_0.png' },
-        { id: 3, name: 'RITUAL DE BARBA', description: 'Tratamiento completo con exfoliación, aceites y bálsamo.', price: 50, imageUrl: 'https://cdn.midjourney.com/d6dbadc2-9f7f-48a7-98b3-3c3ec3dca6d4/0_0.png' },
-        { id: 4, name: 'LIMPIEZA FACIAL', description: 'Limpieza profunda para revitalizar la piel.', price: 70, imageUrl: 'https://cdn.midjourney.com/d6dbadc2-9f7f-48a7-98b3-3c3ec3dca6d4/0_0.png' }
-      ]
-    },
-    {
-      category: 'Paquetes',
-      items: [
-        { id: 5, name: 'CORTE + ARREGLO/AFEITADO DE BARBA', description: 'El combo perfecto para un look completo.', price: 90, imageUrl: 'https://cdn.midjourney.com/abfa96d5-5cc2-473d-9bf0-3d0872a0f222/0_0.png' },
-        { id: 6, name: 'CORTE + RITUAL DE BARBA', description: 'Corte premium más el tratamiento completo para tu barba.', price: 100, imageUrl: 'https://cdn.midjourney.com/af664313-ecb3-4d25-8b68-e609b8491391/0_1.png' },
-        { id: 7, name: 'CORTE + LIMPIEZA FACIAL', description: 'Renueva tu look y tu piel en una sola visita.', price: 120, imageUrl: 'https://cdn.midjourney.com/af664313-ecb3-4d25-8b68-e609b8491391/0_1.png' },
-        { id: 8, name: 'ARREGLO/AFEITADO DE BARBA + LIMPIEZA FACIAL', description: 'Cuidado facial y de barba para una apariencia pulcra.', price: 100, imageUrl: 'https://cdn.midjourney.com/abfa96d5-5cc2-473d-9bf0-3d0872a0f222/0_0.png' }
-      ]
-    },
-    {
-      category: 'Tinturación',
-      items: [
-        { id: 9, name: 'CAMUFLAJE DE CANAS PARA PELO', description: 'Cobertura de canas con un acabado natural y discreto.', price: 60, imageUrl: 'https://cdn.midjourney.com/b5bb7e8b-948e-46d6-a305-944e3852db76/0_0.png' },
-        { id: 10, name: 'CAMUFLAJE DE CANAS PARA BARBA', description: 'Iguala el tono de tu barba de forma natural.', price: 50, imageUrl: 'https://cdn.midjourney.com/946cfa20-0938-4475-9fad-6850e62e3cf8/0_0.png' },
-        { id: 11, name: 'CORTE + CAMUFLAJE DE CANAS DE PELO', description: 'Corte completo más cobertura de canas.', price: 110, imageUrl: 'https://cdn.midjourney.com/946cfa20-0938-4475-9fad-6850e62e3cf8/0_0.png' }
-      ]
-    }
-  ];
 
-  constructor() { }
+  private readonly SERVICE_KEY = 'service_database';
 
-  // Get all services grouped by category
-  getServicesByCategory() {
-    return this.servicesByCategory;
+  // BehaviorSubject para la lista de categorías
+  private categoriesSubject = new BehaviorSubject<Category[]>([]);
+  public categories$: Observable<Category[]> = this.categoriesSubject.asObservable();
+  
+  // Lista plana de todos los servicios para búsqueda rápida
+  private allServices: Service[] = [];
+
+  constructor() {
+    this.loadInitialData();
   }
 
-  // Find a specific service by its ID across all categories
-  getServiceById(id: number) {
-    for (const category of this.servicesByCategory) {
-      const foundService = category.items.find(service => service.id === id);
-      if (foundService) {
-        return foundService;
-      }
+  private loadInitialData(): void {
+    const dataFromStorage = localStorage.getItem(this.SERVICE_KEY);
+    if (dataFromStorage) {
+      this.categoriesSubject.next(JSON.parse(dataFromStorage));
+    } else {
+      localStorage.setItem(this.SERVICE_KEY, JSON.stringify(MOCK_SERVICES));
+      this.categoriesSubject.next(MOCK_SERVICES);
     }
-    return undefined;
+    this.updateAllServicesList(this.categoriesSubject.getValue());
+  }
+  
+  private updateAllServicesList(categories: Category[]): void {
+    this.allServices = categories.flatMap(cat => cat.items);
+  }
+  
+ // --- MÉTODOS DE LECTURA (ACTUALIZADOS) ---
+
+  getServicesByCategory(): Category[] {
+    return this.categoriesSubject.getValue();
+  }
+
+  getServiceById(id: number): Service | undefined {
+    return this.allServices.find(service => service.id === id);
+  }
+  
+  // --- ¡NUEVOS MÉTODOS CRUD (SOLUCIONAN TS2339)! ---
+
+  private _saveCategories(categories: Category[]): void {
+    localStorage.setItem(this.SERVICE_KEY, JSON.stringify(categories));
+    this.categoriesSubject.next(categories);
+    this.updateAllServicesList(categories);
+  }
+
+  createService(newServiceData: any): void { // newServiceData incluye {name, price, duration, category...}
+    let categories = this.getServicesByCategory();
+    
+    // 1. Encuentra la categoría o crea una nueva
+    let category = categories.find(c => c.category === newServiceData.category);
+
+    if (!category) {
+      category = { category: newServiceData.category, items: [] };
+      categories = [...categories, category];
+    }
+
+    // 2. Asigna ID y añade el servicio
+    const newId = Math.max(...this.allServices.map(s => s.id), 0) + 1;
+    const newService: Service = { ...newServiceData, id: newId };
+    category.items.push(newService);
+
+    this._saveCategories(categories);
+  }
+
+  updateService(updatedService: Service & { category: string }): void {
+    const categories = this.getServicesByCategory();
+    
+    const updatedCategories = categories.map(cat => {
+      // 1. Si el servicio pertenece a esta categoría
+      const itemIndex = cat.items.findIndex(item => item.id === updatedService.id);
+      
+      if (itemIndex > -1) {
+        // 2. Reemplaza el servicio
+        cat.items[itemIndex] = updatedService;
+      }
+      return cat;
+    });
+
+    this._saveCategories(updatedCategories);
+  }
+
+  deleteService(serviceToDelete: Service): void {
+    const categories = this.getServicesByCategory();
+    
+    const updatedCategories = categories.map(cat => {
+      // Filtra el servicio de su categoría
+      cat.items = cat.items.filter(item => item.id !== serviceToDelete.id);
+      return cat;
+    });
+
+    this._saveCategories(updatedCategories.filter(cat => cat.items.length > 0)); // Elimina categorías vacías
   }
 }

@@ -1,0 +1,149 @@
+<div class="dashboard-container">
+  
+  <h1>Dashboard de Administración</h1>
+  <p class="subtitle">Bienvenido al centro de control de tu barbería.</p>
+
+  <div class="top-row-grid">
+    
+    <mat-card class="critical-alert-card" [class.urgent]="todayReservations.length > 0">
+      <mat-card-content>
+        <mat-icon class="alert-icon" [style.color]="todayReservations.length > 0 ? '#ff7316' : '#22c55e'">
+          {{ todayReservations.length > 0 ? 'warning' : 'thumb_up' }}
+        </mat-icon>
+        <div class="alert-text-wrapper">
+          <div class="alert-title">CITAS PENDIENTES HOY</div>
+          <div class="alert-value">{{ todayReservations.length }}</div>
+          <p *ngIf="todayReservations.length > 0">
+            Revisa la tabla inferior para la agenda completa.
+          </p>
+        </div>
+        <button mat-flat-button routerLink="/admin/reservas" [color]="todayReservations.length > 0 ? 'warn' : 'primary'">
+          Ver Agenda
+        </button>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="kpi-grid">
+      <mat-card *ngFor="let kpi of kpis" class="kpi-card">
+        <mat-card-content>
+          <div class="kpi-icon-wrapper" [style.background-color]="kpi.color">
+            <mat-icon class="kpi-icon">{{ kpi.icon }}</mat-icon>
+          </div>
+          <div class="kpi-details">
+            <div class="kpi-title">{{ kpi.title }}</div>
+            <div class="kpi-value">{{ kpi.value }}</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  
+ <p class="subtitle">Bienvenido al centro de control de tu barbería.</p>
+
+  <div class="quick-access-buttons">
+    <button mat-flat-button color="primary" routerLink="/admin/reservas">
+      <mat-icon>calendar_plus</mat-icon> Crear Nueva Cita
+    </button>
+    <button mat-flat-button color="accent" routerLink="/admin/productos">
+      <mat-icon>add_shopping_cart</mat-icon> Añadir Producto
+    </button>
+    
+    <button mat-stroked-button color="primary" routerLink="/admin/barberos">
+      <mat-icon>person_pin</mat-icon> Staff / Barberos
+    </button>
+    
+    <button mat-stroked-button color="primary" routerLink="/admin/usuarios">
+      <mat-icon>group</mat-icon> Gestionar Roles
+    </button>
+    <button mat-stroked-button color="accent" routerLink="/admin/sedes">
+      <mat-icon>storefront</mat-icon> Sedes
+    </button>
+    <button mat-stroked-button color="primary" routerLink="/admin/servicios">
+      <mat-icon>cut</mat-icon> Servicios
+    </button>
+    <button mat-stroked-button color="accent" routerLink="/admin/testimonios">
+      <mat-icon>rate_review</mat-icon> Testimonios
+    </button>
+  </div>
+
+  <div class="data-summary-grid full-width-grid">
+    
+    <mat-card class="data-card">
+      <mat-card-header>
+        <mat-card-title>Agenda de Hoy</mat-card-title>
+        <button mat-button color="primary" routerLink="/admin/reservas">Ver Calendario</button>
+      </mat-card-header>
+      <mat-card-content>
+        <table mat-table [dataSource]="todayReservations" class="full-width-table">
+          
+          <ng-container matColumnDef="time">
+            <th mat-header-cell *matHeaderCellDef> Hora </th>
+            <td mat-cell *matCellDef="let res"> <strong>{{ res.time }}</strong> </td>
+          </ng-container>
+
+          <ng-container matColumnDef="client">
+            <th mat-header-cell *matHeaderCellDef> Cliente </th>
+            <td mat-cell *matCellDef="let res"> {{ res.user.firstName }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="service">
+            <th mat-header-cell *matHeaderCellDef> Servicio </th>
+            <td mat-cell *matCellDef="let res"> {{ res.service?.name }} </td>
+          </ng-container>
+          
+          <ng-container matColumnDef="barber">
+            <th mat-header-cell *matHeaderCellDef> Barbero </th>
+            <td mat-cell *matCellDef="let res"> {{ res.barber?.name }} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedReservationColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedReservationColumns;"></tr>
+        </table>
+        <div *ngIf="todayReservations.length === 0" class="empty-state">
+          No hay citas programadas para hoy.
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="data-card">
+      <mat-card-header>
+        <mat-card-title>Últimos Pedidos Pendientes</mat-card-title>
+        <button mat-button color="primary" routerLink="/admin/pedidos">Gestionar</button>
+      </mat-card-header>
+      <mat-card-content>
+        <table mat-table [dataSource]="newOrders" class="full-width-table">
+          
+          <ng-container matColumnDef="orderId">
+            <th mat-header-cell *matHeaderCellDef> Pedido </th>
+            <td mat-cell *matCellDef="let order"> #{{ order.orderId }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="client">
+            <th mat-header-cell *matHeaderCellDef> Cliente </th>
+            <td mat-cell *matCellDef="let order"> {{ order.shippingInfo.firstName }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="total">
+            <th mat-header-cell *matHeaderCellDef> Total </th>
+            <td mat-cell *matCellDef="let order"> <strong>{{ order.total | currency:'S/ ' }}</strong> </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let order"> 
+              <button mat-icon-button [routerLink]="['/mi-cuenta/pedidos', order.orderId]">
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedOrderColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedOrderColumns;"></tr>
+        </table>
+        <div *ngIf="newOrders.length === 0" class="empty-state">
+          No hay pedidos en estado 'Procesando'.
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
