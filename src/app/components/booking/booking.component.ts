@@ -110,7 +110,8 @@ export class BookingComponent implements OnInit {
   
   backToCategories(): void { this.serviceStepView = 'categories'; this.selectedService = null; }
   
-  onStepChange(event: StepperSelectionEvent): void { 
+onStepChange(event: StepperSelectionEvent): void { 
+      // Paso Barbero
       if (event.selectedIndex === 2 && this.selectedLocation) { 
         this.barbersForLocation = this.barberService.getBarbersByLocationId(this.selectedLocation.id, true); 
         if (!this.data?.isReschedule) {
@@ -118,21 +119,36 @@ export class BookingComponent implements OnInit {
         }
       }
     
-    if (event.selectedIndex === 4) { 
+    // El paso de Información (índice 4) YA NO debe avanzar automáticamente 
+    // a menos que sea a través de confirmAppointment() o handleAuthentication() 
+    // para evitar el comportamiento que permite saltar pasos.
+    // El avance automático solo se aplica en el caso de que el usuario ya esté logueado
+    // Y el formulario se llene al entrar al paso.
+    if (event.selectedIndex === 4) { // Paso "Información"
       if (this.authService.isLoggedIn()) {
         const currentUser = this.authService.getCurrentUser();
         
         if (currentUser) {
           this.informationForm.patchValue(currentUser);
-          this._saveReservation(); 
+          // Si el usuario está logueado y se llenan los datos, 
+          // avanzamos al paso de confirmación automáticamente.
+          this._saveReservation();
           setTimeout(() => {
             this.stepper.next();
           }, 0);
         }
       }
     }
-  }
 
+    // Lógica de validación para prevenir el avance directo a "Confirmación" (índice 5) 
+    // si el formulario no es válido.
+    if (event.selectedIndex === 5 && !this.informationForm.valid) {
+        // Redirigir al paso 4 (Información) si intentó ir al paso 5 sin validar.
+        setTimeout(() => {
+             this.stepper.selectedIndex = 4;
+        }, 0);
+    }
+  }
  selectBarber(barber: any): void { 
     this.selectedBarber = barber; 
     this.selectedDate = null;
@@ -171,17 +187,25 @@ onDateSelect(date: Date | null): void {
   
   handleAuthentication(userDataFromChild: any): void { 
     this.informationForm.patchValue(userDataFromChild); 
+    // Después de un login/registro exitoso, el formulario se valida 
+    // y el botón "Siguiente" lo enviará.
+    if (this.informationForm.valid) {
+      this.confirmAppointment();
+    }
   }
 
   confirmAppointment(): void {
     if (this.informationForm.valid) { 
-      this._saveReservation();
+      // Si el usuario no estaba logueado y llenó el formulario, se guarda aquí.
+      if (!this.authService.isLoggedIn()) { 
+          this._saveReservation();
+      }
       this.stepper.next();
     } else {
       this.informationForm.markAllAsTouched();
     }
   }
-  
+    
   private _saveReservation(): void {
     this.confirmationNumber = Math.floor(100000 + Math.random() * 900000).toString();
 
