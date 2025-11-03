@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router'; // Importa RouterModule y Router
 import { AuthService } from '../../services/auth.service'; // Ajusta la ruta si es necesario
 import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 // Importaciones de Angular Material
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -10,6 +11,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { UiStateService } from '../../services/ui-state.service'; // Ajusta la ruta si es necesario
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-account-dashboard',
@@ -20,7 +22,8 @@ import { UiStateService } from '../../services/ui-state.service'; // Ajusta la r
     MatSidenavModule,
     MatListModule,
     MatIconModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatDividerModule
   ],
   templateUrl: './account-dashboard.component.html',
   styleUrls: ['./account-dashboard.component.css']
@@ -28,6 +31,7 @@ import { UiStateService } from '../../services/ui-state.service'; // Ajusta la r
 export class AccountDashboardComponent implements OnInit {
   
   currentUser$: Observable<any | null>;
+  isAdmin$: Observable<boolean>;
 
   constructor(
     private authService: AuthService,
@@ -35,6 +39,9 @@ export class AccountDashboardComponent implements OnInit {
     private uiStateService: UiStateService
   ) {
     this.currentUser$ = of(this.authService.getCurrentUser());
+    this.isAdmin$ = this.currentUser$.pipe(
+      map(() => this.authService.isAdmin())
+    );
   }
 
   ngOnInit(): void {

@@ -2,14 +2,17 @@
 
   <mat-step label="Local" [completed]="!!selectedLocation">
     <div class="step-container">
-      <div class="step-info">
+      <div class="step-info" *ngIf="contentService.content$ | async as guide">
         <mat-icon>location_on</mat-icon>
-        <h2>Seleccionar local</h2>
-        <p>Selecciona el local de tu reserva</p>
-        <div class="whatsapp-link">
-          <h3>¿Consultas?</h3>
-          <p>Escríbenos al WhatsApp</p>
-          <a href="#">995 515 022</a>
+        <h2>{{ guide['step1']?.title }}</h2>
+        <p>{{ guide['step1']?.description }}</p>
+        
+        <div class="whatsapp-contact-box">
+            <h3>{{ guide['contact'].title }}</h3>
+            <p>{{ guide['contact'].description }}</p>
+            <a [href]="guide['contact'].whatsappLink" mat-flat-button color="accent">
+                <mat-icon>whatsapp</mat-icon> {{ guide['contact'].whatsappNumber }}
+            </a>
         </div>
       </div>
       <div class="step-content">
@@ -24,20 +27,29 @@
           </div>
         </div>
       </div>
-      <div class="step-summary" *ngIf="stepper.selectedIndex > 0"></div>
+      <div class="step-summary">
+        </div>
     </div>
     <div class="step-actions">
       <button mat-button matStepperNext [disabled]="!selectedLocation">Siguiente</button>
     </div>
   </mat-step>
 
-<mat-step label="Servicio" [completed]="!!selectedService">
+  <mat-step label="Servicio" [completed]="!!selectedService">
     <div class="step-container">
-      <div class="step-info">
+      <div class="step-info" *ngIf="contentService.content$ | async as guide">
         <mat-icon>auto_stories</mat-icon>
-        <h2>Selecciona tu servicio</h2>
-        <p>Seleccione un servicio para el que desea programar una cita</p>
+        <h2>{{ guide['step2']?.title }}</h2>
+        <p>{{ guide['step2']?.description }}</p>
+
+        <div class="whatsapp-contact-box">
+            <h3>{{ guide['contact'].title }}</h3>
+            <p>{{ guide['contact'].description }}</p>
+            <a [href]="guide['contact'].whatsappLink" mat-flat-button color="accent">
+                <mat-icon>whatsapp</mat-icon> {{ guide['contact'].whatsappNumber }}
+            </a>
         </div>
+      </div>
       <div class="step-content">
         <div *ngIf="serviceStepView === 'categories'">
           <div *ngFor="let category of servicesByCategory" class="category-card" (click)="selectCategory(category)">
@@ -54,7 +66,8 @@
           </button>
           <div *ngFor="let service of selectedCategoryServices" 
                class="service-card"
-               (click)="selectService(service)" [class.selected]="service.id === selectedService?.id">
+               (click)="selectService(service)"
+               [class.selected]="service.id === selectedService?.id">
             <div class="service-details">
               <strong>{{ service.name }}</strong>
               <p>{{ service.description }}</p>
@@ -63,7 +76,7 @@
           </div>
         </div>
       </div>
-      <div class="step-summary" *ngIf="stepper.selectedIndex > 0">
+      <div class="step-summary" *ngIf="contentService.content$ | async as guide">
         <h4>RESUMEN</h4>
         <div class="summary-item">
           <span>UBICACIÓN</span>
@@ -71,11 +84,15 @@
         </div>
         <div class="summary-item" *ngIf="selectedService">
           <span>SERVICIO</span>
-          <strong>{{ selectedService.name }}</strong> <span class="sub-text">Duración: {{ totalDuration }} min</span> </div>
+          <strong>{{ selectedService.name }}</strong> 
+          <span class="sub-text">Duración: {{ totalDuration }} min</span>
+        </div>
         <div class="summary-item total" *ngIf="selectedService">
           <span>PRECIO TOTAL</span>
-          <strong>{{ selectedService.price | currency:'S/ ' }}</strong> </div>
-      </div>
+          <strong>{{ selectedService.price | currency:'S/ ' }}</strong> 
+        </div>
+        <mat-divider></mat-divider>
+        </div>
     </div>
     <div class="step-actions">
       <button mat-button matStepperPrevious>Atrás</button>
@@ -85,11 +102,20 @@
 
   <mat-step label="Barbero" [completed]="!!selectedBarber">
     <div class="step-container">
-       <div class="step-info">
+      
+      <div class="step-info" *ngIf="contentService.content$ | async as guide">
         <mat-icon>content_cut</mat-icon>
-        <h2>Selecciona al barbero</h2>
-        <p>Elige un barbero o selecciona "Cualquier agente" para asignarte uno automáticamente.</p>
+        <h2>{{ guide['step3']?.title }}</h2>
+        <p>{{ guide['step3']?.description }}</p>
+
+        <div class="whatsapp-contact-box">
+            <h3>{{ guide['contact'].title }}</h3>
+            <p>{{ guide['contact'].description }}</p>
+            <a [href]="guide['contact'].whatsappLink" mat-flat-button color="accent">
+                <mat-icon>whatsapp</mat-icon> {{ guide['contact'].whatsappNumber }}
+            </a>
         </div>
+      </div>
       <div class="step-content">
         <app-barber-selector 
           [barbers]="barbersForLocation"
@@ -97,7 +123,7 @@
           (selectionChange)="selectBarber($event)">
         </app-barber-selector>
       </div>
-      <div class="step-summary" *ngIf="stepper.selectedIndex > 0">
+      <div class="step-summary" *ngIf="contentService.content$ | async as guide">
         <h4>RESUMEN</h4>
         <div class="summary-item">
           <span>UBICACIÓN</span>
@@ -106,6 +132,7 @@
         <div class="summary-item">
           <span>SERVICIO</span>
           <strong>{{ selectedService?.name }}</strong>
+          <span class="sub-text">Duración: {{ totalDuration }} min</span> 
         </div>
          <div class="summary-item" *ngIf="selectedBarber">
           <span>BARBERO</span>
@@ -115,7 +142,8 @@
           <span>PRECIO TOTAL</span>
           <strong>{{ selectedService?.price | currency:'S/ ' }}</strong>
         </div>
-      </div>
+        <mat-divider></mat-divider>
+        </div>
     </div>
     <div class="step-actions">
       <button mat-button matStepperPrevious>Atrás</button>
@@ -125,14 +153,17 @@
 
   <mat-step label="Fecha y Hora" [completed]="!!selectedDate && !!selectedTime">
     <div class="step-container">
-      <div class="step-info">
+      <div class="step-info" *ngIf="contentService.content$ | async as guide">
         <mat-icon>calendar_today</mat-icon>
-        <h2>Selecciona fecha & hora</h2>
-        <p>Haga clic en una fecha para ver las franjas horarias disponibles. Haga clic en una franja horaria verde para reservarla.</p>
-        <div class="whatsapp-link">
-          <h3>¿Consultas?</h3>
-          <p>Escríbenos al WhatsApp</p>
-          <a href="#">995 515 022</a>
+        <h2>{{ guide['step4']?.title }}</h2>
+        <p>{{ guide['step4']?.description }}</p>
+        
+        <div class="whatsapp-contact-box">
+            <h3>{{ guide['contact'].title }}</h3>
+            <p>{{ guide['contact'].description }}</p>
+            <a [href]="guide['contact'].whatsappLink" mat-flat-button color="accent">
+                <mat-icon>whatsapp</mat-icon> {{ guide['contact'].whatsappNumber }}
+            </a>
         </div>
       </div>
       <div class="step-content">
@@ -160,7 +191,7 @@
           </ng-template>
         </div>
       </div>
-      <div class="step-summary" *ngIf="stepper.selectedIndex > 0">
+      <div class="step-summary" *ngIf="contentService.content$ | async as guide">
         <h4>RESUMEN</h4>
         <div class="summary-item">
           <span>UBICACIÓN</span>
@@ -169,6 +200,7 @@
         <div class="summary-item">
           <span>SERVICIO</span>
           <strong>{{ selectedService?.name }}</strong>
+          <span class="sub-text">Duración: {{ totalDuration }} min</span> 
         </div>
         <div class="summary-item">
           <span>BARBERO</span>
@@ -182,7 +214,8 @@
           <span>PRECIO TOTAL</span>
           <strong>{{ selectedService?.price | currency:'S/ ' }}</strong>
         </div>
-      </div>
+        <mat-divider></mat-divider>
+        </div>
     </div>
     <div class="step-actions">
       <button mat-button matStepperPrevious>Atrás</button>
@@ -192,10 +225,18 @@
 
   <mat-step label="Información">
     <div class="step-container">
-      <div class="step-info">
+      <div class="step-info" *ngIf="contentService.content$ | async as guide">
         <mat-icon>person</mat-icon>
-        <h2>Ingresa tu información</h2>
-        <p>Inicia sesión o crea una cuenta para continuar con tu reserva.</p>
+        <h2>{{ guide['step5']?.title }}</h2>
+        <p>{{ guide['step5']?.description }}</p>
+
+        <div class="whatsapp-contact-box">
+            <h3>{{ guide['contact'].title }}</h3>
+            <p>{{ guide['contact'].description }}</p>
+            <a [href]="guide['contact'].whatsappLink" mat-flat-button color="accent">
+                <mat-icon>whatsapp</mat-icon> {{ guide['contact'].whatsappNumber }}
+            </a>
+        </div>
       </div>
       <div class="step-content">
         <app-auth-page
@@ -204,7 +245,7 @@
           (registerSuccess)="handleAuthentication($event)">
       </app-auth-page>
       </div>
-      <div class="step-summary" *ngIf="stepper.selectedIndex > 0">
+      <div class="step-summary" *ngIf="contentService.content$ | async as guide">
         <h4>RESUMEN</h4>
         <div class="summary-item">
           <span>UBICACIÓN</span>
@@ -213,6 +254,7 @@
         <div class="summary-item">
           <span>SERVICIO</span>
           <strong>{{ selectedService?.name }}</strong>
+          <span class="sub-text">Duración: {{ totalDuration }} min</span> 
         </div>
         <div class="summary-item">
           <span>BARBERO</span>
@@ -230,7 +272,8 @@
           <span>PRECIO TOTAL</span>
           <strong>{{ selectedService?.price | currency:'S/ ' }}</strong>
         </div>
-      </div>
+        <mat-divider></mat-divider>
+        </div>
     </div>
     <div class="step-actions">
       <button mat-button matStepperPrevious>Atrás</button>
@@ -240,16 +283,11 @@
 
   <mat-step label="Confirmación">
     <div class="step-container confirmation-view">
-      <div class="step-info">
+      <div class="step-info" *ngIf="contentService.content$ | async as guide">
         <mat-icon class="success-icon">verified_user</mat-icon>
-        <h2>Confirmación</h2>
-        <p>Su cita se ha programado correctamente. Conserve esta confirmación para su registro.</p>
-        <div class="whatsapp-link">
-          <h3>¿Consultas?</h3>
-          <p>Escríbenos al WhatsApp</p>
-          <a href="https://wa.me/51995515022" target="_blank">995 515 022</a>
+        <h2>{{ guide['step6']?.title }}</h2>
+        <p>{{ guide['step6']?.description }}</p>
         </div>
-      </div>
       <div class="step-content confirmation-details">
         <div class="confirmation-header">
           </div>
@@ -289,7 +327,7 @@
             </div>
             <div class="grid-item full-width">
               <span class="grid-label">SERVICIO:</span>      
-              <strong class="grid-value">{{ selectedService?.name }}</strong>
+              <strong class="grid-value">{{ selectedService?.name }} ({{ totalDuration }} min)</strong>
             </div>
           </div>
         </div>
@@ -348,7 +386,7 @@
                 <span>Barbero:</span>       <strong>{{ selectedBarber?.name }}</strong>
               </div>
               <div class="grid-item full-width">
-                <span>Servicio:</span>      <strong>{{ selectedService?.name }}</strong>
+                <span>Servicio:</span>      <strong>{{ selectedService?.name }} ({{ totalDuration }} min)</strong>
               </div>
           </div>
       </div>

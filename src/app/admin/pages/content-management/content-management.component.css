@@ -1,0 +1,132 @@
+/* src/app/admin/pages/content-management/content-management.component.css */
+
+/* 1. Contenedor Principal */
+.content-management-container {
+    max-width: 1200px; /* Más ancho para acomodar la columna lateral */
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* 2. Diseño de Cuadrícula de Sidebar y Contenido Principal (SOLUCIÓN CLAVE) */
+.management-grid {
+    display: grid;
+    /* Definimos dos columnas: 250px para el sidebar, el resto (1fr) para el contenido */
+    grid-template-columns: 250px 1fr; 
+    gap: 30px;
+    margin-top: 20px;
+}
+
+/* 3. Estilos del Sidebar (Columna de Botones) */
+.step-navigation-sidebar {
+    /* Mantenemos el sidebar fijo si la página es larga */
+    /* position: sticky; 
+    top: 20px; */ 
+}
+
+.sidebar-card {
+    padding: 16px;
+}
+
+.sidebar-card mat-card-subtitle {
+    font-weight: 600;
+    margin-bottom: 15px;
+    display: block;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.step-navigation-buttons {
+    display: flex;
+    flex-direction: column; /* Apila los botones verticalmente */
+    gap: 10px;
+}
+
+.sidebar-button {
+    width: 100%;
+    text-align: left;
+    height: 45px; /* Botones más altos para mejor toque/clic */
+    justify-content: flex-start;
+    padding: 0 15px;
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.sidebar-button.active {
+    background-color: #3f51b5; /* Color primario */
+    color: white;
+    border-color: #3f51b5;
+    font-weight: 500;
+}
+
+/* 4. Estilos del Contenido Principal (Formulario) */
+.content-card {
+    padding: 30px; /* Más padding para más espacio */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.content-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Formulario de 2 columnas */
+    gap: 25px; /* Más espacio entre campos */
+    padding-top: 20px;
+}
+
+/* Título, Descripción y Botón siempre ocupan el ancho completo */
+.content-form mat-form-field:first-child, /* Título */
+.full-width-field, /* Descripción */
+.contact-subtitle,
+.save-button {
+    grid-column: 1 / -1; /* Ocupa ambas columnas */
+}
+
+/* Mejorar la altura del textarea */
+.content-form textarea {
+    min-height: 120px; 
+    resize: vertical;
+}
+
+/* Reajustar la rejilla para los campos de WhatsApp (si están en un div separado) */
+.whatsapp-fields-grid {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dos campos en una fila */
+    gap: 25px;
+}
+
+/* Botón de Guardar más grande */
+.save-button {
+    height: 55px; 
+    font-size: 16px;
+    justify-self: start;
+    margin-top: 15px;
+}
+
+
+/* Media Query para móvil: apilar el sidebar */
+@media (max-width: 768px) {
+    .management-grid {
+        grid-template-columns: 1fr; /* Sidebar y contenido se apilan */
+        gap: 20px;
+    }
+
+    .content-card {
+        padding: 20px;
+    }
+    
+    .step-navigation-buttons {
+        flex-direction: row; /* Los botones vuelven a ser horizontales para ahorrar espacio */
+        flex-wrap: wrap;
+    }
+    
+    .sidebar-button {
+        width: auto;
+        flex-grow: 1;
+        min-width: 45%;
+    }
+
+    .content-form {
+        grid-template-columns: 1fr; /* Todo el formulario en una sola columna */
+    }
+    
+    .whatsapp-fields-grid {
+        grid-template-columns: 1fr; /* Campos de WhatsApp en una sola columna */
+    }
+}

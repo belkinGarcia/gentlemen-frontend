@@ -8,7 +8,7 @@ export interface Service {
   name: string;
   description: string;
   price: number;
-  duration: number; // <-- ¡CLAVE NUEVA! (Duración en minutos)
+  duration: number; // Duración en minutos
 }
 
 // Interfaz para la estructura de Categorías
@@ -48,21 +48,21 @@ export class ServiceService {
 
   private readonly SERVICE_KEY = 'service_database';
 
-  // BehaviorSubject para la lista de categorías
   private categoriesSubject = new BehaviorSubject<Category[]>([]);
-  public categories$: Observable<Category[]> = this.categoriesSubject.asObservable();
+  public categories$: Observable<Category[]>;
   
-  // Lista plana de todos los servicios para búsqueda rápida
   private allServices: Service[] = [];
 
   constructor() {
+    this.categories$ = this.categoriesSubject.asObservable();
     this.loadInitialData();
   }
 
   private loadInitialData(): void {
     const dataFromStorage = localStorage.getItem(this.SERVICE_KEY);
     if (dataFromStorage) {
-      this.categoriesSubject.next(JSON.parse(dataFromStorage));
+      const categories = JSON.parse(dataFromStorage);
+      this.categoriesSubject.next(categories);
     } else {
       localStorage.setItem(this.SERVICE_KEY, JSON.stringify(MOCK_SERVICES));
       this.categoriesSubject.next(MOCK_SERVICES);
@@ -74,8 +74,6 @@ export class ServiceService {
     this.allServices = categories.flatMap(cat => cat.items);
   }
   
- // --- MÉTODOS DE LECTURA (ACTUALIZADOS) ---
-
   getServicesByCategory(): Category[] {
     return this.categoriesSubject.getValue();
   }
@@ -84,18 +82,15 @@ export class ServiceService {
     return this.allServices.find(service => service.id === id);
   }
   
-  // --- ¡NUEVOS MÉTODOS CRUD (SOLUCIONAN TS2339)! ---
-
   private _saveCategories(categories: Category[]): void {
     localStorage.setItem(this.SERVICE_KEY, JSON.stringify(categories));
     this.categoriesSubject.next(categories);
     this.updateAllServicesList(categories);
   }
 
-  createService(newServiceData: any): void { // newServiceData incluye {name, price, duration, category...}
+  createService(newServiceData: any): void {
     let categories = this.getServicesByCategory();
     
-    // 1. Encuentra la categoría o crea una nueva
     let category = categories.find(c => c.category === newServiceData.category);
 
     if (!category) {
@@ -103,7 +98,6 @@ export class ServiceService {
       categories = [...categories, category];
     }
 
-    // 2. Asigna ID y añade el servicio
     const newId = Math.max(...this.allServices.map(s => s.id), 0) + 1;
     const newService: Service = { ...newServiceData, id: newId };
     category.items.push(newService);
@@ -115,11 +109,9 @@ export class ServiceService {
     const categories = this.getServicesByCategory();
     
     const updatedCategories = categories.map(cat => {
-      // 1. Si el servicio pertenece a esta categoría
       const itemIndex = cat.items.findIndex(item => item.id === updatedService.id);
       
       if (itemIndex > -1) {
-        // 2. Reemplaza el servicio
         cat.items[itemIndex] = updatedService;
       }
       return cat;
@@ -132,11 +124,10 @@ export class ServiceService {
     const categories = this.getServicesByCategory();
     
     const updatedCategories = categories.map(cat => {
-      // Filtra el servicio de su categoría
       cat.items = cat.items.filter(item => item.id !== serviceToDelete.id);
       return cat;
     });
 
-    this._saveCategories(updatedCategories.filter(cat => cat.items.length > 0)); // Elimina categorías vacías
+    this._saveCategories(updatedCategories.filter(cat => cat.items.length > 0));
   }
 }

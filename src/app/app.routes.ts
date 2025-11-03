@@ -43,6 +43,7 @@ import { ScheduleManagementComponent } from './admin/pages/schedule-management/s
 import { ServiceManagementComponent } from './admin/pages/service-management/service-management.component';
 import { LocationManagementComponent } from './admin/pages/location-management/location-management.component';
 import { TestimonialManagementComponent } from './admin/pages/testimonial-management/testimonial-management.component';
+import { ContentManagementComponent } from './admin/pages/content-management/content-management.component';
 
 export const routes: Routes = [
   
@@ -68,7 +69,8 @@ export const routes: Routes = [
       { path: 'productos', component: ProductManagementComponent },
       { path: 'servicios', component: ServiceManagementComponent },
       { path: 'sedes', component: LocationManagementComponent },
-       { path: 'testimonios', component: TestimonialManagementComponent },     
+      { path: 'testimonios', component: TestimonialManagementComponent },   
+      { path: 'contenido', component: ContentManagementComponent }  
     ]
   },
 

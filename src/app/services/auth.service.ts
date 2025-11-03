@@ -169,9 +169,9 @@ export class AuthService {
    * Revisa si el rol del usuario logueado es 'ADMIN'.
    * Usado por el AdminGuard.
    */
-  public isAdmin(): boolean {
-    if (!this.isLoggedIn()) return false;
-    const role = localStorage.getItem(this.ROLE_KEY);
-    return role === 'ADMIN';
+  isAdmin(): boolean {
+    const user = this.getCurrentUser();
+    // Verifica si el usuario existe y si su rol es 'ADMIN'
+    return user && user.role === 'ADMIN'; 
   }
 }

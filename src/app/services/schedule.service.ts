@@ -59,7 +59,6 @@ export class ScheduleService {
       workTimeSlots = [];
     }
 
-    // --- ¡CORRECCIÓN APLICADA AQUÍ! ---
     // Usamos el Subject público del ReservationService para obtener el valor
     const allReservations = this.reservationService.reservationsSubject.getValue(); 
     
@@ -69,14 +68,20 @@ export class ScheduleService {
                       new Date(res.date!).toDateString() === date.toDateString());
 
     const availableSlots: string[] = [];
-    const slotDuration = 20;
+    const baseIncrementMinutes = 10;
 
-    for (const startTimeStr of workTimeSlots) {
+   for (const startTimeStr of workTimeSlots) {
         
-        for (let minuteOffset = 0; minuteOffset < 60; minuteOffset += slotDuration) {
+        // Iteramos en incrementos de 10 minutos para encontrar el slot de inicio perfecto
+        for (let minuteOffset = 0; minuteOffset < 60; minuteOffset += baseIncrementMinutes) { 
             
             const startMinutes = this.timeToMinutes(startTimeStr) + minuteOffset;
             const endMinutes = startMinutes + appointmentDuration;
+            
+            // Regla Adicional: El slot de inicio DEBE ser divisible por la duración del servicio (40)
+            if (startMinutes % appointmentDuration !== 0) {
+                continue; // Saltar si no es un inicio de slot válido (ej: 8:10, 8:30)
+            }
             
             const startHour = Math.floor(startMinutes / 60);
             const startMinute = startMinutes % 60;
@@ -84,11 +89,13 @@ export class ScheduleService {
 
             let isSlotAvailable = true;
 
+            // Comprobar solapamiento con reservas existentes
             for (const res of existingReservations) {
                 const resStartMinutes = this.timeToMinutes(res.time!);
                 const resDuration = (res.service as Service).duration; 
                 const resEndMinutes = resStartMinutes + resDuration;
                 
+                // Verificar si la nueva cita se solapa
                 if (startMinutes < resEndMinutes && endMinutes > resStartMinutes) {
                     isSlotAvailable = false;
                     break;
@@ -100,8 +107,7 @@ export class ScheduleService {
             }
         }
     }
-    
-    const uniqueSlots = [...new Set(availableSlots)].filter(time => this.timeToMinutes(time) % 20 === 0);
-    return uniqueSlots.slice(0, 30);
+    const uniqueSlots = [...new Set(availableSlots)]; 
+    return uniqueSlots;
   }
 }

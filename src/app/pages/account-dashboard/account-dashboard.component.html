@@ -8,6 +8,12 @@
       </div>
       
       <mat-nav-list>
+        <ng-container *ngIf="isAdmin$ | async">
+            <a mat-list-item routerLink="/admin" routerLinkActive="active-link" class="admin-dashboard-link">
+                <mat-icon>dashboard</mat-icon>
+                <span>Dashboard Admin</span>
+            </a>
+            <mat-divider></mat-divider> </ng-container>
         <a mat-list-item routerLink="perfil" routerLinkActive="active-link">
           <mat-icon>person</mat-icon>
           <span>Mi Perfil</span>

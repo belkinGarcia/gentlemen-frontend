@@ -6,7 +6,7 @@ import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { LocationService } from '../../services/location.service';
-import { Service, ServiceService } from '../../services/service.service';
+import { Category, Service, ServiceService } from '../../services/service.service';
 import { BarberService } from '../../services/barber.service';
 import { BarberSelectorComponent } from '../barber-selector/barber-selector.component';
 import { ScheduleService } from '../../services/schedule.service';
@@ -20,6 +20,8 @@ import { AuthService } from '../../services/auth.service';
 import { ReservationService, Reservation, ReservationData } from '../../services/reservation.service'; 
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { ContentService } from '../../services/content.service';
+import { MatDividerModule } from '@angular/material/divider';
 
 declare var html2canvas: any;
 
@@ -29,7 +31,7 @@ declare var html2canvas: any;
   imports: [
     CommonModule, MatStepperModule, MatButtonModule, MatIconModule, BarberSelectorComponent,
     MatDatepickerModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule,
-    MatCheckboxModule, AuthPageComponent
+    MatCheckboxModule, AuthPageComponent, MatDividerModule
   ],
   templateUrl: './booking.component.html',
   styleUrls: ['./booking.component.css'],
@@ -40,21 +42,20 @@ export class BookingComponent implements OnInit {
 
   locations: any[] = [];
   selectedLocation: any | null = null;
-  servicesByCategory: any[] = [];
+  servicesByCategory: Category[] = [];
   serviceStepView: 'categories' | 'services' = 'categories';
-  selectedCategoryServices: any[] = [];
-  selectedService: Service | null = null;
+  selectedCategoryServices: Service[] = [];
+  public selectedService: Service | null = null;
   minDate: Date; 
   selectedDate: Date | null = null;
   selectedTime: string | null = null;
   availableTimes: string[] = [];
   barbersForLocation: any[] = [];
-  selectedBarber: any | null = null;
+  public selectedBarber: any | null = null;
   informationForm!: FormGroup;
   confirmationNumber: string = '';
   totalDuration: number = 0;
 
-  // Propiedad para guardar el ID de la cita a cancelar
   private oldReservationIdToCancel: string | null = null; 
 
   constructor(
@@ -67,13 +68,15 @@ export class BookingComponent implements OnInit {
     private reservationService: ReservationService,
     public dialogRef: MatDialogRef<BookingComponent>,
     private router: Router,
-    // Inyección para recibir datos (para reagendar)
+    public contentService: ContentService,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any 
   ) { this.minDate = new Date(); }
 
   ngOnInit(): void {
     this.locations = this.locationService.getLocations();
-    this.servicesByCategory = this.serviceService.getServicesByCategory();
+    this.serviceService.categories$.subscribe(categories => {
+          this.servicesByCategory = categories;
+        });
     
     this.informationForm = this.fb.group({
       firstName: ['', Validators.required],
@@ -83,38 +86,37 @@ export class BookingComponent implements OnInit {
       phone: ['', Validators.required]
     });
 
-    // --- LÓGICA DE REAGENDAR ---
-    // Comprueba si el modal se abrió con datos de "Reagendar"
-   if (this.data && this.data.isReschedule) {
-      const oldRes: Reservation = this.data.reservationData;
-      this.oldReservationIdToCancel = oldRes.confirmationNumber;
-      this.selectedLocation = oldRes.location;
-      this.selectedService = oldRes.service;
-      this.selectedBarber = oldRes.barber;
-      this.totalDuration = oldRes.service.duration; // Aseguramos que la duración se cargue
-      
-      setTimeout(() => {
-        this.stepper.selectedIndex = 3; 
-      }, 0);
-    }
-  }
+    if (this.data && this.data.isReschedule) {
+          const oldRes: Reservation = this.data.reservationData;
+          this.oldReservationIdToCancel = oldRes.confirmationNumber;
+          this.selectedLocation = oldRes.location;
+          this.selectedService = oldRes.service as Service;
+          this.selectedBarber = oldRes.barber;
+          this.totalDuration = (oldRes.service as Service).duration;
+          
+          setTimeout(() => {
+            this.stepper.selectedIndex = 3; 
+          }, 0);
+        }
+      }
 
   selectLocation(location: any): void { this.selectedLocation = location; }
-  selectCategory(category: any): void { this.selectedCategoryServices = category.items; this.serviceStepView = 'services'; }
- selectService(service: Service): void {
+  selectCategory(category: Category): void { this.selectedCategoryServices = category.items; this.serviceStepView = 'services'; }
+  
+  selectService(service: Service): void {
     this.selectedService = service;
-    this.totalDuration = service.duration; // Ya no es opcional, el servicio se ha seleccionado
+    this.totalDuration = service.duration;
   }
   
   backToCategories(): void { this.serviceStepView = 'categories'; this.selectedService = null; }
   
   onStepChange(event: StepperSelectionEvent): void { 
-    if (event.selectedIndex === 2 && this.selectedLocation) { 
-      this.barbersForLocation = this.barberService.getBarbersByLocationId(this.selectedLocation.id, true); 
-      if (!this.data?.isReschedule) {
-        this.selectedBarber = null; 
+      if (event.selectedIndex === 2 && this.selectedLocation) { 
+        this.barbersForLocation = this.barberService.getBarbersByLocationId(this.selectedLocation.id, true); 
+        if (!this.data?.isReschedule) {
+          this.selectedBarber = null; 
+        }
       }
-    }
     
     if (event.selectedIndex === 4) { 
       if (this.authService.isLoggedIn()) {
@@ -139,26 +141,29 @@ export class BookingComponent implements OnInit {
   }
   
 onDateSelect(date: Date | null): void { 
-    if (date && this.selectedBarber && this.selectedService) { 
-      this.selectedDate = date; 
-      this.selectedTime = null; 
-      
-      // 1. Duración del servicio seleccionado
-      const appointmentDuration = this.selectedService.duration;
-      
-      // 2. Llama al scheduleService pasándole la duración
-      // NOTA: Debes cambiar el método en ScheduleService para que acepte la duración.
-      this.availableTimes = this.scheduleService.getAvailableTimesFor(
-        date, 
-        this.selectedBarber.id,
-        appointmentDuration // <-- ¡NUEVO PARÁMETRO!
-      );
+    
+    const defaultDuration = 30; 
+    let appointmentDuration = defaultDuration;
+
+    if (date && this.selectedBarber) {
+        
+        if (this.selectedService) {
+            appointmentDuration = this.selectedService.duration; 
+        }
+
+        this.selectedDate = date; 
+        this.selectedTime = null; 
+        
+        this.availableTimes = this.scheduleService.getAvailableTimesFor(
+            date, 
+            this.selectedBarber.id,
+            appointmentDuration
+        );
     
     } else {
       this.availableTimes = [];
     }
   }
-  
   selectTime(time: string): void { this.selectedTime = time; }
   dateClass = (d: Date): string => { 
     return this.scheduleService.isDateUnavailable(d) ? 'unavailable-date' : 'available-date'; 
@@ -180,7 +185,6 @@ onDateSelect(date: Date | null): void {
   private _saveReservation(): void {
     this.confirmationNumber = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // Objeto con los datos de la nueva reserva
     const newReservationData: ReservationData = {
       location: this.selectedLocation,
       service: this.selectedService,
@@ -191,10 +195,8 @@ onDateSelect(date: Date | null): void {
       confirmationNumber: this.confirmationNumber
     };
 
-    // 1. Crea la NUEVA reserva
     this.reservationService.createReservation(newReservationData);
 
-    // 2. ¡Cancela la ANTIGUA si estamos reagendando!
     if (this.oldReservationIdToCancel) {
           this.reservationService.cancelReservation(this.oldReservationIdToCancel);
           this.oldReservationIdToCancel = null;
