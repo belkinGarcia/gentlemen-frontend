@@ -37,33 +37,37 @@
       </mat-card>
     </div>
   </div>
-  
- <p class="subtitle">Bienvenido al centro de control de tu barbería.</p>
 
   <div class="quick-access-buttons">
     <button mat-flat-button color="primary" routerLink="/admin/reservas">
-      <mat-icon>calendar_plus</mat-icon> Crear Nueva Cita
+      <mat-icon>calendar_month</mat-icon> Ver Citas
     </button>
     <button mat-flat-button color="accent" routerLink="/admin/productos">
       <mat-icon>add_shopping_cart</mat-icon> Añadir Producto
     </button>
     
     <button mat-stroked-button color="primary" routerLink="/admin/barberos">
-      <mat-icon>person_pin</mat-icon> Staff / Barberos
+      <mat-icon>person_pin</mat-icon>Gestionar Barberos
     </button>
     
     <button mat-stroked-button color="primary" routerLink="/admin/usuarios">
       <mat-icon>group</mat-icon> Gestionar Roles
     </button>
+    <button mat-stroked-button color="primary" routerLink="/admin/pedidos">
+      <mat-icon>shopping_bag</mat-icon> Ver Pedidos
+    </button>
     <button mat-stroked-button color="accent" routerLink="/admin/sedes">
       <mat-icon>storefront</mat-icon> Sedes
     </button>
     <button mat-stroked-button color="primary" routerLink="/admin/servicios">
-      <mat-icon>cut</mat-icon> Servicios
+      <mat-icon>spa</mat-icon> Servicios
     </button>
     <button mat-stroked-button color="accent" routerLink="/admin/testimonios">
-      <mat-icon>rate_review</mat-icon> Testimonios
+      <mat-icon>edit_note</mat-icon> Testimonios
     </button>
+        <button mat-stroked-button color="accent" routerLink="/admin/contenido">
+      <mat-icon>rate_review</mat-icon> Contenido
+    </button> 
   </div>
 
   <div class="data-summary-grid full-width-grid">
@@ -71,7 +75,6 @@
     <mat-card class="data-card">
       <mat-card-header>
         <mat-card-title>Agenda de Hoy</mat-card-title>
-        <button mat-button color="primary" routerLink="/admin/reservas">Ver Calendario</button>
       </mat-card-header>
       <mat-card-content>
         <table mat-table [dataSource]="todayReservations" class="full-width-table">
@@ -108,7 +111,6 @@
     <mat-card class="data-card">
       <mat-card-header>
         <mat-card-title>Últimos Pedidos Pendientes</mat-card-title>
-        <button mat-button color="primary" routerLink="/admin/pedidos">Gestionar</button>
       </mat-card-header>
       <mat-card-content>
         <table mat-table [dataSource]="newOrders" class="full-width-table">
