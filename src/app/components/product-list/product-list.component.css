@@ -1,144 +1,107 @@
-/* --- Contenedor Principal --- */
 .list-container {
-  /* Fondo oscuro y padding */
   background-color: #1a1a1a;
   padding: 60px 0;
   color: #fff;
 }
-
 .content-wrapper {
-  /* Centra el contenido */
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
   text-align: center;
 }
-
-/* --- Títulos (como en la imagen) --- */
 .list-container h2 {
   color: #fff;
-  font-size: 1.5rem; /* Ajusta el tamaño según sea necesario */
+  font-size: 1.5rem; 
   font-weight: 700;
   letter-spacing: 1px;
   margin-bottom: 0;
   text-transform: uppercase;
 }
-
 .list-container h1 {
-  color: #d4c39a; /* Color dorado */
-  font-size: 2rem; /* Ajusta el tamaño según sea necesario */
+  color: #d4c39a; 
+  font-size: 2rem; 
   font-weight: 700;
   letter-spacing: 1px;
   margin-top: 5px;
-  margin-bottom: 40px; /* Espacio antes de los productos */
+  margin-bottom: 40px; 
   text-transform: uppercase;
 }
-
-/* --- Estilos para la VISTA DE CARRUSEL --- */
 .carousel-container {
   position: relative;
-  /* Ya no necesitamos padding-bottom */
 }
-
 .carousel-inner {
   overflow: hidden;
   width: 100%;
 }
-
 .carousel-track {
   display: flex;
   transition: transform 0.5s ease-in-out;
 }
-
 .carousel-track app-product-card {
-  flex: 0 0 33.333%; /* Muestra 3 items en escritorio */
+  flex: 0 0 33.333%; 
   padding: 0 15px;
   box-sizing: border-box;
 }
-
-/* --- Navegación del Carrusel (Actualizada) --- */
 .carousel-nav {
-  position: static; /* Ya no es absoluta */
+  position: static; 
   left: auto;
   bottom: auto;
-  transform: none; /* Ya no se centra con transform */
-  
+  transform: none; 
   display: flex;
-  justify-content: center; /* Centra los botones */
+  justify-content: center; 
   align-items: center;
   gap: 15px;
-  margin-top: 30px; /* Espacio después de las tarjetas */
+  margin-top: 30px; 
 }
-
 .carousel-nav button {
-  color: #d4c39a; /* Botones dorados */
+  color: #d4c39a; 
   background-color: transparent;
 }
-
-/* Ocultamos las líneas, ya que no están en el nuevo diseño */
 .nav-line {
   display: none;
 }
-
-/* --- Botón "VER TODOS LOS PRODUCTOS" (Actualizado) --- */
 .view-all-btn {
-  /* Sobreescribimos estilos de Material */
   background-color: transparent !important;
   border: 2px solid #d4c39a;
-  color: #d4c39a !important; /* !important para sobreescribir color de <a> */
-  
+  color: #d4c39a !important; 
   padding: 10px 30px;
   font-weight: 700;
   letter-spacing: 1px;
-  margin-top: 30px; /* Espacio después de la nav del carrusel */
+  margin-top: 30px; 
   display: inline-block;
   text-decoration: none;
   transition: all 0.3s ease;
 }
-
 .view-all-btn:hover {
   background-color: #d4c39a !important;
   color: #1a1a1a !important;
 }
-
-/* --- VISTA DE GRILLA (PARA LA TIENDA) --- */
 .products-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 30px;
 }
-
-/* ========================================= */
-/* ===== ESTILOS RESPONSIVOS (Igual que antes) ===== */
-/* ========================================= */
-
-/* --- Reponsivo para CARRUSEL --- */
 @media (max-width: 992px) {
   .carousel-track app-product-card {
-    flex: 0 0 50%; /* Muestra 2 items en tablet */
+    flex: 0 0 50%; 
   }
 }
-
 @media (max-width: 768px) {
   .carousel-track app-product-card {
-    flex: 0 0 100%; /* Muestra 1 item en móvil */
+    flex: 0 0 100%; 
   }
 }
-
-/* --- Responsivo para GRILLA --- */
 @media (max-width: 992px) {
   .products-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-
 /* =================================
   == MEJORA APLICADA:
   == Se eliminó el bloque @media (max-width: 768px) 
   == que era redundante con el de 992px.
   =================================
 */
-
 @media (max-width: 480px) {
   .products-grid {
     grid-template-columns: 1fr;

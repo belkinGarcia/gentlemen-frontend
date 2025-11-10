@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core'; // Añade Input
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductCardComponent } from '../product-card/product-card.component';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,7 +10,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CustomPaginatorComponent } from '../custom-paginator/custom-paginator.component';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-
 @Component({
   selector: 'app-product-list',
   standalone: true,
@@ -28,20 +27,11 @@ export class ProductListComponent {
   @Input() products: any[] = [];
   @Input() totalProducts: number = 0;
   @Input() pageSize: number = 8;
-  
-  // --- INICIO DE CAMBIOS ---
-  /** Muestra los títulos H1 y H2 en la parte superior del componente */
   @Input() showTitle: boolean = true;
-  /** Muestra el botón "VER TODOS LOS PRODUCTOS" debajo del carrusel */
   @Input() showViewAllButton: boolean = true;
-  /** Muestra la navegación de flechas/puntos del carrusel */
-  @Input() showNav: boolean = false; // Por defecto estaba oculta, ahora la controlamos
-  // --- FIN DE CAMBIOS ---
-  
+  @Input() showNav: boolean = false;
   @Output() pageChange = new EventEmitter<number>();
-
   currentIndex = 0;
-
   get maxIndex(): number {
     const visibleSlides = 3; 
     if (this.products.length <= visibleSlides) {
@@ -49,19 +39,15 @@ export class ProductListComponent {
     }
     return this.products.length - visibleSlides;
   }
-
   constructor() {}
-
   onPageChange(page: number): void {
     this.pageChange.emit(page);
   }
-
   next(): void {
     if (this.currentIndex < this.maxIndex) {
       this.currentIndex++;
     }
   }
-
   prev(): void {
     if (this.currentIndex > 0) {
       this.currentIndex--;

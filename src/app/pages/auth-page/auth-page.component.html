@@ -1,5 +1,4 @@
 <div [ngSwitch]="displayMode">
-
   <ng-container *ngSwitchCase="'tabs'">
     <div class="form-toggle-header">
       <div class="toggle-option" [class.active]="activeView === 'register'" (click)="setActiveView('register')">
@@ -9,7 +8,6 @@
         Iniciar sesión
       </div>
     </div>
-
     <div class="forms-content">
       <div *ngIf="activeView === 'register'">
         <form [formGroup]="registerForm" (ngSubmit)="onSubmitRegister()">
@@ -63,7 +61,6 @@
           <button mat-flat-button color="primary" type="submit" [disabled]="registerForm.invalid">REGISTRARME AHORA</button>
         </form>
       </div>
-      
       <div *ngIf="activeView === 'login'">
         <form [formGroup]="loginForm" (ngSubmit)="onSubmitLogin()">
           <mat-form-field appearance="fill">
@@ -86,7 +83,6 @@
       </div>
     </div>
   </ng-container>
-
   <ng-container *ngSwitchDefault>
     <div class="content-wrapper">
       <div class="forms-container">

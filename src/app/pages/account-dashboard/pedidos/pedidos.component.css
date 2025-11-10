@@ -1,36 +1,29 @@
 .pedidos-container {
   padding: 20px;
 }
-
 h2 {
   font-weight: 600;
   margin-bottom: 5px;
 }
-
 p {
   color: #666;
   margin-bottom: 30px;
 }
-
 table {
   width: 100%;
 }
-
 .mat-mdc-table {
   box-shadow: 0 2px 5px rgba(0,0,0,0.05) !important;
 }
-
 .mat-mdc-header-cell {
   background-color: #f9f9f9;
   font-weight: bold;
   color: #333;
 }
-
 .mat-mdc-chip {
   padding: 4px 10px;
   font-size: 0.85em;
 }
-
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -41,7 +34,6 @@ table {
   border: 1px dashed #ddd;
   margin-top: 20px;
 }
-
 .empty-state mat-icon {
   font-size: 50px;
   height: 50px;

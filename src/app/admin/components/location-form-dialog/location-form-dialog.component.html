@@ -1,45 +1,36 @@
 <h2 mat-dialog-title>
   {{ isEditMode ? 'Editar Sede' : 'Añadir Nueva Sede' }}
 </h2>
-
 <mat-dialog-content>
   <form [formGroup]="locationForm" class="location-form">
-    
     <div class="form-row">
       <mat-form-field appearance="outline" class="flex-50">
         <mat-label>Nombre de la Sede</mat-label>
         <input matInput formControlName="name" required>
       </mat-form-field>
-      
       <mat-form-field appearance="outline" class="flex-50">
         <mat-label>Teléfono de Contacto</mat-label>
         <input matInput formControlName="phone" required>
       </mat-form-field>
     </div>
-
     <mat-divider></mat-divider>
-    
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Dirección Completa</mat-label>
       <input matInput formControlName="address" required>
     </mat-form-field>
-
     <div class="form-row">
       <mat-form-field appearance="outline" class="flex-50">
         <mat-label>URL de Imagen</mat-label>
         <input matInput formControlName="imageUrl">
         <mat-hint>Usada en la página pública de Locales.</mat-hint>
       </mat-form-field>
-
       <mat-form-field appearance="outline" class="flex-50">
         <mat-label>Link de Google Maps</mat-label>
         <input matInput formControlName="mapLink">
       </mat-form-field>
     </div>
-
   </form>
 </mat-dialog-content>
-
 <mat-dialog-actions align="end">
   <button mat-button (click)="onCancel()">Cancelar</button>
   <button mat-flat-button color="primary" (click)="onSave()" [disabled]="locationForm.invalid">

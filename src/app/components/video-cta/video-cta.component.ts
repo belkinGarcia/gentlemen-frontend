@@ -9,7 +9,6 @@ import {
   MAT_DIALOG_DATA,
   MatDialogRef
 } from '@angular/material/dialog';
-
 @Component({
   selector: 'app-video-cta',
   standalone: true,
@@ -24,25 +23,20 @@ import {
 })
 export class VideoCtaComponent {
   videoUrl: SafeResourceUrl;
-
   constructor(public dialog: MatDialog, private sanitizer: DomSanitizer) {
     const unsafeUrl = "https://www.youtube.com/embed/qKhkeEz9k1Y?autoplay=1&rel=0&modestbranding=1&showinfo=0&controls=1";
     this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(unsafeUrl);
   }
-
   openVideoDialog(): void {
     this.dialog.open(VideoPlayerDialogComponent, {
-      // --- MODIFICADO: Volvemos a las dimensiones originales ---
       width: '90vw',
       maxWidth: '1200px',
       height: '90vh',
-      // --- FIN MODIFICADO ---
       panelClass: 'video-dialog-container',
       data: { videoUrl: this.videoUrl } 
     });
   }
 }
-
 @Component({
   selector: 'app-video-player-dialog',
   standalone: true,
@@ -52,7 +46,6 @@ export class VideoCtaComponent {
     MatDialogModule,
     MatIconModule
   ],
-  // --- MODIFICADO: Se quita el 'style' inline del iframe ---
   template: `
     <mat-dialog-content>
       <iframe 
@@ -64,12 +57,10 @@ export class VideoCtaComponent {
         allowfullscreen>
       </iframe>
     </mat-dialog-content>
-    
     <button mat-icon-button class="close-button" mat-dialog-close>
       <mat-icon>close</mat-icon>
     </button>
   `,
-  // --- MODIFICADO: Se añaden los estilos del iframe aquí ---
   styles: [`
     :host { 
       display: flex; 
@@ -77,27 +68,21 @@ export class VideoCtaComponent {
       height: 100%;
       background: #000;
       position: relative; 
-      overflow: hidden !important; /* Evita cualquier scrollbar */
+      overflow: hidden !important; 
     }
-    
     mat-dialog-content { 
       padding: 0; 
       flex-grow: 1; 
-      overflow: hidden !important; /* Evita cualquier scrollbar */
+      overflow: hidden !important; 
       display: flex; 
     }
-    
     iframe { 
       width: 100%; 
       height: 100%; 
       display: block; 
-      
-      /* --- AÑADIDO: Estilos movidos desde el HTML --- */
-      border: 1cm solid #1a1a1a; /* Tu marco de 1cm */
-      box-sizing: border-box;    /* <-- LA CORRECCIÓN CLAVE */
+      border: 1cm solid #1a1a1a; 
+      box-sizing: border-box;    
     }
-    
-    /* Estilos del botón (sin cambios) */
     .close-button {
       position: absolute;
       top: -25px; 

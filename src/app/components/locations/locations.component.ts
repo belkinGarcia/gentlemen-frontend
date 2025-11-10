@@ -5,7 +5,6 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { LocationService } from '../../services/location.service';
 import { BarberService } from '../../services/barber.service';
 import { BarbersDialogComponent } from '../barbers-dialog/barbers-dialog.component';
-
 @Component({
   selector: 'app-locations',
   standalone: true,
@@ -15,20 +14,16 @@ import { BarbersDialogComponent } from '../barbers-dialog/barbers-dialog.compone
 })
 export class LocationsComponent implements OnInit {
   locations: any[] = [];
-
   constructor(
     private locationService: LocationService,
     private barberService: BarberService,
     public dialog: MatDialog
   ) {}
-
   ngOnInit(): void {
     this.locations = this.locationService.getLocations();
   }
-
   showBarbers(location: any): void {
   const barbers = this.barberService.getBarbersByLocationId(location.id);
-
   this.dialog.open(BarbersDialogComponent, {
     data: { 
       barbers: barbers,

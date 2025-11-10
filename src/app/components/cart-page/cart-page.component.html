@@ -1,17 +1,12 @@
 <div class="cart-page-wrapper">
-  
   <div *ngIf="cartItems.length > 0; else emptyCart" class="cart-container">
-
     <div class="cart-items-list">
-      
       <div *ngFor="let item of cartItems" class="cart-item">
         <img [src]="item.product.imageUrl" [alt]="item.product.name" class="cart-item-image">
-        
         <div class="cart-item-details">
           <a [routerLink]="['/producto', item.product.id]">{{ item.product.name }}</a>
           <p class="item-price">{{ item.product.price | currency:'S/ ' }}</p>
         </div>
-        
         <div class="cart-item-quantity">
           <button mat-icon-button (click)="decreaseQuantity(item)">
             <mat-icon>remove</mat-icon>
@@ -21,45 +16,35 @@
             <mat-icon>add</mat-icon>
           </button>
         </div>
-
         <strong class="cart-item-total">
           {{ (item.product.price * item.quantity) | currency:'S/ ' }}
         </strong>
-
         <button mat-icon-button (click)="removeItem(item)" class="cart-item-remove" aria-label="Eliminar item">
           <mat-icon>delete_outline</mat-icon>
         </button>
       </div>
-
     </div>
-
     <div class="order-summary">
       <h2>Resumen del Pedido</h2>
-      
       <div class="summary-row">
         <span>Subtotal</span>
         <span>{{ subtotal | currency:'S/ ' }}</span>
       </div>
-
       <div class="summary-row">
         <span>Envío</span>
         <span>A calcular</span>
       </div>
-
       <div class="summary-row total">
         <strong>Total</strong>
         <strong>{{ subtotal | currency:'S/ ' }}</strong>
       </div>
-
       <button mat-flat-button color="accent" class="checkout-btn" routerLink="/checkout">
         FINALIZAR COMPRA
       </button>
       <a mat-button routerLink="/tienda" class="continue-shopping-btn">Seguir Comprando</a>
     </div>
-
   </div>
 </div>
-
 <ng-template #emptyCart>
   <div class="empty-cart-view">
     <h2>Tu carrito está vacío</h2>

@@ -1,12 +1,10 @@
 <mat-stepper #stepper linear (selectionChange)="onStepChange($event)">
-
   <mat-step label="Local" [completed]="!!selectedLocation">
     <div class="step-container">
       <div class="step-info" *ngIf="contentService.content$ | async as guide">
         <mat-icon>location_on</mat-icon>
         <h2>{{ guide['step1']?.title }}</h2>
         <p>{{ guide['step1']?.description }}</p>
-        
         <div class="whatsapp-contact-box">
             <h3>{{ guide['contact'].title }}</h3>
             <p>{{ guide['contact'].description }}</p>
@@ -34,14 +32,12 @@
       <button mat-button matStepperNext [disabled]="!selectedLocation">Siguiente</button>
     </div>
   </mat-step>
-
   <mat-step label="Servicio" [completed]="!!selectedService">
     <div class="step-container">
       <div class="step-info" *ngIf="contentService.content$ | async as guide">
         <mat-icon>auto_stories</mat-icon>
         <h2>{{ guide['step2']?.title }}</h2>
         <p>{{ guide['step2']?.description }}</p>
-
         <div class="whatsapp-contact-box">
             <h3>{{ guide['contact'].title }}</h3>
             <p>{{ guide['contact'].description }}</p>
@@ -99,15 +95,12 @@
       <button mat-button matStepperNext [disabled]="!selectedService">Siguiente</button>
     </div>
   </mat-step>
-
   <mat-step label="Barbero" [completed]="!!selectedBarber">
     <div class="step-container">
-      
       <div class="step-info" *ngIf="contentService.content$ | async as guide">
         <mat-icon>content_cut</mat-icon>
         <h2>{{ guide['step3']?.title }}</h2>
         <p>{{ guide['step3']?.description }}</p>
-
         <div class="whatsapp-contact-box">
             <h3>{{ guide['contact'].title }}</h3>
             <p>{{ guide['contact'].description }}</p>
@@ -150,14 +143,12 @@
       <button mat-button matStepperNext [disabled]="!selectedBarber">Siguiente</button>
     </div>
   </mat-step>
-
   <mat-step label="Fecha y Hora" [completed]="!!selectedDate && !!selectedTime">
     <div class="step-container">
       <div class="step-info" *ngIf="contentService.content$ | async as guide">
         <mat-icon>calendar_today</mat-icon>
         <h2>{{ guide['step4']?.title }}</h2>
         <p>{{ guide['step4']?.description }}</p>
-        
         <div class="whatsapp-contact-box">
             <h3>{{ guide['contact'].title }}</h3>
             <p>{{ guide['contact'].description }}</p>
@@ -222,14 +213,12 @@
       <button mat-button matStepperNext [disabled]="!selectedTime">Siguiente</button>
     </div>
   </mat-step>
-
   <mat-step label="Información">
     <div class="step-container">
       <div class="step-info" *ngIf="contentService.content$ | async as guide">
         <mat-icon>person</mat-icon>
         <h2>{{ guide['step5']?.title }}</h2>
         <p>{{ guide['step5']?.description }}</p>
-
         <div class="whatsapp-contact-box">
             <h3>{{ guide['contact'].title }}</h3>
             <p>{{ guide['contact'].description }}</p>
@@ -280,7 +269,6 @@
       <button mat-button (click)="confirmAppointment()">Siguiente</button>
     </div>
   </mat-step>
-
   <mat-step label="Confirmación">
     <div class="step-container confirmation-view">
       <div class="step-info" *ngIf="contentService.content$ | async as guide">
@@ -291,21 +279,17 @@
       <div class="step-content confirmation-details">
         <div class="confirmation-header">
           </div>
-
         <span class="confirmation-label">CONFIRMATION #</span>
         <h2 class="confirmation-number">{{ confirmationNumber }}</h2>
-        
         <div class="confirmation-actions">
           <button mat-stroked-button (click)="downloadConfirmationAsPDF()">
             <mat-icon>print</mat-icon> Imprimir
           </button>
-
           <button mat-flat-button color="primary" (click)="closeAndNavigateToReservations()">
             <mat-icon>visibility</mat-icon>
             Ver mis reservas
           </button>
         </div>
-
         <div class="detail-section">
           <h4>Información de la cita</h4>
           <div class="detail-grid">
@@ -331,7 +315,6 @@
             </div>
           </div>
         </div>
-
         <div class="detail-section">
           <h4>Información del cliente</h4>
           <div class="detail-grid">
@@ -349,7 +332,6 @@
             </div>
           </div>
         </div>
-
         <div class="detail-section">
           <h4>Información de pago</h4>
           <div class="detail-grid">
@@ -362,9 +344,7 @@
       </div>
     </div>
   </mat-step>
-
 </mat-stepper>
-
 <div class="pdf-ticket-wrapper">
   <div id="pdf-ticket" class="pdf-ticket-container">
       <h3>Confirmación de la cita</h3>

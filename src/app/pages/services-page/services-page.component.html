@@ -5,13 +5,11 @@
       <p>{{ categoryGroup.items.length }} servicios disponibles</p>
     </div>
   </div>
-
   <div *ngIf="view === 'services' && selectedCategory">
     <button mat-stroked-button (click)="backToCategories()" class="back-button">
       <mat-icon>arrow_back</mat-icon>
       Volver a Categorías
     </button>
-
     <div class="category-section">
       <h2>{{ selectedCategory.category }}</h2>
       <div class="services-grid">

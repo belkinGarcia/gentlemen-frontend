@@ -1,67 +1,46 @@
 .main-header {
-  /* --- CAMBIO 1: Fondo transparente --- */
   background: transparent; 
   color: white;
-  
-  /* --- CAMBIO 2: Posicionamiento absoluto --- */
-  /* Esto saca al header del flujo normal y lo superpone */
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 100; /* Asegura que esté por encima del contenido */
-
-  /* --- CAMBIO 3: Borde sutil (opcional) --- */
-  /* Un borde sólido se verá extraño, uno semitransparente se integra mejor */
-
-
+  z-index: 100; 
   display: flex;
   justify-content: center;
-  /* Se eliminó !important de la regla de background original */
 }
-
 .content-wrapper {
   display: flex;
   align-items: center;
   width: 100%;
 }
-
 .main-header a[mat-button] {
   color: white;
   font-size: 16px;
 }
-
 .logo-link {
   line-height: 0; 
 }
-
 .header-logo {
   height: 40px;
   width: auto;
 }
-
 .spacer {
   flex: 1 1 auto; 
 }
-
 .cart-button {
   color: white;
 }
-
-/* --- ESTILOS RESPONSIVOS (Sin cambios) --- */
 .desktop-menu {
   display: block; 
 }
-
 .mobile-menu-button {
   display: none; 
 }
-
 @media (max-width: 768px) {
   .desktop-menu {
     display: none; 
   }
-
   .mobile-menu-button {
     display: block; 
   }

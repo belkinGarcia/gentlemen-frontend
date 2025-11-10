@@ -1,4 +1,3 @@
-// src/app/components/booking/booking.component.ts
 import { Component, OnInit, ViewChild,  ViewEncapsulation, Inject, Optional } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
@@ -22,9 +21,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ContentService } from '../../services/content.service';
 import { MatDividerModule } from '@angular/material/divider';
-
 declare var html2canvas: any;
-
 @Component({
   selector: 'app-booking',
   standalone: true,
@@ -39,7 +36,6 @@ declare var html2canvas: any;
 })
 export class BookingComponent implements OnInit {
   @ViewChild('stepper') stepper!: MatStepper;
-
   locations: any[] = [];
   selectedLocation: any | null = null;
   servicesByCategory: Category[] = [];
@@ -55,9 +51,7 @@ export class BookingComponent implements OnInit {
   informationForm!: FormGroup;
   confirmationNumber: string = '';
   totalDuration: number = 0;
-
   private oldReservationIdToCancel: string | null = null; 
-
   constructor(
     private locationService: LocationService,
     private serviceService: ServiceService,
@@ -71,13 +65,11 @@ export class BookingComponent implements OnInit {
     public contentService: ContentService,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any 
   ) { this.minDate = new Date(); }
-
   ngOnInit(): void {
     this.locations = this.locationService.getLocations();
     this.serviceService.categories$.subscribe(categories => {
           this.servicesByCategory = categories;
         });
-    
     this.informationForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -85,7 +77,6 @@ export class BookingComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       phone: ['', Validators.required]
     });
-
     if (this.data && this.data.isReschedule) {
           const oldRes: Reservation = this.data.reservationData;
           this.oldReservationIdToCancel = oldRes.confirmationNumber;
@@ -93,45 +84,30 @@ export class BookingComponent implements OnInit {
           this.selectedService = oldRes.service as Service;
           this.selectedBarber = oldRes.barber;
           this.totalDuration = (oldRes.service as Service).duration;
-          
           setTimeout(() => {
             this.stepper.selectedIndex = 3; 
           }, 0);
         }
       }
-
   selectLocation(location: any): void { this.selectedLocation = location; }
   selectCategory(category: Category): void { this.selectedCategoryServices = category.items; this.serviceStepView = 'services'; }
-  
   selectService(service: Service): void {
     this.selectedService = service;
     this.totalDuration = service.duration;
   }
-  
   backToCategories(): void { this.serviceStepView = 'categories'; this.selectedService = null; }
-  
 onStepChange(event: StepperSelectionEvent): void { 
-      // Paso Barbero
       if (event.selectedIndex === 2 && this.selectedLocation) { 
         this.barbersForLocation = this.barberService.getBarbersByLocationId(this.selectedLocation.id, true); 
         if (!this.data?.isReschedule) {
           this.selectedBarber = null; 
         }
       }
-    
-    // El paso de Información (índice 4) YA NO debe avanzar automáticamente 
-    // a menos que sea a través de confirmAppointment() o handleAuthentication() 
-    // para evitar el comportamiento que permite saltar pasos.
-    // El avance automático solo se aplica en el caso de que el usuario ya esté logueado
-    // Y el formulario se llene al entrar al paso.
-    if (event.selectedIndex === 4) { // Paso "Información"
+    if (event.selectedIndex === 4) {
       if (this.authService.isLoggedIn()) {
         const currentUser = this.authService.getCurrentUser();
-        
         if (currentUser) {
           this.informationForm.patchValue(currentUser);
-          // Si el usuario está logueado y se llenan los datos, 
-          // avanzamos al paso de confirmación automáticamente.
           this._saveReservation();
           setTimeout(() => {
             this.stepper.next();
@@ -139,11 +115,7 @@ onStepChange(event: StepperSelectionEvent): void {
         }
       }
     }
-
-    // Lógica de validación para prevenir el avance directo a "Confirmación" (índice 5) 
-    // si el formulario no es válido.
     if (event.selectedIndex === 5 && !this.informationForm.valid) {
-        // Redirigir al paso 4 (Información) si intentó ir al paso 5 sin validar.
         setTimeout(() => {
              this.stepper.selectedIndex = 4;
         }, 0);
@@ -155,27 +127,20 @@ onStepChange(event: StepperSelectionEvent): void {
     this.selectedTime = null;
     this.availableTimes = [];
   }
-  
 onDateSelect(date: Date | null): void { 
-    
     const defaultDuration = 30; 
     let appointmentDuration = defaultDuration;
-
     if (date && this.selectedBarber) {
-        
         if (this.selectedService) {
             appointmentDuration = this.selectedService.duration; 
         }
-
         this.selectedDate = date; 
         this.selectedTime = null; 
-        
         this.availableTimes = this.scheduleService.getAvailableTimesFor(
             date, 
             this.selectedBarber.id,
             appointmentDuration
         );
-    
     } else {
       this.availableTimes = [];
     }
@@ -184,19 +149,14 @@ onDateSelect(date: Date | null): void {
   dateClass = (d: Date): string => { 
     return this.scheduleService.isDateUnavailable(d) ? 'unavailable-date' : 'available-date'; 
   }
-  
   handleAuthentication(userDataFromChild: any): void { 
     this.informationForm.patchValue(userDataFromChild); 
-    // Después de un login/registro exitoso, el formulario se valida 
-    // y el botón "Siguiente" lo enviará.
     if (this.informationForm.valid) {
       this.confirmAppointment();
     }
   }
-
   confirmAppointment(): void {
     if (this.informationForm.valid) { 
-      // Si el usuario no estaba logueado y llenó el formulario, se guarda aquí.
       if (!this.authService.isLoggedIn()) { 
           this._saveReservation();
       }
@@ -205,10 +165,8 @@ onDateSelect(date: Date | null): void {
       this.informationForm.markAllAsTouched();
     }
   }
-    
   private _saveReservation(): void {
     this.confirmationNumber = Math.floor(100000 + Math.random() * 900000).toString();
-
     const newReservationData: ReservationData = {
       location: this.selectedLocation,
       service: this.selectedService,
@@ -218,15 +176,12 @@ onDateSelect(date: Date | null): void {
       user: this.informationForm.value,
       confirmationNumber: this.confirmationNumber
     };
-
     this.reservationService.createReservation(newReservationData);
-
     if (this.oldReservationIdToCancel) {
           this.reservationService.cancelReservation(this.oldReservationIdToCancel);
           this.oldReservationIdToCancel = null;
     }
   }
-
   downloadConfirmationAsPDF(): void {
     setTimeout(() => {
       const contentToCapture = document.getElementById('pdf-ticket');
@@ -252,7 +207,6 @@ onDateSelect(date: Date | null): void {
       }
     }, 100);
   }
-
   closeAndNavigateToReservations(): void {
     this.dialogRef.close();
     this.router.navigate(['/mi-cuenta/reservas']);

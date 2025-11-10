@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UiStateService } from '../../services/ui-state.service';
 import { InfoSectionComponent } from '../../components/info-section/info-section.component';
-
 @Component({
   selector: 'app-terms-page',
   standalone: true,
@@ -12,9 +11,7 @@ import { InfoSectionComponent } from '../../components/info-section/info-section
 })
 export class TermsPageComponent implements OnInit {
   constructor(private uiStateService: UiStateService) {}
-
   ngOnInit(): void {
-    // Set the banner for this page
     this.uiStateService.setHeroState({
       type: 'banner',
       title: 'Términos y Condiciones',

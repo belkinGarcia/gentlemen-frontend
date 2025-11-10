@@ -1,10 +1,8 @@
 <div class="pedido-detail-container">
-  
   <button mat-stroked-button (click)="goBack()" class="back-button">
     <mat-icon>arrow_back</mat-icon>
     Volver a Mis Pedidos
   </button>
-
   <div *ngIf="order; else notFound">
     <div class="order-header">
       <div>
@@ -15,9 +13,7 @@
         {{ order.status }}
       </mat-chip>
     </div>
-
     <mat-divider></mat-divider>
-
     <h3>Productos en este pedido</h3>
     <mat-list role="list" class="product-list">
       <mat-list-item *ngFor="let item of order.items" role="listitem">
@@ -27,9 +23,7 @@
         <span class="product-price">{{ (item.product.price * item.quantity) | currency:'S/ ' }}</span>
       </mat-list-item>
     </mat-list>
-    
     <mat-divider></mat-divider>
-
     <div class="details-grid">
       <div class="detail-card">
         <h4>Resumen de Pago</h4>
@@ -46,7 +40,6 @@
           <strong>{{ order.total | currency:'S/ ' }}</strong>
         </div>
       </div>
-
       <div class="detail-card">
         <h4>Dirección de Envío</h4>
         <p>
@@ -58,7 +51,6 @@
       </div>
     </div>
   </div>
-
   <ng-template #notFound>
     <div class="empty-state" *ngIf="!isLoading">
       <mat-icon>error_outline</mat-icon>
@@ -66,5 +58,4 @@
       <p>No pudimos encontrar los detalles para este pedido.</p>
     </div>
   </ng-template>
-
 </div>

@@ -1,6 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 @Component({
   selector: 'app-barber-selector',
   standalone: true,
@@ -12,7 +11,6 @@ export class BarberSelectorComponent {
   @Input() barbers: any[] = [];
   @Input() selectedBarberId: number | null = null;
   @Output() selectionChange = new EventEmitter<any>();
-
   selectBarber(barber: any) {
     this.selectionChange.emit(barber);
   }

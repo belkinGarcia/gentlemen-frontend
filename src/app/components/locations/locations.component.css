@@ -4,7 +4,6 @@
   gap: 30px;
   padding: 60px 20px; 
 }
-
 .location-card {
   background-color: #212121;
   color: #fff;
@@ -14,24 +13,20 @@
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
 .location-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
 }
-
 .location-card img {
   width: 100%;
   height: 250px; 
   object-fit: cover;
   display: block;
 }
-
 .card-content {
   padding: 24px;
 }
-
-h3 { /* Título (Blanco, Negrita, Mayúsculas) */
+h3 { 
   color: #fff;
   font-size: 1.1rem;
   font-weight: 700;
@@ -39,52 +34,39 @@ h3 { /* Título (Blanco, Negrita, Mayúsculas) */
   margin-bottom: 10px;
   min-height: 44px;
 }
-
-p { /* Dirección (Gris, Normal) */
+p { 
   color: #aaa;
   font-size: 0.9em;
   min-height: 40px; 
   margin-bottom: 15px;
   font-weight: normal; 
 }
-
-/* --- ESTILOS DE BOTÓN ACTUALIZADOS --- */
-
 .map-link, .phone-link {
   display: block;
   color: #d4c39a; 
   text-decoration: none;
   margin-top: 15px;
-  font-size: 1em; /* Un poco más pequeño para que quepa */
-  font-weight: 700; /* Negrita */
-  
-  /* --- NUEVO: Borde y padding --- */
+  font-size: 1em; 
+  font-weight: 700; 
   border: 2px solid #d4c39a;
   padding: 10px 15px;
-  border-radius: 4px; /* Bordes redondeados para el botón */
+  border-radius: 4px; 
   transition: background-color 0.3s ease, color 0.3s ease;
 }
-
-/* --- NUEVO: Efecto Hover --- */
 .map-link:hover, .phone-link:hover {
   background-color: #d4c39a;
-  color: #1a1a1a; /* Texto oscuro al hacer hover */
+  color: #1a1a1a; 
 }
-
-/* --- Ajuste para el botón de teléfono --- */
 .phone-link {
-  display: flex; /* Cambiado a flex para centrar contenido */
+  display: flex; 
   align-items: center;
   justify-content: center;
 }
-
-/* Responsive Styles */
 @media (max-width: 992px) {
   .locations-container {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-
 @media (max-width: 768px) {
   .locations-container {
     grid-template-columns: 1fr;

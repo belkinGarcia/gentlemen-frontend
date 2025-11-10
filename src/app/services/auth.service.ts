@@ -1,10 +1,6 @@
-// src/app/services/auth.service.ts
 import { Injectable } from '@angular/core';
 import { Observable, tap, BehaviorSubject, of, delay } from 'rxjs';
 import { Router } from '@angular/router';
-
-// --- NUESTROS DATOS ESTÁTICOS (MOCK) ---
-
 const MOCK_USER = {
   id: 1,
   firstName: 'Belkin',
@@ -15,7 +11,6 @@ const MOCK_USER = {
   role: 'USER',
   district: 'Miraflores' 
 };
-
 const MOCK_ADMIN = {
   id: 99,
   firstName: 'Admin',
@@ -23,27 +18,21 @@ const MOCK_ADMIN = {
   dni: '99999999',
   email: 'admin@admin.com',
   phone: '999888777',
-  role: 'ADMIN', // <-- Rol de Admin
+  role: 'ADMIN',
   district: 'Oficina'
 };
-// ----------------------------
-
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  
   private readonly TOKEN_KEY = 'auth_token';
   private readonly ROLE_KEY = 'user_role';
   private readonly USER_KEY = 'auth_user';
-
   private loggedInStatus = new BehaviorSubject<boolean>(this.isLoggedIn());
   public loggedIn$ = this.loggedInStatus.asObservable();
-
   constructor(
     private router: Router
   ) {}
-
   /**
    * Simula el inicio de sesión.
    * Si el email es 'admin@admin.com', loguea como Admin.
@@ -51,10 +40,7 @@ export class AuthService {
    */
   login(credentials: any): Observable<any> {
     console.log('--- MOCK LOGIN ---', credentials);
-
     let fakeResponse: any;
-
-    // 1. Revisa si es el admin
     if (credentials.username === 'admin@admin.com') {
       console.log('¡Iniciando sesión como ADMIN!');
       fakeResponse = {
@@ -63,7 +49,6 @@ export class AuthService {
         user: MOCK_ADMIN
       };
     } else {
-      // 2. Si no, es un usuario normal
       console.log('Iniciando sesión como USER');
       fakeResponse = {
         token: 'fake-jwt-token-123456789',
@@ -71,28 +56,20 @@ export class AuthService {
         user: MOCK_USER
       };
     }
-
-    // 3. Guarda la sesión (admin o user)
     this.setSession(fakeResponse);
-
-    // 4. Devuelve la respuesta después de 500ms
     return of(fakeResponse).pipe(delay(500));
   }
-
   /**
    * Simula el registro de un nuevo usuario.
    * Devuelve los datos del usuario.
    */
   register(userData: any): Observable<any> {
     console.log('--- MOCK REGISTER ---', userData);
-    // (En una app real, también deberías añadir este usuario
-    // al UserService que creamos)
     const fakeResponse = {
       user: userData 
     };
     return of(fakeResponse).pipe(delay(1000));
   }
-  
   /**
    * Guarda la sesión completa en localStorage y notifica a la app.
    */
@@ -103,12 +80,11 @@ export class AuthService {
       if (response.role) {
         localStorage.setItem(this.ROLE_KEY, response.role);
       }
-      this.loggedInStatus.next(true); // Notifica a los suscriptores
+      this.loggedInStatus.next(true);
     } else {
       console.error('Respuesta de login inválida, faltan datos:', response);
     }
   }
-
   /**
    * Limpia la sesión de localStorage y notifica a la app.
    */
@@ -116,17 +92,15 @@ export class AuthService {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.ROLE_KEY);
     localStorage.removeItem(this.USER_KEY);
-    this.loggedInStatus.next(false); // Notifica a los suscriptores
-    this.router.navigate(['/']); // Redirige al inicio
+    this.loggedInStatus.next(false);
+    this.router.navigate(['/']);
   }
-
   /**
    * Obtiene el token JWT.
    */
   getToken(): string | null {
     return localStorage.getItem(this.TOKEN_KEY);
   }
-
   /**
    * Revisa si el usuario está logueado (si existe un token).
    */
@@ -134,7 +108,6 @@ export class AuthService {
     const token = localStorage.getItem(this.TOKEN_KEY);
     return !!token;
   }
-  
   /**
    * Obtiene los datos del usuario logueado desde localStorage.
    */
@@ -144,11 +117,10 @@ export class AuthService {
     try {
       return JSON.parse(userString);
     } catch (e) {
-      this.logout(); // Limpia la sesión si está corrupta
+      this.logout();
       return null;
     }
   }
-
   /**
    * Actualiza los datos del usuario en localStorage.
    */
@@ -157,21 +129,17 @@ export class AuthService {
     if (!currentUser) {
       return of(null);
     }
-
     const updatedUser = { ...currentUser, ...updatedData };
     localStorage.setItem(this.USER_KEY, JSON.stringify(updatedUser));
     console.log("AuthService: Usuario actualizado en localStorage", updatedUser);
-    
     return of(updatedUser).pipe(delay(500));
   }
-
   /**
    * Revisa si el rol del usuario logueado es 'ADMIN'.
    * Usado por el AdminGuard.
    */
   isAdmin(): boolean {
     const user = this.getCurrentUser();
-    // Verifica si el usuario existe y si su rol es 'ADMIN'
     return user && user.role === 'ADMIN'; 
   }
 }

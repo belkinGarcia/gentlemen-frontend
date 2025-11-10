@@ -1,4 +1,3 @@
-// src/app/pages/auth-page/auth-page.component.ts
 import { Component, OnInit, EventEmitter, Output, Input, HostBinding } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -9,8 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { UiStateService } from '../../services/ui-state.service';
-import { AuthService } from '../../services/auth.service'; // Importa tu AuthService
-
+import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-auth-page',
   standalone: true,
@@ -25,46 +23,39 @@ export class AuthPageComponent implements OnInit {
   loginForm!: FormGroup;
   registerForm!: FormGroup;
   hidePassword = true;
-
   @Output() loginSuccess = new EventEmitter<any>();
   @Output() registerSuccess = new EventEmitter<any>();
   @Input() displayMode: 'tabs' | 'grid' = 'grid';
-
   activeView: 'register' | 'login' = 'register';
-  
   @HostBinding('class.tabs-mode') get isTabsMode() {
     return this.displayMode === 'tabs';
   }
   @HostBinding('class.grid-mode') get isGridMode() {
     return this.displayMode === 'grid';
   }
-
   constructor(
     private fb: FormBuilder,
     private uiStateService: UiStateService,
     private authService: AuthService,
     private router: Router
   ) {}
-
   ngOnInit(): void {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
       rememberMe: [false]
     });
-
     this.registerForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       dni: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
-      confirmPassword: ['', Validators.required], // <-- Debes añadir un validador para que coincidan
+      confirmPassword: ['', Validators.required],
       phone: [''],
       district: [''],
       terms: [false, Validators.requiredTrue]
     });
-
     if (this.displayMode === 'grid') {
       this.uiStateService.setHeroState({
         type: 'banner',
@@ -73,35 +64,27 @@ export class AuthPageComponent implements OnInit {
       });
     }
   }
-
   onSubmitLogin(): void {
     if (this.loginForm.valid) {
       const loginPayload = {
         username: this.loginForm.value.username,
         password: this.loginForm.value.password
       };
-
       this.authService.login(loginPayload).subscribe({
-        next: response => { // 'response' es { token: '...', user: { ... } }
+        next: response => {
           console.log('Respuesta del login:', response);
-
           if (this.displayMode === 'grid') {
-            // Si es la PÁGINA, navega
-            // (No tienes página de cuenta, así que redirigimos al Home)
             this.router.navigate(['/']); 
           } else {
-            // Si es el MODAL (tabs), emite SOLO los datos del usuario
-            this.loginSuccess.emit(response.user); // <-- ¡CAMBIO IMPORTANTE!
+            this.loginSuccess.emit(response.user);
           }
         },
         error: error => console.error('Error al realizar login:', error)
       });
     }
   }
-
   onSubmitRegister(): void {
     if (this.registerForm.valid) {
-      
       const formData = this.registerForm.value;
       const registerPayload = {
         firstName: formData.firstName,
@@ -112,25 +95,21 @@ export class AuthPageComponent implements OnInit {
         phone: formData.phone,
         district: formData.district
       };
-
       this.authService.register(registerPayload).subscribe({
-        next: response => { // 'response' debería ser { user: { ... } }
+        next: response => {
           console.log('Respuesta del registro:', response);
-
           if (this.displayMode === 'grid') {
             alert('¡Registro exitoso! Por favor, inicia sesión.');
             this.setActiveView('login');
           } else {
-            // Si es el MODAL (tabs), emite SOLO los datos del usuario
-            this.registerSuccess.emit(response.user); // <-- ¡CAMBIO IMPORTANTE!
-            this.setActiveView('login'); // Cambia a login después de registrar
+            this.registerSuccess.emit(response.user);
+            this.setActiveView('login');
           }
         },
         error: error => console.error('Error al realizar registro:', error)
       });
     }
   }
-
   setActiveView(view: 'register' | 'login'): void {
     this.activeView = view;
   }

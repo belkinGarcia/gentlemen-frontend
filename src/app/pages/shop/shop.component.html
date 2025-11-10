@@ -1,9 +1,7 @@
 <div class="shop-page-wrapper">
   <mat-toolbar class="shop-nav-bar">
     <div class="content-wrapper">
-
       <div class="desktop-nav">
-        
         <button mat-button [matMenuTriggerFor]="categoryMenu">
           <span>{{ selectedCategory || 'Categoría' }}</span>
           <mat-icon>expand_more</mat-icon>
@@ -14,7 +12,6 @@
             {{ cat }}
           </button>
         </mat-menu>
-
         <button mat-button [matMenuTriggerFor]="brandMenu">
           <span>{{ selectedBrand || 'Marca' }}</span>
           <mat-icon>expand_more</mat-icon>
@@ -25,16 +22,13 @@
             {{ brand }}
           </button>
         </mat-menu>
-
       </div>
-
       <div class="mobile-nav">
         <button mat-button [matMenuTriggerFor]="mobileMenu">
           <mat-icon>menu</mat-icon>
           <span>Menú</span>
         </button>
         <mat-menu #mobileMenu="matMenu">
-          
           <button mat-menu-item [matMenuTriggerFor]="mobileCategoryMenu">
             {{ selectedCategory || 'Categoría' }}
           </button>
@@ -44,7 +38,6 @@
               {{ cat }}
             </button>
           </mat-menu>
-
           <button mat-menu-item [matMenuTriggerFor]="mobileBrandMenu">
             {{ selectedBrand || 'Marca' }}
           </button>
@@ -54,12 +47,10 @@
               {{ brand }}
             </button>
           </mat-menu>
-          
         </mat-menu>
       </div>
       </div>
   </mat-toolbar>
-
   <div class="content-wrapper">
     <app-product-list
       [isCarousel]="false"
@@ -69,10 +60,7 @@
       [pageSize]="pageSize"
       (pageChange)="onPageChange($event)">
     </app-product-list>
-    
-   
   </div>
 </div>
 <app-testimonials></app-testimonials>    
-
   <app-info-section></app-info-section>

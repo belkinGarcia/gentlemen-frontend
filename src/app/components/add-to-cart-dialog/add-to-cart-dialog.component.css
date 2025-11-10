@@ -2,8 +2,6 @@
   CSS Actualizado para 'add-to-cart-dialog.component.css'
   Asegúrate de que 'encapsulation: ViewEncapsulation.None' esté en el .ts
 */
-
-/* Contenedor principal del diálogo */
 .add-to-cart-dialog-container {
   background-color: #212121;
   color: #fff;
@@ -15,8 +13,6 @@
   border: 1px solid #444;
   overflow: hidden; 
 }
-
-/* Header del diálogo */
 .dialog-header {
   display: flex;
   align-items: center;
@@ -43,16 +39,12 @@
 .dialog-header button {
   color: #aaa;
 }
-
-/* Contenido del diálogo (sin scroll vertical) */
 .dialog-content {
   padding: 20px;
   overflow-x: hidden;
   max-height: 80vh; 
-  overflow-y: hidden;  /* Elimina el scroll vertical */
+  overflow-y: hidden;  
 }
-
-/* Resumen del producto añadido */
 .added-product-summary {
   display: flex;
   align-items: center;
@@ -103,8 +95,6 @@
 .quantity-selector button {
   color: #d4c39a;
 }
-
-/* Recomendaciones */
 .recommendations {
   margin-bottom: 20px;
 }
@@ -115,9 +105,6 @@
   margin-bottom: 15px;
   text-align: center;
 }
-
-/* === SOLUCIÓN: SCROLL HORIZONTAL y TAMAÑO DE TARJETAS === */
-
 .add-to-cart-dialog-container .recommendations app-product-list .content-wrapper {
   padding: 0 !important;
   max-width: 100% !important; 
@@ -137,68 +124,52 @@
   padding: 0 10px !important; 
   height: 100% !important; 
 }
-
-/* === SOLUCIÓN: TEXTO Y TAMAÑO UNIFORME DE TARJETAS === */
 .add-to-cart-dialog-container .recommendations app-product-card .product-card {
   max-width: 100% !important;
   font-size: 0.8em !important;
   padding-bottom: 5px !important;
   background-color: #2a2a2a !important;
-  
-  /* Flexbox para altura uniforme */
   display: flex !important;
   flex-direction: column !important;
   height: 100% !important; 
-  text-align: center !important; /* Centrar todo el texto */
+  text-align: center !important; 
 }
 .add-to-cart-dialog-container .recommendations app-product-card img {
   height: 120px !important; 
   object-fit: cover !important;
 }
-
-/* Estilo del Título */
 .add-to-cart-dialog-container .recommendations app-product-card mat-card-title {
   font-size: 0.95em !important;
-  min-height: 2.6em !important; /* 2 líneas de texto */
+  min-height: 2.6em !important; 
   padding: 10px 5px 5px 5px !important;
   margin-bottom: 0 !important;
   line-height: 1.3em !important; 
   font-weight: bold !important;
   color: #fff !important;
 }
-
-/* Contenedor del texto (descripción y precio) */
 .add-to-cart-dialog-container .recommendations app-product-card mat-card-content {
-   flex-grow: 1 !important; /* Ocupa el espacio restante */
+   flex-grow: 1 !important; 
    display: flex !important; 
    flex-direction: column !important;
    justify-content: space-between !important;
    padding: 0 5px !important;
 }
-
-/* Estilo de la Descripción */
 .add-to-cart-dialog-container .recommendations app-product-card mat-card-content p:not(.price) {
-  display: block !important; /* Asegura que sea visible */
-  font-size: 0.85em !important; /* Más pequeño */
-  color: #aaa !important; /* Color más suave */
-  min-height: 2.4em; /* Espacio para 2 líneas */
+  display: block !important; 
+  font-size: 0.85em !important; 
+  color: #aaa !important; 
+  min-height: 2.4em; 
   line-height: 1.2em;
   margin: 5px 0 !important;
 }
-
-/* Estilo del Precio */
 .add-to-cart-dialog-container .recommendations app-product-card .price {
   font-size: 1.1em !important; 
   font-weight: bold !important;
-  color: #fff !important; /* Blanco para el precio */
+  color: #fff !important; 
   padding: 0 5px 10px 5px !important;
-  display: block !important; /* Asegura que sea visible */
-  margin-top: auto !important; /* Empuja al fondo */
+  display: block !important; 
+  margin-top: auto !important; 
 }
-/* === FIN DE SOLUCIONES === */
-
-
-/* Acciones del diálogo (botones al final) */
 .dialog-actions {
   display: flex;
   justify-content: flex-end;

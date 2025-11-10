@@ -1,12 +1,10 @@
 .account-page-wrapper {
   padding-top: 0; 
 }
-
 .account-container {
   min-height: 70vh;
   background-color: #f9f9f9;
 }
-
 .side-menu {
   width: 280px;
   background-color: #ffffff;
@@ -14,51 +12,41 @@
   padding: 20px;
   box-sizing: border-box;
 }
-
 .user-greet {
   font-size: 1.2em;
   padding: 10px 16px;
   margin-bottom: 20px;
   border-bottom: 1px solid #eee;
 }
-
 .user-greet strong {
   display: block;
   font-weight: 600;
 }
-
 .side-menu .mat-mdc-list-item {
   color: #333;
   margin-bottom: 5px;
   border-radius: 6px;
 }
-
 .side-menu .mat-mdc-list-item:hover {
   background-color: #f4f4f4;
 }
-
 .side-menu .mat-mdc-list-item mat-icon {
   margin-right: 15px;
   color: #555;
 }
-
-/* Este es el estilo para el enlace activo */
 .side-menu .active-link {
-  background-color: #8e44ad; /* Tu color púrpura principal */
+  background-color: #8e44ad; 
   color: white;
 }
-
 .side-menu .active-link mat-icon {
   color: white;
 }
-
 .logout-button {
   cursor: pointer;
   margin-top: 20px;
   border-top: 1px solid #eee;
   padding-top: 10px;
 }
-
 .account-content {
   background-color: #ffffff;
   padding: 20px 40px;
