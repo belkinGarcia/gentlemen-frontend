@@ -9,6 +9,7 @@ export interface Service {
   description: string;
   price: number;
   duration: number; // Duración en minutos
+  imageUrl: string;
 }
 
 // Interfaz para la estructura de Categorías
@@ -22,21 +23,40 @@ const MOCK_SERVICES: Category[] = [
   {
     category: 'Corte de Cabello',
     items: [
-      { id: 101, name: 'Corte Clásico', description: 'Corte con máquina y tijera.', price: 50, duration: 40 },
-      { id: 102, name: 'Corte Fade Premium', description: 'Degradado profesional, incluye lavado.', price: 75, duration: 60 },
+      { id: 102, 
+        name: 'Corte Fade Premium', 
+        description: 'Degradado profesional, incluye lavado.', 
+        price: 75, 
+        duration: 60, 
+        imageUrl: 'https://i.pinimg.com/736x/87/48/03/8748031d6e694fb31b0ad85bf3e7c849.jpg' 
+      },
+            { id: 103, 
+        name: 'Corte Fade Premium', 
+        description: 'Degradado profesional, incluye lavado.', 
+        price: 75, 
+        duration: 60, 
+        imageUrl: 'https://i.pinimg.com/736x/87/48/03/8748031d6e694fb31b0ad85bf3e7c849.jpg' 
+      },
+            { id: 104, 
+        name: 'Corte Fade clasico', 
+        description: 'Degradado profesional, incluye lavado.', 
+        price: 75, 
+        duration: 60, 
+        imageUrl: 'https://i.pinimg.com/736x/87/48/03/8748031d6e694fb31b0ad85bf3e7c849.jpg' 
+      },
     ]
   },
   {
     category: 'Barba y Afeitado',
     items: [
-      { id: 201, name: 'Arreglo de Barba', description: 'Perfilado y arreglo con máquina.', price: 30, duration: 30 },
-      { id: 202, name: 'Afeitado Clásico', description: 'Afeitado con navaja, toallas calientes.', price: 45, duration: 45 },
+      { id: 201, name: 'Arreglo de Barba', description: 'Perfilado y arreglo con máquina.', price: 30, duration: 30, imageUrl: 'https://i.pinimg.com/736x/87/48/03/8748031d6e694fb31b0ad85bf3e7c849.jpg' },
+      { id: 202, name: 'Afeitado Clásico', description: 'Afeitado con navaja, toallas calientes.', price: 45, duration: 45, imageUrl: 'https://i.pinimg.com/736x/87/48/03/8748031d6e694fb31b0ad85bf3e7c849.jpg' },
     ]
   },
   {
     category: 'Paquetes',
     items: [
-      { id: 301, name: 'Corte + Barba Express', description: 'Corte rápido y perfilado de barba.', price: 80, duration: 70 }, // Duración 40+30=70
+      { id: 301, name: 'Corte + Barba Express', description: 'Corte rápido y perfilado de barba.', price: 80, duration: 70, imageUrl: 'https://i.pinimg.com/736x/87/48/03/8748031d6e694fb31b0ad85bf3e7c849.jpg' }, // Duración 40+30=70
     ]
   }
 ];

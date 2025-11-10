@@ -28,7 +28,8 @@ const MOCK_LOCATIONS: Location[] = [
       imageUrl: 'https://cdn.midjourney.com/3bc73fde-49ec-49cc-8bf2-c86a3083b5cd/0_3.png',
       mapLink: 'https://maps.app.goo.gl/tu_enlace_de_google_maps',
       phone: '+51912345678'
-    },
+    }
+    
 ];
 
 @Injectable({
