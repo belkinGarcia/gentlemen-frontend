@@ -43,7 +43,8 @@ export class ServiceFormDialogComponent implements OnInit {
       duration: [this.data ? this.data.duration : 30, [Validators.required, Validators.min(10)]], 
       description: [this.data ? this.data.description : ''],
       // Nota: La categoría debe manejarse aquí
-      category: [this.data ? this.categoryName : '', Validators.required]
+      category: [this.data ? this.categoryName : '', Validators.required],
+      imageUrl: [this.data ? this.data.imageUrl : ''] // <-- Nuevo control para la URL
     });
   }
 

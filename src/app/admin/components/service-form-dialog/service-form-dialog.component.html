@@ -35,6 +35,17 @@
     </div>
 
     <mat-form-field appearance="outline">
+          <mat-label>URL de la Imagen</mat-label>
+          <input matInput formControlName="imageUrl">
+          <mat-icon matSuffix>image</mat-icon>
+          <mat-hint>Enlace a la imagen del servicio (ej: un logo)</mat-hint>
+    </mat-form-field>
+    
+    <mat-form-field appearance="outline">
+      <mat-label>Descripción</mat-label>
+      <textarea matInput formControlName="description" rows="3"></textarea>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
       <mat-label>Descripción</mat-label>
       <textarea matInput formControlName="description" rows="3"></textarea>
     </mat-form-field>
