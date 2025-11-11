@@ -1,5 +1,4 @@
 <div *ngIf="product">
-
   <div class="product-hero-banner">
     <div class="content-wrapper">
       <h1>{{ product.name }}</h1>
@@ -11,7 +10,6 @@
     </div>
     <div class="product-info">
       <p class="price">{{ product.price | currency:'S/ ' }}</p>
-      
       <div class="quantity-selector">
         <button mat-icon-button (click)="decreaseQuantity()">
           <mat-icon>remove</mat-icon>
@@ -30,12 +28,10 @@
       </div>
     </div>
   </div>
-
   <div class="description-container">
     <h3>DESCRIPCIÓN</h3>
     <p>{{ product.description }}</p>
   </div>
-
 <div class="related-products">
   <h2>PRODUCTOS RELACIONADOS</h2>
   <app-product-list 
@@ -45,7 +41,5 @@
   </app-product-list>
 </div>
 <app-testimonials></app-testimonials>
-   
-
 </div>
 <app-info-section></app-info-section>

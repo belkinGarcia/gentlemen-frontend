@@ -1,25 +1,19 @@
-/* src/app/admin/admin-layout/admin-layout.component.css */
-
 :host {
   display: block;
-  height: 100vh; /* Ocupa toda la altura de la pantalla */
+  height: 100vh; 
 }
-
 .admin-wrapper {
   display: flex;
   height: 100%;
 }
-
-/* === Menú Lateral === */
 .admin-sidebar {
   width: 260px;
-  background-color: #1e293b; /* Un color oscuro para el admin */
+  background-color: #1e293b; 
   color: #cbd5e1;
   display: flex;
   flex-direction: column;
   height: 100%;
 }
-
 .sidebar-header {
   padding: 20px;
   border-bottom: 1px solid #334155;
@@ -29,14 +23,12 @@
   margin: 0;
   text-align: center;
 }
-
 .nav-links {
   list-style: none;
   padding: 20px 0;
   margin: 0;
-  flex-grow: 1; /* Empuja el footer hacia abajo */
+  flex-grow: 1; 
 }
-
 .nav-links li a {
   display: flex;
   align-items: center;
@@ -47,19 +39,15 @@
   font-weight: 500;
   transition: all 0.2s ease-in-out;
 }
-
 .nav-links li a:hover {
   background-color: #334155;
   color: white;
 }
-
-/* Estilo para el enlace activo */
 .nav-links li a.active-link {
-  background-color: #4f46e5; /* Un color de acento */
+  background-color: #4f46e5;
   color: white;
   font-weight: 600;
 }
-
 .sidebar-footer {
   padding: 20px;
   border-top: 1px solid #334155;
@@ -77,12 +65,10 @@
   justify-content: center;
   gap: 10px;
 }
-
-/* === Área de Contenido === */
 .admin-content {
-  flex-grow: 1; /* Ocupa el resto del espacio */
+  flex-grow: 1; 
   padding: 30px;
-  background-color: #f1f5f9; /* Un fondo claro para el contenido */
+  background-color: #f1f5f9; 
   height: 100%;
-  overflow-y: auto; /* Permite scroll si el contenido es largo */
+  overflow-y: auto; 
 }

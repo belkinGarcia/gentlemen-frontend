@@ -1,10 +1,7 @@
 <app-header></app-header>
-
 <ng-container *ngIf="heroState$ | async as heroState">
    <div *ngIf="heroState.type !== 'none'"></div>
-
   <app-hero *ngIf="heroState.type === 'carousel'"></app-hero>
-
   <div *ngIf="heroState.type === 'banner'"
        class="product-hero-banner"
        [style.background-image]="'url(' + heroState.imageUrl + ')'">
@@ -12,11 +9,8 @@
       <h1>{{ heroState.title }}</h1>
     </div>
   </div>
-
 </ng-container>
-
 <main>
   <router-outlet></router-outlet>
 </main>
-
 <app-footer></app-footer>

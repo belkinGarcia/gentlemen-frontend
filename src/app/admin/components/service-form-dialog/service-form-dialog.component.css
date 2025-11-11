@@ -3,17 +3,14 @@
   flex-direction: column;
   gap: 15px; 
 }
-
 .form-row {
   display: flex;
   gap: 15px; 
   flex-wrap: wrap; 
 }
-
 .flex-50 {
   flex: 1 1 calc(50% - 7.5px); 
 }
-
 mat-form-field {
   width: 100%;
 }

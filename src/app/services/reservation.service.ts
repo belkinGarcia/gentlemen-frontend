@@ -1,8 +1,5 @@
-// src/app/services/reservation.service.ts
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-
-// --- Interfaz de Reserva (con status requerido) ---
 export interface Reservation {
   location: any;
   service: any;
@@ -11,26 +8,17 @@ export interface Reservation {
   time: string | null;
   user: any;
   confirmationNumber: string;
-  status: 'upcoming' | 'completed' | 'canceled'; // <-- Sigue siendo requerido
+  status: 'upcoming' | 'completed' | 'canceled';
 }
-
-// --- ¡NUEVO TIPO! ---
 export type ReservationData = Omit<Reservation, 'status'>;
-
 @Injectable({
   providedIn: 'root'
 })
 export class ReservationService {
-
   private readonly RESERVATION_KEY = 'user_reservations';
-  
-  // --- ¡CAMBIO CLAVE! Hacemos el Subject público para acceso de otros servicios ---
   public reservationsSubject = new BehaviorSubject<Reservation[]>(this.getReservationsFromStorage());
-  
   public reservations$: Observable<Reservation[]>;
-
   constructor() { this.reservations$ = this.reservationsSubject.asObservable();}
-
   private getReservationsFromStorage(): Reservation[] {
     const reservationsString = localStorage.getItem(this.RESERVATION_KEY);
     if (!reservationsString) {
@@ -43,39 +31,29 @@ export class ReservationService {
       return [];
     }
   }
-
   public getReservations(): Observable<Reservation[]> {
     return this.reservations$;
   }
-
   public createReservation(newReservationData: ReservationData): void {
-    
     const newReservation: Reservation = {
       ...newReservationData,
       status: 'upcoming'
     };
-    
     const currentReservations = this.getReservationsFromStorage();
     const updatedReservations = [...currentReservations, newReservation];
-    
     localStorage.setItem(this.RESERVATION_KEY, JSON.stringify(updatedReservations));
     this.reservationsSubject.next(updatedReservations);
-    
     console.log("Reserva guardada en el servicio:", newReservation);
   }
-
   public cancelReservation(confirmationId: string): void {
     console.log('Servicio: Cancelando reserva:', confirmationId);
-    
     const currentReservations = this.getReservationsFromStorage();
-
     const updatedReservations = currentReservations.map(res => {
       if (res.confirmationNumber === confirmationId) {
         return { ...res, status: 'canceled' as const }; 
       }
       return res;
     });
-
     localStorage.setItem(this.RESERVATION_KEY, JSON.stringify(updatedReservations));
     this.reservationsSubject.next(updatedReservations);
   }

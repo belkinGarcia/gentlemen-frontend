@@ -1,9 +1,7 @@
 <div class="seguridad-container">
   <h2>Seguridad</h2>
   <p>Actualiza tu contraseña de acceso.</p>
-
   <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()" class="password-form">
-    
     <mat-form-field appearance="fill">
       <mat-label>Contraseña Actual</mat-label>
       <input matInput formControlName="currentPassword" [type]="hideCurrent ? 'password' : 'text'">
@@ -14,7 +12,6 @@
         La contraseña actual es requerida.
       </mat-error>
     </mat-form-field>
-    
     <mat-form-field appearance="fill">
       <mat-label>Nueva Contraseña</mat-label>
       <input matInput formControlName="newPassword" [type]="hideNew ? 'password' : 'text'">
@@ -29,7 +26,6 @@
         Mínimo 8 caracteres.
       </mat-error>
     </mat-form-field>
-
     <mat-form-field appearance="fill">
       <mat-label>Confirmar Contraseña</mat-label>
       <input matInput formControlName="confirmPassword" [type]="hideConfirm ? 'password' : 'text'">
@@ -43,14 +39,12 @@
         Las contraseñas no coinciden.
       </mat-error>
     </mat-form-field>
-
     <div *ngIf="successMessage" class="alert alert-success">
       {{ successMessage }}
     </div>
     <div *ngIf="errorMessage" class="alert alert-error">
       {{ errorMessage }}
     </div>
-
     <button mat-flat-button color="primary" type="submit" [disabled]="passwordForm.invalid">
       Actualizar Contraseña
     </button>

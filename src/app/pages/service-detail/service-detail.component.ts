@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { ServiceService } from '../../services/service.service';
 import { UiStateService } from '../../services/ui-state.service';
-
 @Component({
   selector: 'app-service-detail',
   standalone: true,
@@ -13,13 +12,11 @@ import { UiStateService } from '../../services/ui-state.service';
 })
 export class ServiceDetailComponent implements OnInit {
   service: any;
-
   constructor(
     private route: ActivatedRoute,
     private serviceService: ServiceService,
     private uiStateService: UiStateService
   ) {}
-
   ngOnInit(): void {
     const serviceId = this.route.snapshot.paramMap.get('id');
     if (serviceId) {
@@ -27,7 +24,7 @@ export class ServiceDetailComponent implements OnInit {
       if (this.service) {
         this.uiStateService.setHeroState({
           type: 'banner',
-          title: this.service.name.toUpperCase(), // Title is the service name
+          title: this.service.name.toUpperCase(),
           imageUrl: this.service.imageUrl
         });
       }

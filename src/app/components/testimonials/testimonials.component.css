@@ -5,7 +5,6 @@
   color: #aaa;
 }
 h2 {
-  /* --- MODIFICADO: Color dorado para coincidir con la imagen --- */
   color: #d4c39a; 
   font-family: 'Oswald', sans-serif;
   font-size: 2em;
@@ -24,7 +23,7 @@ h2 {
   gap: 40px;
 }
 .quote-icon {
-  color: #3f51b5; /* Angular Material primary color (Azul/Púrpura) */
+  color: #3f51b5; 
   font-size: 40px;
   height: 40px;
   width: 40px;
@@ -47,8 +46,6 @@ h2 {
   font-weight: bold;
   margin-top: 20px;
 }
-
-/* --- AÑADIDO: Estilos para la navegación del carrusel --- */
 .carousel-nav {
   display: flex;
   justify-content: center;
@@ -56,51 +53,37 @@ h2 {
   gap: 15px;
   margin-top: 40px;
 }
-
 .carousel-nav button {
   color: #d4c39a;
 }
-
 .carousel-nav button[disabled] {
-  color: #555; /* Color del botón deshabilitado */
+  color: #555; 
 }
-
 .nav-lines {
   display: flex;
   gap: 8px;
 }
-
 .nav-line {
   width: 50px;
   height: 2px;
-  background-color: #555; /* Línea inactiva */
+  background-color: #555; 
   transition: background-color 0.3s ease;
 }
-
 .nav-line.active {
-  background-color: #d4c39a; /* Línea activa */
+  background-color: #d4c39a; 
 }
-
 .call-to-action-review {
     margin-top: 50px;
     padding-top: 30px;
     border-top: 1px solid #333;
 }
-
 .call-to-action-review a {
     padding: 15px 30px;
     font-weight: bold;
     font-size: 1.1em;
-    /* El color accent (morado/dorado) debería venir de mat-flat-button */
 }
-/* --- FIN AÑADIDO --- */
-
-
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .testimonials-grid {
     grid-template-columns: 1fr;
-    /* En móvil, querrás cambiar la lógica para mostrar 1 solo testimonio a la vez */
-    /* Esto requeriría cambiar el (slice) y la lógica del .ts a '+ 1' en lugar de '+ 3' */
   }
 }

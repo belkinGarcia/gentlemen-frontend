@@ -2,7 +2,6 @@
   <button mat-icon-button (click)="prevPage()" [disabled]="currentPage === 1">
     <mat-icon>arrow_back</mat-icon>
   </button>
-
   <div class="page-numbers">
     <button mat-button *ngFor="let page of pages" 
             (click)="goToPage(page)"
@@ -10,7 +9,6 @@
       {{ page }}
     </button>
   </div>
-
   <button mat-icon-button (click)="nextPage()" [disabled]="currentPage === totalPages">
     <mat-icon>arrow_forward</mat-icon>
   </button>

@@ -4,8 +4,7 @@ import { ProductService } from '../../services/product.service';
 import { ProductListComponent } from '../../components/product-list/product-list.component';
 import { InfoSectionComponent } from '../../components/info-section/info-section.component';
 import { TestimonialsComponent } from '../../components/testimonials/testimonials.component';
-import { VideoCtaComponent } from '../../components/video-cta/video-cta.component'; // 1. Importar
-
+import { VideoCtaComponent } from '../../components/video-cta/video-cta.component';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -15,15 +14,12 @@ import { VideoCtaComponent } from '../../components/video-cta/video-cta.componen
 })
 export class HomeComponent implements OnInit {
   homeProducts: any[] = [];
-  
   constructor(
     private uiStateService: UiStateService,
     private productService: ProductService
   ) {}
-
   ngOnInit(): void {
     this.uiStateService.setHeroState({ type: 'carousel' });
-    // Esta línea obtiene los productos y los guarda en la variable
     this.homeProducts = this.productService.getProducts(1, 8).products;
   }
 }

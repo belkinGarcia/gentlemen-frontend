@@ -4,7 +4,6 @@
   color: white;
   padding: 40px 0 80px 0;
 }
-
 .checkout-page-wrapper {
   max-width: 1200px;
   margin: 0 auto;
@@ -13,21 +12,16 @@
   gap: 40px;
   align-items: flex-start;
 }
-
-/* --- Columna 1: Stepper --- */
 .checkout-stepper {
-  flex: 2; /* Ocupa 2/3 del espacio */
+  flex: 2; 
   background-color: #212121;
   padding: 20px;
   border-radius: 8px;
 }
-
 /* ===============================================================
   == INICIO: ESTILOS PARA TEMA OSCURO DE ANGULAR MATERIAL ==
   ===============================================================
 */
-
-/* Estilos para que el Stepper de Material se vea bien en tema oscuro */
 :host ::ng-deep .mat-stepper-vertical {
   background-color: transparent !important;
 }
@@ -40,27 +34,21 @@
 }
 :host ::ng-deep .mat-step-header .mat-step-icon-selected,
 :host ::ng-deep .mat-step-header .mat-step-icon-state-done {
-  background-color: #d4c39a !important; /* Tu color dorado */
+  background-color: #d4c39a !important; 
   color: #121212 !important;
 }
 :host ::ng-deep .mat-vertical-content-container {
   margin-left: 32px !important;
 }
-
-/* Arregla el borde del campo de texto */
 :host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
   color: #777 !important;
 }
-/* Arregla la etiqueta (label) del campo de texto */
 :host ::ng-deep .mat-form-field-label {
   color: #ccc !important;
 }
-
-/* Arregla el color del texto que escribe el usuario */
 :host ::ng-deep .mat-mdc-input-element {
   color: white !important;
 }
-
 /* ===============================================================
   == SOLUCIÓN PARA EL CHECKBOX ==
   ===============================================================
@@ -68,24 +56,15 @@
   solo para este componente.
 */
 :host ::ng-deep .mat-mdc-checkbox {
-  /* 1. Color de la etiqueta (el texto "Usar esta dirección...") */
   --mat-checkbox-label-text-color: white;
-  
-  /* 2. Color del borde de la casilla (cuando NO está marcada) */
   --mat-checkbox-unselected-icon-color: rgba(255, 255, 255, 0.7);
-  
-  /* 3. Color del "check" (la marca de verificación) */
-  --mat-checkbox-selected-icon-color: #121212; /* Texto oscuro para que contraste */
-  
-  /* 4. Color del fondo de la casilla (cuando SÍ está marcada) */
-  --mat-checkbox-selected-container-color: #d4c39a; /* Tu color dorado */
+  --mat-checkbox-selected-icon-color: #121212; 
+  --mat-checkbox-selected-container-color: #d4c39a; 
 }
 /* ===============================================================
   == FIN: ESTILOS PARA TEMA OSCURO DE ANGULAR MATERIAL ==
   ===============================================================
 */
-
-
 .step-form {
   display: flex;
   flex-direction: column;
@@ -95,8 +74,6 @@
 .step-form p {
   color: #ccc;
 }
-
-/* Formulario de cuadrícula (para Envío) */
 .grid-form {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -108,37 +85,31 @@
 .col-span-2 {
   grid-column: span 2;
 }
-
 .step-actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   margin-top: 20px;
 }
-
-/* --- Columna 2: Resumen del Pedido --- */
 .order-summary {
-  flex: 1; /* Ocupa 1/3 del espacio */
+  flex: 1; 
   background-color: #212121;
   padding: 30px;
   border-radius: 8px;
   position: sticky;
-  top: 100px; /* Se queda fijo al hacer scroll */
+  top: 100px; 
 }
-
 .order-summary h3 {
   margin-top: 0;
   font-size: 1.5em;
   padding-bottom: 15px;
   border-bottom: 1px solid #444;
 }
-
 .summary-items-list {
   max-height: 300px;
   overflow-y: auto;
   margin-bottom: 20px;
 }
-
 .summary-item {
   display: flex;
   align-items: center;
@@ -164,7 +135,6 @@
   color: white;
   font-weight: bold;
 }
-
 .summary-totals {
   border-top: 1px solid #444;
   padding-top: 20px;
@@ -181,11 +151,9 @@
 .summary-row.total {
   font-size: 1.3em;
 }
-
-/* Responsivo */
 @media (max-width: 900px) {
   .checkout-page-wrapper {
-    flex-direction: column-reverse; /* El resumen va arriba en móvil */
+    flex-direction: column-reverse; 
   }
   .order-summary {
     position: static;

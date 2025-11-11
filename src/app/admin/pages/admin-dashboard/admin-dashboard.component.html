@@ -1,10 +1,7 @@
 <div class="dashboard-container">
-  
   <h1>Dashboard de Administración</h1>
   <p class="subtitle">Bienvenido al centro de control de tu barbería.</p>
-
   <div class="top-row-grid">
-    
     <mat-card class="critical-alert-card" [class.urgent]="todayReservations.length > 0">
       <mat-card-content>
         <mat-icon class="alert-icon" [style.color]="todayReservations.length > 0 ? '#ff7316' : '#22c55e'">
@@ -22,7 +19,6 @@
         </button>
       </mat-card-content>
     </mat-card>
-
     <div class="kpi-grid">
       <mat-card *ngFor="let kpi of kpis" class="kpi-card">
         <mat-card-content>
@@ -37,7 +33,6 @@
       </mat-card>
     </div>
   </div>
-
   <div class="quick-access-buttons">
     <button mat-flat-button color="primary" routerLink="/admin/reservas">
       <mat-icon>calendar_month</mat-icon> Ver Citas
@@ -45,11 +40,9 @@
     <button mat-flat-button color="accent" routerLink="/admin/productos">
       <mat-icon>add_shopping_cart</mat-icon> Añadir Producto
     </button>
-    
     <button mat-stroked-button color="primary" routerLink="/admin/barberos">
       <mat-icon>person_pin</mat-icon>Gestionar Barberos
     </button>
-    
     <button mat-stroked-button color="primary" routerLink="/admin/usuarios">
       <mat-icon>group</mat-icon> Gestionar Roles
     </button>
@@ -69,36 +62,29 @@
       <mat-icon>rate_review</mat-icon> Contenido
     </button> 
   </div>
-
   <div class="data-summary-grid full-width-grid">
-    
     <mat-card class="data-card">
       <mat-card-header>
         <mat-card-title>Agenda de Hoy</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <table mat-table [dataSource]="todayReservations" class="full-width-table">
-          
           <ng-container matColumnDef="time">
             <th mat-header-cell *matHeaderCellDef> Hora </th>
             <td mat-cell *matCellDef="let res"> <strong>{{ res.time }}</strong> </td>
           </ng-container>
-
           <ng-container matColumnDef="client">
             <th mat-header-cell *matHeaderCellDef> Cliente </th>
             <td mat-cell *matCellDef="let res"> {{ res.user.firstName }} </td>
           </ng-container>
-
           <ng-container matColumnDef="service">
             <th mat-header-cell *matHeaderCellDef> Servicio </th>
             <td mat-cell *matCellDef="let res"> {{ res.service?.name }} </td>
           </ng-container>
-          
           <ng-container matColumnDef="barber">
             <th mat-header-cell *matHeaderCellDef> Barbero </th>
             <td mat-cell *matCellDef="let res"> {{ res.barber?.name }} </td>
           </ng-container>
-
           <tr mat-header-row *matHeaderRowDef="displayedReservationColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedReservationColumns;"></tr>
         </table>
@@ -107,29 +93,24 @@
         </div>
       </mat-card-content>
     </mat-card>
-
     <mat-card class="data-card">
       <mat-card-header>
         <mat-card-title>Últimos Pedidos Pendientes</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <table mat-table [dataSource]="newOrders" class="full-width-table">
-          
           <ng-container matColumnDef="orderId">
             <th mat-header-cell *matHeaderCellDef> Pedido </th>
             <td mat-cell *matCellDef="let order"> #{{ order.orderId }} </td>
           </ng-container>
-
           <ng-container matColumnDef="client">
             <th mat-header-cell *matHeaderCellDef> Cliente </th>
             <td mat-cell *matCellDef="let order"> {{ order.shippingInfo.firstName }} </td>
           </ng-container>
-
           <ng-container matColumnDef="total">
             <th mat-header-cell *matHeaderCellDef> Total </th>
             <td mat-cell *matCellDef="let order"> <strong>{{ order.total | currency:'S/ ' }}</strong> </td>
           </ng-container>
-
           <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let order"> 
@@ -138,7 +119,6 @@
               </button>
             </td>
           </ng-container>
-
           <tr mat-header-row *matHeaderRowDef="displayedOrderColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedOrderColumns;"></tr>
         </table>

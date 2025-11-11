@@ -1,5 +1,4 @@
 <a [routerLink]="['/producto', product.id]" class="card-link-wrapper">
-
   <mat-card class="product-card">
     <img mat-card-image [src]="product.imageUrl" [alt]="product.name">
     <mat-card-header>
@@ -10,5 +9,4 @@
       <p class="price">{{ product.price | currency:'S/ ' }}</p>
     </mat-card-content>
   </mat-card>
-
 </a>

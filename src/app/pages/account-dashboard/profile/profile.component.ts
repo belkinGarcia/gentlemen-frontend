@@ -1,4 +1,3 @@
-// src/app/pages/account-dashboard/profile/profile.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -7,7 +6,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../../services/auth.service';
-
 @Component({
   selector: 'app-profile',
   standalone: true,
@@ -24,11 +22,10 @@ import { AuthService } from '../../../services/auth.service';
 })
 export class ProfileComponent implements OnInit {
   profileForm: FormGroup;
-  successMessage: string | null = null; // Para feedback
-
+  successMessage: string | null = null;
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService // Inyectado
+    private authService: AuthService
   ) {
     this.profileForm = this.fb.group({
       firstName: ['', Validators.required],
@@ -39,21 +36,16 @@ export class ProfileComponent implements OnInit {
       district: ['']
     });
   }
-
   ngOnInit(): void {
     const currentUser = this.authService.getCurrentUser();
     if (currentUser) {
       this.profileForm.patchValue(currentUser);
     }
   }
-
-  // --- ¡FUNCIÓN ACTUALIZADA! ---
   saveChanges(): void {
     this.successMessage = null;
     if (this.profileForm.valid) {
       console.log('Guardando cambios:', this.profileForm.getRawValue());
-      
-      // Llama al servicio para actualizar los datos
       this.authService.updateUser(this.profileForm.getRawValue()).subscribe({
         next: (updatedUser) => {
           console.log("Perfil actualizado con éxito", updatedUser);

@@ -2,7 +2,6 @@
   <button mat-icon-button class="nav-button left" (click)="prevSlide()">
     <mat-icon>chevron_left</mat-icon>
   </button>
-
   <div *ngFor="let slide of slides; let i = index" 
        class="slide" 
        [style.background-image]="'url(' + slide.imageUrl + ')'" 
@@ -15,7 +14,6 @@
           </button>
         </div>
   </div>
-
   <button mat-icon-button class="nav-button right" (click)="nextSlide()">
     <mat-icon>chevron_right</mat-icon>
   </button>

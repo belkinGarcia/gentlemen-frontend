@@ -1,5 +1,4 @@
-// src/app/admin/components/barber-form-dialog/barber-form-dialog.component.ts
-import { Component, Inject, OnInit } from '@angular/core'; // <-- Importa OnInit
+import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -9,9 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider'; 
-
-import { LocationService, Location } from '../../../services/location.service'; // <-- ¡IMPORTA LOCATION SERVICE!
-
+import { LocationService, Location } from '../../../services/location.service';
 interface DialogData {
   id?: number;
   name?: string;
@@ -23,7 +20,6 @@ interface DialogData {
   dayOff?: string;
   shift?: string;
 }
-
 @Component({
   selector: 'app-barber-form-dialog',
   standalone: true,
@@ -41,19 +37,16 @@ interface DialogData {
   templateUrl: './barber-form-dialog.component.html',
   styleUrls: ['./barber-form-dialog.component.css']
 })
-export class BarberFormDialogComponent implements OnInit { // <-- Implementa OnInit
+export class BarberFormDialogComponent implements OnInit {
   barberForm: FormGroup;
-  
   daysOfWeek: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo', 'Ninguno'];
   shifts: string[] = ['Full Time', 'Part Time - Mañana', 'Part Time - Tarde'];
-  
-  locations: Location[] = []; // <-- Propiedad para almacenar las sedes
-
+  locations: Location[] = [];
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<BarberFormDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    private locationService: LocationService // <-- ¡INYECTA LOCATION SERVICE!
+    private locationService: LocationService
   ) {
     this.barberForm = this.fb.group({
       id: [this.data ? this.data.id : null],
@@ -66,23 +59,19 @@ export class BarberFormDialogComponent implements OnInit { // <-- Implementa OnI
       dayOff: [this.data?.dayOff || 'Domingo', Validators.required],
       shift: [this.data?.shift || 'Full Time', Validators.required]
     });
-
     if (this.data) {
       this.barberForm.patchValue(this.data);
     }
   }
-
   ngOnInit(): void {
-    this.locations = this.locationService.getLocations(); // Carga las sedes al iniciar
+    this.locations = this.locationService.getLocations();
   }
-
   onSave(): void {
     if (this.barberForm.valid) {
       const result = this.data ? { ...this.barberForm.value, id: this.data.id } : this.barberForm.value;
       this.dialogRef.close(result);
     }
   }
-
   onCancel(): void {
     this.dialogRef.close();
   }

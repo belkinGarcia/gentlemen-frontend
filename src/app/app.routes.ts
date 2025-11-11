@@ -1,15 +1,8 @@
-// src/app/app.routes.ts
 import { Routes } from '@angular/router';
-
-// --- Guards ---
 import { AuthGuard} from './auth-guard'; 
 import { AdminGuard } from './admin-guard';
-
-// --- Layouts (Nuestra nueva estructura) ---
 import { PublicLayoutComponent } from './components/public-layout/public-layout.component';
 import { AdminLayoutComponent } from './admin/admin-layout/admin-layout.component';
-            
-// --- Páginas Públicas ---
 import { HomeComponent } from './pages/home/home.component';
 import { ShopComponent } from './pages/shop/shop.component';
 import { AboutComponent } from './pages/about/about.component';
@@ -22,17 +15,13 @@ import { BarberDetailComponent } from './pages/barber-detail/barber-detail.compo
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
 import { CartPageComponent } from './components/cart-page/cart-page';
 import { CheckoutPageComponent } from './pages/checkout-page/checkout-page.component';
-
-// --- Páginas de Cuenta de Usuario ---
 import { AccountDashboardComponent } from './pages/account-dashboard/account-dashboard.component';
 import { ProfileComponent } from './pages/account-dashboard/profile/profile.component';
 import { ReservasComponent } from './pages/account-dashboard/reservas/reservas.component';
 import { PedidosComponent } from './pages/account-dashboard/pedidos/pedidos.component';
 import { SeguridadComponent } from './pages/account-dashboard/seguridad/seguridad.component';
 import { PedidoDetailComponent } from './pages/account-dashboard/pedido-detail/pedido-detail.component';
-import { TestimonialPageComponent } from './pages/testimonial-page/testimonial-page.component'; // <-- ¡NUEVA IMPORTACIÓN!
-
-// --- Páginas de Admin ---
+import { TestimonialPageComponent } from './pages/testimonial-page/testimonial-page.component';
 import { AdminDashboardComponent } from './admin/pages/admin-dashboard/admin-dashboard.component';
 import { UserManagementComponent } from './admin/pages/user-management/user-management.component';
 import { ReservationManagementComponent } from './admin/pages/reservation-management/reservation-management.component';
@@ -44,11 +33,7 @@ import { ServiceManagementComponent } from './admin/pages/service-management/ser
 import { LocationManagementComponent } from './admin/pages/location-management/location-management.component';
 import { TestimonialManagementComponent } from './admin/pages/testimonial-management/testimonial-management.component';
 import { ContentManagementComponent } from './admin/pages/content-management/content-management.component';
-
 export const routes: Routes = [
-  
-  // --- RUTA DE ADMIN (Layout Separado) ---
-  // Carga el AdminLayoutComponent y sus rutas hijas
 {
     path: 'admin',
     component: AdminLayoutComponent,
@@ -56,14 +41,10 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: AdminDashboardComponent },
-      
       { path: 'dejar-testimonio', component: TestimonialPageComponent },
       { path: 'usuarios', component: UserManagementComponent }, 
-      
-      // 2. ¡AÑADIR LAS RUTAS FALTANTES DE BARBEROS!
       { path: 'barberos', component: BarberManagementComponent }, 
-      { path: 'barberos/horarios/:id', component: ScheduleManagementComponent }, // Ruta anidada de horarios
-      
+      { path: 'barberos/horarios/:id', component: ScheduleManagementComponent },
       { path: 'reservas', component: ReservationManagementComponent },
       { path: 'pedidos', component: OrderManagementComponent },
       { path: 'productos', component: ProductManagementComponent },
@@ -73,9 +54,6 @@ export const routes: Routes = [
       { path: 'contenido', component: ContentManagementComponent }  
     ]
   },
-
-  // --- RUTAS PÚBLICAS (Layout Separado) ---
-  // Carga el PublicLayoutComponent y todas las demás rutas como hijas
   {
     path: '',
     component: PublicLayoutComponent,
@@ -92,8 +70,7 @@ export const routes: Routes = [
       { path: 'checkout', component: CheckoutPageComponent },
       { path: 'producto/:id', component: ProductDetailComponent },
       { path: 'carrito', component: CartPageComponent },
-      { path: 'dejar-testimonio', component: TestimonialPageComponent }, // <-- Debe estar aquí
-      // --- Ruta de Cuenta Anidada (va dentro del Layout Público) ---
+      { path: 'dejar-testimonio', component: TestimonialPageComponent },
       {
         path: 'mi-cuenta',
         component: AccountDashboardComponent,
@@ -109,7 +86,5 @@ export const routes: Routes = [
       }
     ]
   },
-
-  // Redirección final
   { path: '**', redirectTo: '' }
 ];

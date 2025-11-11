@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-
 @Component({
   selector: 'app-test-page',
   standalone: true,
   imports: [CommonModule],
-  // Usamos un template inline para que no necesites un archivo HTML separado
   template: `
     <div style="padding: 3rem; font-family: sans-serif; background: #f0f0f0; min-height: 100vh;">
       <div style="max-width: 800px; margin: auto; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
@@ -27,27 +25,18 @@ import { Router } from '@angular/router';
   `,
 })
 export class TestPageComponent implements OnInit {
-  // Aquí guardaremos los datos que vienen del formulario de registro
   registrationData: any;
-
   constructor(private router: Router) {
-    // Obtenemos los datos que fueron pasados durante la navegación
     const navigation = this.router.getCurrentNavigation();
-    // Los datos están en 'extras.state'
     this.registrationData = navigation?.extras?.state?.['userData'];
   }
-
   ngOnInit(): void {
-    // Una pequeña validación por si el usuario llega a esta página directamente
     if (!this.registrationData) {
       console.warn('No se recibieron datos de registro.');
       this.registrationData = { error: "No se recibieron datos de registro. Vuelve y completa el formulario." };
     }
   }
-
-  // Función para el botón de volver
   goBack(): void {
     this.router.navigate(['/mi-cuenta']);
   }
 }
-

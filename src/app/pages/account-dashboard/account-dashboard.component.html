@@ -1,12 +1,10 @@
 <div class="account-page-wrapper">
   <mat-sidenav-container class="account-container">
-    
     <mat-sidenav mode="side" opened class="side-menu">
       <div class="user-greet">
         Hola,
         <strong>{{ (currentUser$ | async)?.firstName || 'Usuario' }}</strong>
       </div>
-      
       <mat-nav-list>
         <ng-container *ngIf="isAdmin$ | async">
             <a mat-list-item routerLink="/admin" routerLinkActive="active-link" class="admin-dashboard-link">
@@ -36,10 +34,8 @@
         </a>
       </mat-nav-list>
     </mat-sidenav>
-
     <mat-sidenav-content class="account-content">
       <router-outlet></router-outlet>
     </mat-sidenav-content>
-
   </mat-sidenav-container>
 </div>

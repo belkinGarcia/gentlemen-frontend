@@ -1,29 +1,19 @@
-/* ========================================= */
-/* ===== NUEVO TEMA CLARO (LIGHT THEME) ===== */
-/* ========================================= */
-
-/* --- Estructura Principal de 3 Columnas --- */
 .step-container {
   display: flex;
-  gap: 0; /* Sin espacio, los fondos se tocan */
+  gap: 0; 
   min-height: 500px;
-  background-color: #ffffff; /* Fondo blanco para el contenido */
-  color: #000; /* Texto negro por defecto */
+  background-color: #ffffff; 
+  color: #000; 
 }
-
-/* Columna 1: Información (Izquierda) */
 .step-info {
   flex: 1;
   text-align: left;
   padding: 50px 35px; 
   background-color: #fcfcfc; 
   border-right: 1px solid #eeeeee; 
-  
-  /* CLAVE: Habilitar flexbox y dirección de columna */
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  /* Asegura que el step-info tenga la altura completa del step-container */
   height: 100%; 
 }
 .step-info mat-icon {
@@ -31,7 +21,7 @@
   width: 40px;
   height: 40px;
   margin-bottom: 20px;
-  color: #333; /* Icono oscuro */
+  color: #333; 
 }
 .step-info h2 {
   font-size: 1.5em;
@@ -43,18 +33,14 @@
   font-size: 0.9em;
   line-height: 1.5;
 }
-/* Contenedor de contacto de WhatsApp */
 .whatsapp-contact-box {
-    /* CLAVE: Esto empuja el elemento hasta el fondo del contenedor flex */
     margin-top: auto; 
-    
     padding: 25px 0 0 0; 
     border-top: 1px solid #e0e0e0;
     text-align: left; 
     width: 100%;
     box-sizing: border-box;
 }
-
 .whatsapp-contact-box h3 {
     margin-top: 0;
     margin-bottom: 5px;
@@ -62,47 +48,37 @@
     font-weight: 600;
     color: #4a4a4a;
 }
-
 .whatsapp-contact-box p {
     margin-top: 0;
     margin-bottom: 10px;
     font-size: 14px;
     color: #757575;
 }
-
 .whatsapp-contact-box a.mat-flat-button {
-    background-color: #25D366; /* Verde WhatsApp */
+    background-color: #25D366; 
     color: white;
     font-weight: bold;
     padding: 5px 15px;
     height: 40px;
-    /* Asegura que el ícono esté alineado */
     display: inline-flex;
     align-items: center;
     justify-content: center;
 }
-
 .whatsapp-contact-box a.mat-flat-button mat-icon {
     margin-right: 5px;
 }
-
-/* Separador en el resumen */
 .step-summary mat-divider {
     margin: 15px 0;
 }
-
-/* Columna 2: Contenido Principal (Centro) */
 .step-content {
-  flex: 2; /* Más espacio para el contenido */
+  flex: 2; 
   max-height: 500px;
   overflow-y: auto;
   padding: 40px 30px;
 }
-
-/* Columna 3: Resumen (Derecha) */
 .step-summary {
   flex: 1;
-  background-color: #f4f4f4; /* Fondo gris pálido */
+  background-color: #f4f4f4; 
   border-left: 1px solid #e0e0e0;
   padding: 40px 30px;
 }
@@ -131,8 +107,6 @@
   font-size: 1.5em;
   color: #000;
 }
-
-/* --- Estilos para las Tarjetas de Selección --- */
 .location-card, .category-card, .service-card {
   padding: 15px 20px;
   border: 1px solid #e0e0e0;
@@ -177,8 +151,6 @@
   margin-bottom: 20px;
   color: #000;
 }
-
-/* --- Estilos para Fecha y Hora (ref: image_a4cf06.png) --- */
 .time-slots-container {
   margin-top: 20px;
   border-top: 1px solid #eee;
@@ -195,17 +167,15 @@
   gap: 10px;
 }
 .time-slots-grid button {
-  background-color: #e0f2f1; /* Verde pálido */
-  color: #004d40; /* Verde oscuro */
+  background-color: #e0f2f1; 
+  color: #004d40; 
   border: 1px solid transparent;
 }
 .time-slots-grid button.selected {
-  background-color: #004d40; /* Verde oscuro */
+  background-color: #004d40; 
   color: white;
   border-color: #004d40;
 }
-
-/* --- Estilos para la Confirmación (ref: image_a4d26b.png) --- */
 .confirmation-view .step-info {
   justify-content: flex-start;
   text-align: left;
@@ -213,7 +183,7 @@
 .confirmation-details {
   max-height: none;
   overflow-y: visible;
-  padding: 0; /* Sin padding extra */
+  padding: 0; 
   background-color: #fff;
 }
 .confirmation-number {
@@ -235,8 +205,6 @@
   padding: 20px 0;
   border-top: 1px solid #e0e0e0;
 }
-
-/* --- Botones de Acción (Siguiente/Atrás) --- */
 .step-actions {
   margin-top: 20px;
   display: flex;
@@ -246,8 +214,6 @@
   border-top: 1px solid #e0e0e0;
   padding: 20px 30px;
 }
-
-/* --- Ticket Oculto (sin cambios) --- */
 .pdf-ticket-wrapper {
   position: absolute;
   left: -9999px; 
@@ -256,15 +222,9 @@
 .pdf-ticket-container {
   width: 550px; 
 }
-
-
-/* === INICIO: NUEVOS ESTILOS PARA CONFIRMACIÓN === */
-
-/* --- Estilos específicos para la vista de Confirmación (Imagen 1) --- */
 .confirmation-details {
-  padding: 30px 40px; /* Añadir padding al contenido de confirmación */
+  padding: 30px 40px; 
 }
-
 .confirmation-label {
   display: block;
   font-size: 0.8em;
@@ -272,30 +232,26 @@
   margin-bottom: 5px;
   letter-spacing: 1px;
 }
-
 .confirmation-number {
   font-size: 2.2em;
-  font-weight: 600; /* Menos negrita que el h2 general */
+  font-weight: 600; 
   margin-top: 0;
   margin-bottom: 25px;
-  color: #333; /* Color más oscuro para el número */
+  color: #333; 
 }
-
 .confirmation-actions {
   display: flex;
   gap: 10px;
   margin-bottom: 40px;
 }
-
 .confirmation-actions button {
-  background-color: #f0f0f0; /* Fondo gris claro */
-  color: #333; /* Texto oscuro */
-  border: 1px solid #ccc; /* Borde sutil */
+  background-color: #f0f0f0; 
+  color: #333; 
+  border: 1px solid #ccc; 
   font-size: 0.9em;
   padding: 8px 15px;
   border-radius: 5px;
 }
-
 .confirmation-actions button mat-icon {
   margin-right: 5px;
   font-size: 18px;
@@ -303,54 +259,45 @@
   width: 18px;
   color: #555;
 }
-
 .detail-section {
-  margin-bottom: 30px; /* Más espacio entre secciones */
-  border-top: none; /* Eliminar borde superior si ya hay margin */
+  margin-bottom: 30px; 
+  border-top: none; 
   padding-top: 0;
 }
-
 .detail-section h4 {
   font-size: 1.1em;
   font-weight: 600;
   margin-bottom: 20px;
   color: #333;
   padding-bottom: 10px;
-  border-bottom: 1px solid #eee; /* Separador sutil */
+  border-bottom: 1px solid #eee; 
 }
-
 .detail-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Dos columnas por defecto */
-  gap: 15px 30px; /* Espacio vertical y horizontal */
+  grid-template-columns: 1fr 1fr; 
+  gap: 15px 30px; 
 }
-
 .grid-item {
   display: flex;
-  flex-direction: column; /* Etiqueta arriba, valor abajo */
+  flex-direction: column; 
 }
-
 .grid-item.full-width {
-  grid-column: 1 / -1; /* Ocupa todo el ancho si es necesario */
+  grid-column: 1 / -1; 
 }
-
 .grid-label {
-  font-size: 0.75em; /* Más pequeño para la etiqueta */
+  font-size: 0.75em; 
   color: #888;
   margin-bottom: 3px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-
 .grid-value {
-  font-size: 1em; /* Tamaño normal para el valor */
+  font-size: 1em; 
   color: #333;
   font-weight: bold;
 }
-
-/* Ajustes para el PDF para que coincida con el layout */
 .pdf-ticket-container {
-    padding: 30px; /* Añade padding para que no se vea tan pegado */
+    padding: 30px; 
 }
 .pdf-ticket-container h3 {
     text-align: center;
@@ -392,7 +339,7 @@
     grid-template-columns: 1fr 1fr;
     gap: 10px 20px;
 }
-.pdf-grid .grid-item { /* Reutiliza el estilo de grid-item para PDF */
+.pdf-grid .grid-item { 
     display: flex;
     flex-direction: column;
 }
@@ -410,5 +357,3 @@
 .pdf-grid .full-width {
   grid-column: 1 / -1;
 }
-
-/* === FIN: NUEVOS ESTILOS PARA CONFIRMACIÓN === */

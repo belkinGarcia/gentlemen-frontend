@@ -1,9 +1,7 @@
 <div class="profile-container">
   <h2>Mi Perfil</h2>
   <p>Actualiza tu información personal y de contacto.</p>
-
   <form [formGroup]="profileForm" (ngSubmit)="saveChanges()" class="profile-form">
-    
     <div class="form-row">
       <mat-form-field appearance="fill">
         <mat-label>Nombres</mat-label>
@@ -34,11 +32,9 @@
         <input matInput formControlName="district">
       </mat-form-field>
     </div>
-
     <button mat-flat-button color="primary" type="submit" [disabled]="profileForm.invalid">
       Guardar Cambios
     </button>
-
     <div *ngIf="successMessage" class="alert-success">
       {{ successMessage }}
     </div>

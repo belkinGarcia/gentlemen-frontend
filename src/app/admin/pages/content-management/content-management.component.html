@@ -1,9 +1,7 @@
 <div class="content-management-container">
   <h1>Gestión de Contenido de Guía (Booking)</h1>
   <p class="subtitle">Selecciona el paso que deseas editar. El contenido se reflejará instantáneamente en el modal de reserva.</p>
-
   <div class="management-grid">
-    
     <div class="step-navigation-sidebar">
       <mat-card class="sidebar-card">
         <mat-card-subtitle>Pasos de Edición</mat-card-subtitle>
@@ -19,43 +17,34 @@
         </div>
       </mat-card>
     </div>
-
     <div class="content-main">
       <mat-card class="content-card">
         <mat-card-title>
           Editando: {{ getStepTitle(activeStepKey!) }}
         </mat-card-title>
-
         <mat-divider></mat-divider>
-
         <form [formGroup]="mainForm" (ngSubmit)="saveGuide()" class="content-form">
-            
             <mat-card-subtitle *ngIf="isContactView" class="contact-subtitle">
                 Esta información de contacto se muestra en varios pasos (Ej: "Seleccionar local", "Fecha y Hora")
             </mat-card-subtitle>
-
             <mat-form-field appearance="outline">
               <mat-label>Título</mat-label>
               <input matInput formControlName="title" required>
             </mat-form-field>
-            
             <mat-form-field appearance="outline" class="full-width-field">
               <mat-label>Descripción / Guía</mat-label>
               <textarea matInput formControlName="description" rows="5" required></textarea>
             </mat-form-field>
-
             <div *ngIf="isContactView" class="whatsapp-fields-grid">
               <mat-form-field appearance="outline">
                 <mat-label>Número de WhatsApp (Texto visible)</mat-label>
                 <input matInput formControlName="whatsappNumber" required>
               </mat-form-field>
-
               <mat-form-field appearance="outline">
                 <mat-label>URL de WhatsApp (Ej: https://wa.me/51...)</mat-label>
                 <input matInput formControlName="whatsappLink" required>
               </mat-form-field>
             </div>
-            
             <button 
                 mat-flat-button 
                 [color]="isContactView ? 'accent' : 'primary'" 

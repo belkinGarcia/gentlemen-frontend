@@ -1,11 +1,9 @@
-/* --- Estilos Base del Carrusel --- */
 .carousel-container {
   height: 100vh;
   position: relative;
   overflow: hidden;
   color: white;
 }
-
 .slide {
   position: absolute;
   top: 0;
@@ -21,11 +19,9 @@
   opacity: 0;
   transition: opacity 0.8s ease-in-out;
 }
-
 .slide.active {
   opacity: 1;
 }
-
 .slide::before {
   content: '';
   position: absolute;
@@ -36,13 +32,11 @@
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 1;
 }
-
 .hero-text {
   position: relative;
   z-index: 2;
   padding: 20px;
 }
-
 .hero-text h1 {
   font-family: 'Abel', sans-serif;
   font-size: 4rem;
@@ -54,7 +48,6 @@
   max-width: 800px;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
 }
-
 .hero-text button {
   font-size: 1rem;
   padding: 12px 35px;
@@ -62,51 +55,35 @@
   line-height: normal;
   transition: all 0.3s ease;
 }
-
 .hero-text button:hover {
   background-color: #d4c39a;
   color: #121212;
 }
-
 .nav-button {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   z-index: 3;
 }
-
 .nav-button.left { left: 20px; }
 .nav-button.right { right: 20px; }
-
-/* --- FIN DE ESTILOS BASE --- */
-
-
-/* ========================================= */
-/* ===== ESTILOS RESPONSIVOS PARA MÓVILES ===== */
-/* ========================================= */
 @media (max-width: 768px) {
-
   .carousel-container {
     height: 80vh; 
   }
-
   .hero-text h1 {
     font-size: 2.5rem; 
   }
-
   .hero-text button {
     padding: 10px 25px;
     font-size: 0.9rem;
   }
-
   .nav-button {
     transform: translateY(-50%) scale(0.8);
   }
-
   .nav-button.left {
     left: 10px;
   }
-
   .nav-button.right {
     right: 10px;
   }

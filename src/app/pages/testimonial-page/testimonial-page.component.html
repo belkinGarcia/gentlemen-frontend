@@ -1,12 +1,9 @@
 <div class="testimonial-page-container">
-  
   <mat-card *ngIf="!isSubmitted" class="review-card">
     <mat-card-title>Deja tu Comentario</mat-card-title>
     <mat-card-subtitle>Tu opinión es importante para nosotros. Selecciona la calificación y déjanos tu reseña.</mat-card-subtitle>
     <mat-divider></mat-divider>
-    
     <form [formGroup]="testimonialForm" (ngSubmit)="submitTestimonial()" class="review-form">
-      
       <div class="rating-stars">
         <mat-icon 
           *ngFor="let i of [1,2,3,4,5]" 
@@ -19,25 +16,20 @@
           Por favor, selecciona una calificación.
         </div>
       </div>
-      
       <mat-form-field appearance="outline">
         <mat-label>Tu Nombre</mat-label>
         <input matInput formControlName="clientName" required>
       </mat-form-field>
-      
       <mat-form-field appearance="outline">
         <mat-label>Tu Opinión (máx. {{ maxCommentLength }} caracteres)</mat-label>
         <textarea matInput formControlName="comment" rows="4" required maxlength="{{ maxCommentLength }}"></textarea>
         <mat-hint align="end">{{ maxCommentLength - (testimonialForm.get('comment')?.value?.length || 0) }} restantes</mat-hint>
       </mat-form-field>
-      
       <button mat-flat-button color="primary" type="submit" [disabled]="testimonialForm.invalid">
         Enviar Testimonio
       </button>
-      
     </form>
   </mat-card>
-
   <mat-card *ngIf="isSubmitted" class="success-card">
     <mat-icon class="success-icon">check_circle</mat-icon>
     <h2>¡Gracias por tu Comentario!</h2>

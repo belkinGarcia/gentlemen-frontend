@@ -9,7 +9,6 @@
 .image-column { flex: 1; }
 .image-column img { width: 100%; border-radius: 8px; }
 h2 { font-size: 2.5em; color: #fff; }
-
 @media (max-width: 768px) {
   .bio-section { flex-direction: column; }
 }

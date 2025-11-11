@@ -7,10 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatChipsModule } from '@angular/material/chips';
-
-// --- ¡IMPORTAMOS EL SERVICIO Y LA INTERFAZ! ---
-import { OrderService, Order } from '../../../services/order.service'; // Ajusta la ruta
-
+import { OrderService, Order } from '../../../services/order.service';
 @Component({
   selector: 'app-pedido-detail',
   standalone: true,
@@ -28,36 +25,26 @@ import { OrderService, Order } from '../../../services/order.service'; // Ajusta
   styleUrls: ['./pedido-detail.component.css']
 })
 export class PedidoDetailComponent implements OnInit {
-
-  order: Order | undefined; // <-- Ahora usa la interfaz 'Order'
+  order: Order | undefined;
   isLoading = true;
-
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private orderService: OrderService // <-- Inyecta el servicio
+    private orderService: OrderService
   ) {}
-
   ngOnInit(): void {
     const orderId = this.route.snapshot.paramMap.get('id');
-    
-    // Llama al servicio (que ahora lee del BehaviorSubject)
     if (orderId) {
       this.order = this.orderService.getOrderById(orderId);
     }
-    
     this.isLoading = false;
-
     if (!this.order) {
-      // Este es el error que estás viendo en la consola
       console.error("No se encontró el pedido con ID:", orderId);
     }
   }
-
   goBack(): void {
     this.router.navigate(['/mi-cuenta/pedidos']);
   }
-
   getStatusChipColor(status: 'Procesando' | 'Enviado' | 'Entregado'): string {
     switch (status) {
       case 'Procesando': return 'warn';

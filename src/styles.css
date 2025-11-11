@@ -3,32 +3,28 @@ html, body { height: 100%; }
 body {
   margin: 0;
   font-family: 'Abel', sans-serif;
-  background-color: #121212; /* Dark background for the whole app */
+  background-color: #121212; 
 }
 .content-wrapper {
   width: 100%;
-  max-width: calc(1920px - 680px); /* A common desktop width minus your margins */
-  margin: 0 auto; /* This centers the container */
+  max-width: calc(1920px - 680px); 
+  margin: 0 auto; 
   padding: 0 20px;
   box-sizing: border-box;
 }
-
-/* Estilos globales para el panel del diálogo de video. */
 .video-dialog-container .mat-mdc-dialog-container {
-  background-color: #000 !important; /* Fondo completamente negro */
+  background-color: #000 !important; 
   padding: 0 !important;
-  border-radius: 0 !important; /* Bordes cuadrados */
+  border-radius: 0 !important; 
   box-shadow: none !important;
-  overflow: hidden !important; /* --- MODIFICADO: Evita barras de scroll en el diálogo --- */
+  overflow: hidden !important; 
 }
-
-/* Oculta el panel "CDK-overlay" para que no haya fondo gris */
 .video-dialog-container .cdk-overlay-backdrop {
-   background: rgba(0, 0, 0, 0.95) !important; /* Fondo de overlay aún más oscuro */
+   background: rgba(0, 0, 0, 0.95) !important; 
 }
 .dark-theme-dialog-container .mat-mdc-dialog-container .mdc-dialog__surface {
   background: none !important;
   box-shadow: none !important;
   padding: 0 !important;
-  border-radius: 8px !important; /* Asegúrate que coincida con tu CSS */
+  border-radius: 8px !important; 
 }

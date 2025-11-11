@@ -9,7 +9,6 @@
   background-size: cover;
   background-position: center;
 }
-
 .product-hero-banner::before {
   content: '';
   position: absolute;
@@ -19,7 +18,6 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.6);
 }
-
 .product-hero-banner h1 {
   position: relative;
   z-index: 2;
