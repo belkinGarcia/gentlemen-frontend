@@ -6,27 +6,26 @@
         <h2>{{ guide['step1']?.title }}</h2>
         <p>{{ guide['step1']?.description }}</p>
         <div class="whatsapp-contact-box">
-            <h3>{{ guide['contact'].title }}</h3>
-            <p>{{ guide['contact'].description }}</p>
-            <a [href]="guide['contact'].whatsappLink" mat-flat-button color="accent">
-                <mat-icon>whatsapp</mat-icon> {{ guide['contact'].whatsappNumber }}
-            </a>
+          <h3>{{ guide['contact'].title }}</h3>
+          <p>{{ guide['contact'].description }}</p>
+          <a [href]="guide['contact'].whatsappLink" mat-flat-button color="accent">
+            📞 {{ guide['contact'].whatsappNumber
+            }}
+          </a>
         </div>
       </div>
       <div class="step-content">
-        <div *ngFor="let location of locations" 
-             class="location-card" 
-             (click)="selectLocation(location)"
-             [class.selected]="location.id === selectedLocation?.id">
+        <div *ngFor="let location of locations" class="location-card" (click)="selectLocation(location)"
+          [class.selected]="location.id === selectedLocation?.id">
           <img [src]="location.imageUrl" [alt]="location.name">
           <div class="location-details">
-            <strong>{{ location.name }}</strong>
+            <strong>{{ location.name }} </strong>
             <span>{{ location.address }}</span>
           </div>
         </div>
       </div>
       <div class="step-summary">
-        </div>
+      </div>
     </div>
     <div class="step-actions">
       <button mat-button matStepperNext [disabled]="!selectedLocation">Siguiente</button>
@@ -39,11 +38,11 @@
         <h2>{{ guide['step2']?.title }}</h2>
         <p>{{ guide['step2']?.description }}</p>
         <div class="whatsapp-contact-box">
-            <h3>{{ guide['contact'].title }}</h3>
-            <p>{{ guide['contact'].description }}</p>
-            <a [href]="guide['contact'].whatsappLink" mat-flat-button color="accent">
-                <mat-icon>whatsapp</mat-icon> {{ guide['contact'].whatsappNumber }}
-            </a>
+          <h3>{{ guide['contact'].title }}</h3>
+          <p>{{ guide['contact'].description }}</p>
+          <a [href]="guide['contact'].whatsappLink" mat-flat-button color="accent">
+            📞 {{ guide['contact'].whatsappNumber }}
+          </a>
         </div>
       </div>
       <div class="step-content">
@@ -60,10 +59,8 @@
           <button mat-button (click)="backToCategories()" class="back-button-small">
             <mat-icon>arrow_back</mat-icon> Atrás
           </button>
-          <div *ngFor="let service of selectedCategoryServices" 
-               class="service-card"
-               (click)="selectService(service)"
-               [class.selected]="service.id === selectedService?.id">
+          <div *ngFor="let service of selectedCategoryServices" class="service-card" (click)="selectService(service)"
+            [class.selected]="service.id === selectedService?.id">
             <div class="service-details">
               <strong>{{ service.name }}</strong>
               <p>{{ service.description }}</p>
@@ -80,15 +77,15 @@
         </div>
         <div class="summary-item" *ngIf="selectedService">
           <span>SERVICIO</span>
-          <strong>{{ selectedService.name }}</strong> 
+          <strong>{{ selectedService.name }}</strong>
           <span class="sub-text">Duración: {{ totalDuration }} min</span>
         </div>
         <div class="summary-item total" *ngIf="selectedService">
           <span>PRECIO TOTAL</span>
-          <strong>{{ selectedService.price | currency:'S/ ' }}</strong> 
+          <strong>{{ selectedService.price | currency:'S/ ' }}</strong>
         </div>
         <mat-divider></mat-divider>
-        </div>
+      </div>
     </div>
     <div class="step-actions">
       <button mat-button matStepperPrevious>Atrás</button>
@@ -102,17 +99,15 @@
         <h2>{{ guide['step3']?.title }}</h2>
         <p>{{ guide['step3']?.description }}</p>
         <div class="whatsapp-contact-box">
-            <h3>{{ guide['contact'].title }}</h3>
-            <p>{{ guide['contact'].description }}</p>
-            <a [href]="guide['contact'].whatsappLink" mat-flat-button color="accent">
-                <mat-icon>whatsapp</mat-icon> {{ guide['contact'].whatsappNumber }}
-            </a>
+          <h3>{{ guide['contact'].title }}</h3>
+          <p>{{ guide['contact'].description }}</p>
+          <a [href]="guide['contact'].whatsappLink" mat-flat-button color="accent">
+            📞 {{ guide['contact'].whatsappNumber }}
+          </a>
         </div>
       </div>
       <div class="step-content">
-        <app-barber-selector 
-          [barbers]="barbersForLocation"
-          [selectedBarberId]="selectedBarber?.id"
+        <app-barber-selector [barbers]="barbersForLocation" [selectedBarberId]="selectedBarber?.id"
           (selectionChange)="selectBarber($event)">
         </app-barber-selector>
       </div>
@@ -125,9 +120,9 @@
         <div class="summary-item">
           <span>SERVICIO</span>
           <strong>{{ selectedService?.name }}</strong>
-          <span class="sub-text">Duración: {{ totalDuration }} min</span> 
+          <span class="sub-text">Duración: {{ totalDuration }} min</span>
         </div>
-         <div class="summary-item" *ngIf="selectedBarber">
+        <div class="summary-item" *ngIf="selectedBarber">
           <span>BARBERO</span>
           <strong>{{ selectedBarber?.name }}</strong>
         </div>
@@ -136,7 +131,7 @@
           <strong>{{ selectedService?.price | currency:'S/ ' }}</strong>
         </div>
         <mat-divider></mat-divider>
-        </div>
+      </div>
     </div>
     <div class="step-actions">
       <button mat-button matStepperPrevious>Atrás</button>
@@ -150,27 +145,21 @@
         <h2>{{ guide['step4']?.title }}</h2>
         <p>{{ guide['step4']?.description }}</p>
         <div class="whatsapp-contact-box">
-            <h3>{{ guide['contact'].title }}</h3>
-            <p>{{ guide['contact'].description }}</p>
-            <a [href]="guide['contact'].whatsappLink" mat-flat-button color="accent">
-                <mat-icon>whatsapp</mat-icon> {{ guide['contact'].whatsappNumber }}
-            </a>
+          <h3>{{ guide['contact'].title }}</h3>
+          <p>{{ guide['contact'].description }}</p>
+          <a [href]="guide['contact'].whatsappLink" mat-flat-button color="accent">
+            📞 {{ guide['contact'].whatsappNumber }}
+          </a>
         </div>
       </div>
       <div class="step-content">
-        <mat-calendar 
-          [selected]="selectedDate"
-          (selectedChange)="onDateSelect($event)"
-          [dateClass]="dateClass"
+        <mat-calendar [selected]="selectedDate" (selectedChange)="onDateSelect($event)" [dateClass]="dateClass"
           [minDate]="minDate">
         </mat-calendar>
         <div *ngIf="selectedDate" class="time-slots-container">
           <h4>Elija la hora de la cita para {{ selectedDate | date: 'longDate' }}</h4>
           <div *ngIf="availableTimes.length > 0; else noTimes" class="time-slots-grid">
-            <button 
-              *ngFor="let time of availableTimes" 
-              mat-stroked-button
-              (click)="selectTime(time)"
+            <button *ngFor="let time of availableTimes" mat-stroked-button (click)="selectTime(time)"
               [class.selected]="time === selectedTime">
               {{ time }}
             </button>
@@ -191,7 +180,7 @@
         <div class="summary-item">
           <span>SERVICIO</span>
           <strong>{{ selectedService?.name }}</strong>
-          <span class="sub-text">Duración: {{ totalDuration }} min</span> 
+          <span class="sub-text">Duración: {{ totalDuration }} min</span>
         </div>
         <div class="summary-item">
           <span>BARBERO</span>
@@ -206,7 +195,7 @@
           <strong>{{ selectedService?.price | currency:'S/ ' }}</strong>
         </div>
         <mat-divider></mat-divider>
-        </div>
+      </div>
     </div>
     <div class="step-actions">
       <button mat-button matStepperPrevious>Atrás</button>
@@ -220,19 +209,17 @@
         <h2>{{ guide['step5']?.title }}</h2>
         <p>{{ guide['step5']?.description }}</p>
         <div class="whatsapp-contact-box">
-            <h3>{{ guide['contact'].title }}</h3>
-            <p>{{ guide['contact'].description }}</p>
-            <a [href]="guide['contact'].whatsappLink" mat-flat-button color="accent">
-                <mat-icon>whatsapp</mat-icon> {{ guide['contact'].whatsappNumber }}
-            </a>
+          <h3>{{ guide['contact'].title }}</h3>
+          <p>{{ guide['contact'].description }}</p>
+          <a [href]="guide['contact'].whatsappLink" mat-flat-button color="accent">
+            📞 {{ guide['contact'].whatsappNumber }}
+          </a>
         </div>
       </div>
       <div class="step-content">
-        <app-auth-page
-          [displayMode]="'tabs'" 
-          (loginSuccess)="handleAuthentication($event)"
+        <app-auth-page [displayMode]="'tabs'" (loginSuccess)="handleAuthentication($event)"
           (registerSuccess)="handleAuthentication($event)">
-      </app-auth-page>
+        </app-auth-page>
       </div>
       <div class="step-summary" *ngIf="contentService.content$ | async as guide">
         <h4>RESUMEN</h4>
@@ -243,7 +230,7 @@
         <div class="summary-item">
           <span>SERVICIO</span>
           <strong>{{ selectedService?.name }}</strong>
-          <span class="sub-text">Duración: {{ totalDuration }} min</span> 
+          <span class="sub-text">Duración: {{ totalDuration }} min</span>
         </div>
         <div class="summary-item">
           <span>BARBERO</span>
@@ -262,7 +249,7 @@
           <strong>{{ selectedService?.price | currency:'S/ ' }}</strong>
         </div>
         <mat-divider></mat-divider>
-        </div>
+      </div>
     </div>
     <div class="step-actions">
       <button mat-button matStepperPrevious>Atrás</button>
@@ -275,10 +262,10 @@
         <mat-icon class="success-icon">verified_user</mat-icon>
         <h2>{{ guide['step6']?.title }}</h2>
         <p>{{ guide['step6']?.description }}</p>
-        </div>
+      </div>
       <div class="step-content confirmation-details">
         <div class="confirmation-header">
-          </div>
+        </div>
         <span class="confirmation-label">CONFIRMATION #</span>
         <h2 class="confirmation-number">{{ confirmationNumber }}</h2>
         <div class="confirmation-actions">
@@ -294,23 +281,23 @@
           <h4>Información de la cita</h4>
           <div class="detail-grid">
             <div class="grid-item">
-              <span class="grid-label">FECHA:</span>         
+              <span class="grid-label">FECHA:</span>
               <strong class="grid-value">{{ selectedDate | date:'d MMM, yyyy' }}</strong>
             </div>
             <div class="grid-item">
-              <span class="grid-label">HORA:</span>          
+              <span class="grid-label">HORA:</span>
               <strong class="grid-value">{{ selectedTime }}</strong>
             </div>
             <div class="grid-item full-width">
-              <span class="grid-label">UBICACIÓN:</span>      
+              <span class="grid-label">UBICACIÓN:</span>
               <strong class="grid-value">{{ selectedLocation?.address }}</strong>
             </div>
             <div class="grid-item">
-              <span class="grid-label">BARBERO:</span>       
+              <span class="grid-label">BARBERO:</span>
               <strong class="grid-value">{{ selectedBarber?.name }}</strong>
             </div>
             <div class="grid-item full-width">
-              <span class="grid-label">SERVICIO:</span>      
+              <span class="grid-label">SERVICIO:</span>
               <strong class="grid-value">{{ selectedService?.name }} ({{ totalDuration }} min)</strong>
             </div>
           </div>
@@ -319,15 +306,16 @@
           <h4>Información del cliente</h4>
           <div class="detail-grid">
             <div class="grid-item">
-              <span class="grid-label">NOMBRE:</span>        
-              <strong class="grid-value">{{ informationForm.get('firstName')?.value }} {{ informationForm.get('lastName')?.value }}</strong>
+              <span class="grid-label">NOMBRE:</span>
+              <strong class="grid-value">{{ informationForm.get('firstName')?.value }} {{
+                informationForm.get('lastName')?.value }}</strong>
             </div>
             <div class="grid-item">
-              <span class="grid-label">TELÉFONO:</span>      
+              <span class="grid-label">TELÉFONO:</span>
               <strong class="grid-value">{{ informationForm.get('phone')?.value }}</strong>
             </div>
             <div class="grid-item full-width">
-              <span class="grid-label">CORREO ELECTRÓNICO:</span> 
+              <span class="grid-label">CORREO ELECTRÓNICO:</span>
               <strong class="grid-value">{{ informationForm.get('email')?.value }}</strong>
             </div>
           </div>
@@ -336,7 +324,7 @@
           <h4>Información de pago</h4>
           <div class="detail-grid">
             <div class="grid-item">
-              <span class="grid-label">PRECIO:</span>        
+              <span class="grid-label">PRECIO:</span>
               <strong class="grid-value">{{ selectedService?.price | currency:'S/ ' }}</strong>
             </div>
           </div>
@@ -347,50 +335,51 @@
 </mat-stepper>
 <div class="pdf-ticket-wrapper">
   <div id="pdf-ticket" class="pdf-ticket-container">
-      <h3>Confirmación de la cita</h3>
-      <p class="pdf-label">Confirmation #</p>
-      <p class="pdf-number">{{ confirmationNumber }}</p>
-      <div class="pdf-section">
-          <h4>Información de la cita</h4>
-          <div class="pdf-grid">
-              <div class="grid-item">
-                <span>Fecha:</span>         <strong>{{ selectedDate | date:'d MMM, yyyy' }}</strong>
-              </div>
-              <div class="grid-item">
-                <span>Hora:</span>          <strong>{{ selectedTime }}</strong>
-              </div>
-              <div class="grid-item full-width">
-                <span>Ubicación:</span>      <strong>{{ selectedLocation?.address }}</strong>
-              </div>
-              <div class="grid-item">
-                <span>Barbero:</span>       <strong>{{ selectedBarber?.name }}</strong>
-              </div>
-              <div class="grid-item full-width">
-                <span>Servicio:</span>      <strong>{{ selectedService?.name }} ({{ totalDuration }} min)</strong>
-              </div>
-          </div>
+    <h3>Confirmación de la cita</h3>
+    <p class="pdf-label">Confirmation #</p>
+    <p class="pdf-number">{{ confirmationNumber }}</p>
+    <div class="pdf-section">
+      <h4>Información de la cita</h4>
+      <div class="pdf-grid">
+        <div class="grid-item">
+          <span>Fecha:</span> <strong>{{ selectedDate | date:'d MMM, yyyy' }}</strong>
+        </div>
+        <div class="grid-item">
+          <span>Hora:</span> <strong>{{ selectedTime }}</strong>
+        </div>
+        <div class="grid-item full-width">
+          <span>Ubicación:</span> <strong>{{ selectedLocation?.address }}</strong>
+        </div>
+        <div class="grid-item">
+          <span>Barbero:</span> <strong>{{ selectedBarber?.name }}</strong>
+        </div>
+        <div class="grid-item full-width">
+          <span>Servicio:</span> <strong>{{ selectedService?.name }} ({{ totalDuration }} min)</strong>
+        </div>
       </div>
-      <div class="pdf-section">
-          <h4>Información del cliente</h4>
-          <div class="pdf-grid">
-            <div class="grid-item">
-              <span>Nombre:</span>        <strong>{{ informationForm.get('firstName')?.value }} {{ informationForm.get('lastName')?.value }}</strong>
-            </div>
-            <div class="grid-item">
-              <span>Teléfono:</span>      <strong>{{ informationForm.get('phone')?.value }}</strong>
-            </div>
-            <div class="grid-item full-width">
-              <span>Correo electrónico:</span> <strong>{{ informationForm.get('email')?.value }}</strong>
-            </div>
-          </div>
+    </div>
+    <div class="pdf-section">
+      <h4>Información del cliente</h4>
+      <div class="pdf-grid">
+        <div class="grid-item">
+          <span>Nombre:</span> <strong>{{ informationForm.get('firstName')?.value }} {{
+            informationForm.get('lastName')?.value }}</strong>
+        </div>
+        <div class="grid-item">
+          <span>Teléfono:</span> <strong>{{ informationForm.get('phone')?.value }}</strong>
+        </div>
+        <div class="grid-item full-width">
+          <span>Correo electrónico:</span> <strong>{{ informationForm.get('email')?.value }}</strong>
+        </div>
       </div>
-      <div class="pdf-section">
-          <h4>Información de pago</h4>
-          <div class="pdf-grid">
-            <div class="grid-item">
-              <span>Precio:</span>        <strong>{{ selectedService?.price | currency:'S/ ' }}</strong>
-            </div>
-          </div>
+    </div>
+    <div class="pdf-section">
+      <h4>Información de pago</h4>
+      <div class="pdf-grid">
+        <div class="grid-item">
+          <span>Precio:</span> <strong>{{ selectedService?.price | currency:'S/ ' }}</strong>
+        </div>
       </div>
+    </div>
   </div>
 </div>

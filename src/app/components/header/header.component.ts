@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { RouterModule } from '@angular/router'; 
+import { RouterModule } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -36,7 +36,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private cartService: CartService,
     private authService: AuthService
   ) {
-    this.isLoggedIn$ = this.authService.loggedIn$; 
+    this.isLoggedIn$ = this.authService.loggedIn$;
   }
   ngOnInit(): void {
     this.cartSubscription = this.cartService.cartCount$.subscribe(count => {

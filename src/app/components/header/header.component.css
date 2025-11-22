@@ -1,11 +1,11 @@
 .main-header {
-  background: transparent; 
+  background: transparent;
   color: white;
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 100; 
+  z-index: 100;
   display: flex;
   justify-content: center;
 }
@@ -19,29 +19,49 @@
   font-size: 16px;
 }
 .logo-link {
-  line-height: 0; 
+  line-height: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+.logo-text {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #d4af37; /* dorado elegante */
+  font-family: "Cinzel", serif;
+  text-shadow: 0px 0px 8px rgba(0,0,0,0.6);
+  margin: 0;
 }
 .header-logo {
   height: 40px;
   width: auto;
+  border-radius: 8px;
 }
 .spacer {
-  flex: 1 1 auto; 
+  flex: 1 1 auto;
 }
 .cart-button {
   color: white;
 }
 .desktop-menu {
-  display: block; 
+  display: block;
 }
 .mobile-menu-button {
-  display: none; 
+  display: none;
 }
 @media (max-width: 768px) {
   .desktop-menu {
-    display: none; 
+    display: none;
   }
   .mobile-menu-button {
-    display: block; 
+    display: block;
+  }
+}
+/*Ocultar el texto cuando la pantalla es móvil */
+@media (max-width: 600px) {
+  .logo-text {
+    display: none;
   }
 }

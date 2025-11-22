@@ -1,10 +1,9 @@
 <mat-toolbar class="main-header">
   <div class="content-wrapper">
     <a routerLink="/" class="logo-link">
-      <img 
-        src="https://cdn.midjourney.com/a3d72ee2-72b5-408a-8a02-c823e06247fe/0_2.png" 
-        alt="Gentlemen Frontend Logo" 
+      <img src="https://cdn.midjourney.com/a3d72ee2-72b5-408a-8a02-c823e06247fe/0_2.png" alt="Gentlemen Frontend Logo"
         class="header-logo">
+      <p class="logo-text">GENTLEMEN BARBERIA</p>
     </a>
     <span class="spacer"></span>
     <div class="desktop-menu">
@@ -19,15 +18,9 @@
       <ng-template #loggedOutMenu>
         <a mat-button routerLink="/auth/login">Iniciar Sesión</a>
       </ng-template>
-      </div>
-    <button 
-      mat-icon-button 
-      class="cart-button" 
-      aria-label="Botón de carrito de compras"
-      routerLink="/carrito" 
-      [matBadge]="cartItemCount > 0 ? cartItemCount : null"
-      matBadgeColor="warn"
-      matBadgePosition="after"
+    </div>
+    <button mat-icon-button class="cart-button" aria-label="Botón de carrito de compras" routerLink="/carrito"
+      [matBadge]="cartItemCount > 0 ? cartItemCount : null" matBadgeColor="warn" matBadgePosition="after"
       matBadgeSize="small">
       <mat-icon>shopping_cart</mat-icon>
     </button>

@@ -9,8 +9,8 @@ import { BookingComponent } from '../booking/booking.component';
   selector: 'app-hero',
   standalone: true,
   imports: [
-    CommonModule, 
-    MatButtonModule, 
+    CommonModule,
+    MatButtonModule,
     MatIconModule,
     MatDialogModule,
   ],
@@ -21,8 +21,8 @@ export class HeroComponent {
   slides = [
     {
     imageUrl: 'https://cdn.midjourney.com/c0d03bc8-50cc-4dc3-9199-1abd30f85020/0_0.png',
-    subtitle: 'LOS MEJORES AMBIENTES DE',
-    title: 'BARBERÍA CLÁSICA EN 7 SEDES',
+    subtitle: 'LOS MEJORES AMBIENTES EN',
+    title: 'GENTLEMEN BARBER SHOP',
     buttonText: 'RESERVAR UNA CITA'
   },
   {

@@ -1,5 +1,5 @@
 .card-link-wrapper {
-  text-decoration: none; 
+  text-decoration: none;
   display: block;
   height: 100%;
 }
@@ -9,11 +9,13 @@
   text-align: center;
   padding-bottom: 16px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  color: #fff !important; 
-  font-weight: bold; 
-  height: 100%; 
-  display: flex; 
-  flex-direction: column; 
+  color: #fff !important;
+  font-weight: bold;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
 }
 .product-card:hover {
   transform: translateY(-5px);
@@ -22,11 +24,11 @@
 }
 mat-card-title {
   font-size: 1em;
-  color: inherit; 
+  color: inherit;
   font-weight: inherit;
 }
 mat-card-content {
-  flex-grow: 1; 
+  flex-grow: 1;
 }
 mat-card-content p {
   font-size: 0.8em;
@@ -41,6 +43,28 @@ mat-card-content p {
 }
 @media (max-width: 768px) {
   .detail-container {
-    flex-direction: column; 
+    flex-direction: column;
   }
+}
+.product-card img {
+  width: 100%;
+  max-width: 220px;           /* Tamaño centrado y bonito */
+  border-radius: 10px;
+  margin: 0 auto;
+  display: block;
+}
+
+.product-card .mat-card-header,
+.product-card .mat-card-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;       /* Centra su contenido */
+  text-align: center;
+}
+
+.product-card .price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 10px;
 }
