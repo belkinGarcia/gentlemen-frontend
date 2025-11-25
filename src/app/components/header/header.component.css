@@ -29,7 +29,7 @@
   font-size: 22px;
   font-weight: 700;
   letter-spacing: 2px;
-  color: #d4af37; /* dorado elegante */
+  color: #ffffff;
   font-family: "Cinzel", serif;
   text-shadow: 0px 0px 8px rgba(0,0,0,0.6);
   margin: 0;
@@ -59,7 +59,7 @@
     display: block;
   }
 }
-/*Ocultar el texto cuando la pantalla es móvil */
+
 @media (max-width: 600px) {
   .logo-text {
     display: none;

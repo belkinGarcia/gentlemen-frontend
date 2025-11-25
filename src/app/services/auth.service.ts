@@ -1,26 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable, tap, BehaviorSubject, of, delay } from 'rxjs';
+import { HttpClient } from '@angular/common/http'; // 1. Importar HttpClient
+import { Observable, BehaviorSubject, of, throwError } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators'; // 2. Importar operadores
 import { Router } from '@angular/router';
-const MOCK_USER = {
-  id: 1,
-  firstName: 'Belkin',
-  lastName: 'de Prueba',
-  dni: '12345678',
-  email: 'prueba@gmail.com',
-  phone: '987654321',
-  role: 'USER',
-  district: 'Miraflores' 
-};
-const MOCK_ADMIN = {
-  id: 99,
-  firstName: 'Admin',
-  lastName: 'Principal',
-  dni: '99999999',
-  email: 'admin@admin.com',
-  phone: '999888777',
-  role: 'ADMIN',
-  district: 'Oficina'
-};
+
 @Injectable({
   providedIn: 'root',
 })
@@ -28,63 +11,71 @@ export class AuthService {
   private readonly TOKEN_KEY = 'auth_token';
   private readonly ROLE_KEY = 'user_role';
   private readonly USER_KEY = 'auth_user';
+  
+  // 3. Define la URL de tu backend
+  private readonly API_URL = 'http://localhost:8080/api/v1/auth';
+
   private loggedInStatus = new BehaviorSubject<boolean>(this.isLoggedIn());
   public loggedIn$ = this.loggedInStatus.asObservable();
+
   constructor(
-    private router: Router
+    private router: Router,
+    private http: HttpClient // 4. Inyectar HttpClient
   ) {}
+
   /**
-   * Simula el inicio de sesión.
-   * Si el email es 'admin@admin.com', loguea como Admin.
-   * Para cualquier otro email, loguea como MOCK_USER.
+   * Realiza el login contra el Backend Spring Boot.
    */
   login(credentials: any): Observable<any> {
-    console.log('--- MOCK LOGIN ---', credentials);
-    let fakeResponse: any;
-    if (credentials.username === 'admin@admin.com') {
-      console.log('¡Iniciando sesión como ADMIN!');
-      fakeResponse = {
-        token: 'fake-admin-jwt-token-999999',
-        role: MOCK_ADMIN.role,
-        user: MOCK_ADMIN
-      };
-    } else {
-      console.log('Iniciando sesión como USER');
-      fakeResponse = {
-        token: 'fake-jwt-token-123456789',
-        role: MOCK_USER.role,
-        user: MOCK_USER
-      };
-    }
-    this.setSession(fakeResponse);
-    return of(fakeResponse).pipe(delay(500));
+    // El backend espera { username: "...", password: "..." }
+    return this.http.post<any>(`${this.API_URL}/login`, credentials).pipe(
+      tap(response => {
+        // Si el backend responde OK, guardamos la sesión
+        console.log('Respuesta del Backend:', response);
+        this.setSession(response);
+      }),
+      catchError(error => {
+        console.error('Error en login:', error);
+        return throwError(() => error);
+      })
+    );
   }
+
   /**
-   * Simula el registro de un nuevo usuario.
-   * Devuelve los datos del usuario.
+   * Registra un nuevo usuario en el Backend.
    */
   register(userData: any): Observable<any> {
-    console.log('--- MOCK REGISTER ---', userData);
-    const fakeResponse = {
-      user: userData 
-    };
-    return of(fakeResponse).pipe(delay(1000));
+    // Nota: Asegúrate de tener este endpoint creado en tu AuthController de Java
+    // Si no lo tienes aún, el login funcionará pero el registro dará error 404.
+    return this.http.post<any>(`${this.API_URL}/register`, userData).pipe(
+      tap(response => {
+         // Opcional: Podrías hacer login automático aquí si el backend devuelve token
+         console.log('Usuario registrado:', response);
+      })
+    );
   }
+
   /**
    * Guarda la sesión completa en localStorage y notifica a la app.
    */
   private setSession(response: any): void {
-    if (response && response.token && response.user) { 
+    if (response && response.token) { 
       localStorage.setItem(this.TOKEN_KEY, response.token);
-      localStorage.setItem(this.USER_KEY, JSON.stringify(response.user));
+      
+      // Guardar el rol (Viene como "ADMINISTRADOR" o "CLIENTE" desde Java)
       if (response.role) {
         localStorage.setItem(this.ROLE_KEY, response.role);
       }
+
+      // Guardar datos del usuario
+      if (response.user) {
+        localStorage.setItem(this.USER_KEY, JSON.stringify(response.user));
+      }
+      
       this.loggedInStatus.next(true);
-    } else {
-      console.error('Respuesta de login inválida, faltan datos:', response);
     }
   }
+
   /**
    * Limpia la sesión de localStorage y notifica a la app.
    */
@@ -95,22 +86,17 @@ export class AuthService {
     this.loggedInStatus.next(false);
     this.router.navigate(['/']);
   }
-  /**
-   * Obtiene el token JWT.
-   */
+
   getToken(): string | null {
     return localStorage.getItem(this.TOKEN_KEY);
   }
-  /**
-   * Revisa si el usuario está logueado (si existe un token).
-   */
+
   isLoggedIn(): boolean {
     const token = localStorage.getItem(this.TOKEN_KEY);
+    // Aquí podrías agregar lógica extra para validar si el token expiró (usando jwt-decode)
     return !!token;
   }
-  /**
-   * Obtiene los datos del usuario logueado desde localStorage.
-   */
+
   getCurrentUser(): any | null {
     const userString = localStorage.getItem(this.USER_KEY);
     if (!userString) return null;
@@ -121,25 +107,36 @@ export class AuthService {
       return null;
     }
   }
+
   /**
-   * Actualiza los datos del usuario en localStorage.
+   * Actualiza los datos del usuario.
+   * NOTA: Actualmente solo actualiza localStorage.
+   * Para ser persistente, deberías crear un endpoint PUT /api/v1/usuarios en Java.
    */
   updateUser(updatedData: any): Observable<any> {
     const currentUser = this.getCurrentUser();
     if (!currentUser) {
       return of(null);
     }
+    
+    // Fusionar datos actuales con los nuevos
     const updatedUser = { ...currentUser, ...updatedData };
+    
+    // Actualizar localStorage
     localStorage.setItem(this.USER_KEY, JSON.stringify(updatedUser));
-    console.log("AuthService: Usuario actualizado en localStorage", updatedUser);
-    return of(updatedUser).pipe(delay(500));
+    console.log("AuthService: Usuario actualizado localmente", updatedUser);
+    
+    // Retornamos un Observable inmediato (sin delay)
+    return of(updatedUser);
   }
+
   /**
-   * Revisa si el rol del usuario logueado es 'ADMIN'.
-   * Usado por el AdminGuard.
+   * Verifica si el usuario es administrador.
+   * Ajustado para coincidir con el Enum de Java: 'ADMINISTRADOR'
    */
   isAdmin(): boolean {
-    const user = this.getCurrentUser();
-    return user && user.role === 'ADMIN'; 
+    const role = localStorage.getItem(this.ROLE_KEY);
+    // Tu backend devuelve "ADMINISTRADOR", así que validamos eso.
+    return role === 'ADMINISTRADOR'; 
   }
 }
