@@ -48,12 +48,22 @@ export class CartPageComponent implements OnInit, OnDestroy {
       return total + (item.product.price * item.quantity);
     }, 0);
   }
-  increaseQuantity(item: CartItem): void {
-    this.cartService.updateItemQuantity(item.product.id, item.quantity + 1);
+ increaseQuantity(item: CartItem): void {
+    // Verificamos si la cantidad actual es menor al stock disponible
+    if (item.quantity < item.product.stock) {
+      this.cartService.updateItemQuantity(item.product.id, item.quantity + 1);
+    } else {
+      // Opcional: Podrías mostrar un 'snackBar' o alerta pequeña aquí
+      console.log('Stock máximo alcanzado para este producto');
+    }
   }
+
   decreaseQuantity(item: CartItem): void {
-    this.cartService.updateItemQuantity(item.product.id, item.quantity - 1);
+    if (item.quantity > 1) {
+      this.cartService.updateItemQuantity(item.product.id, item.quantity - 1);
+    }
   }
+
   removeItem(item: CartItem): void {
     this.cartService.removeItem(item.product.id);
   }

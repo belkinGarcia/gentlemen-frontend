@@ -1,0 +1,11 @@
+.brand-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding-top: 10px;
+  min-width: 300px; /* Ancho mínimo para que se vea bien */
+}
+
+mat-form-field {
+  width: 100%;
+}

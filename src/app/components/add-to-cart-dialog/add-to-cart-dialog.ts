@@ -70,8 +70,11 @@ export class AddToCartDialogComponent implements OnInit, OnDestroy {
     let shuffledProducts = this.shuffleArray(filteredProducts);
     this.recommendedProducts = shuffledProducts.slice(0, 6);
   }
-  increaseQuantity(): void {
-    this.cartService.updateItemQuantity(this.addedProduct.id, this.addedQuantity + 1);
+ increaseQuantity(): void {
+    // Verificamos si hay stock disponible antes de aumentar
+    if (this.addedProduct && this.addedQuantity < this.addedProduct.stock) {
+      this.cartService.updateItemQuantity(this.addedProduct.id, this.addedQuantity + 1);
+    }
   }
   decreaseQuantity(): void {
     if (this.addedQuantity > 1) {

@@ -21,7 +21,7 @@ import { ProductFormDialogComponent } from '../../components/product-form-dialog
   styleUrls: ['./product-management.component.css']
 })
 export class ProductManagementComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['image', 'name', 'category', 'price', 'actions'];
+  displayedColumns: string[] = ['image', 'name', 'category', 'price', 'stock', 'actions'];
   dataSource: any[] = [];
   private productSub: Subscription | undefined;
   constructor(

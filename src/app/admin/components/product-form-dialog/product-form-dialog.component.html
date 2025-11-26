@@ -1,30 +1,68 @@
 <h2 mat-dialog-title>
   {{ isEditMode ? 'Editar Producto' : 'Crear Nuevo Producto' }}
 </h2>
+
 <mat-dialog-content>
   <form [formGroup]="productForm" class="product-form">
-    <mat-form-field appearance="outline">
-      <mat-label>Nombre del Producto</mat-label>
-      <input matInput formControlName="name" required>
-    </mat-form-field>
+    
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Nombre del Producto</mat-label>
+        <input matInput formControlName="name" placeholder="Ej. Cera Mate" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Marca</mat-label>
+        <mat-select formControlName="brandId" required>
+          <mat-option *ngFor="let brand of brands" [value]="brand.idMarca">
+            {{ brand.nombre }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="productForm.get('brandId')?.hasError('required')">
+            Requerido
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Categoría</mat-label>
+        <mat-select formControlName="categoryId" required>
+          <mat-option *ngFor="let cat of categories" [value]="cat.idCategoria">
+            {{ cat.nombre }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="productForm.get('categoryId')?.hasError('required')">
+            Requerido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Stock</mat-label>
+        <input matInput type="number" formControlName="stock" required min="0">
+      </mat-form-field>
+    </div>
+
     <mat-form-field appearance="outline">
       <mat-label>Precio (S/)</mat-label>
-      <input matInput type="number" formControlName="price" required>
+      <input matInput type="number" formControlName="price" required min="0">
+      <span matTextPrefix>S/&nbsp;</span>
     </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Categoría</mat-label>
-      <input matInput formControlName="category" required>
-    </mat-form-field>
+
     <mat-form-field appearance="outline">
       <mat-label>URL de la Imagen</mat-label>
-      <input matInput formControlName="imageUrl" required>
+      <input matInput formControlName="imagenUrl" placeholder="https://..." required>
+      <mat-hint>Copia y pega el enlace de la imagen</mat-hint>
     </mat-form-field>
+
     <mat-form-field appearance="outline">
       <mat-label>Descripción</mat-label>
-      <textarea matInput formControlName="description" rows="3"></textarea>
+      <textarea matInput formControlName="description" rows="3" placeholder="Detalles del producto..."></textarea>
     </mat-form-field>
+
   </form>
 </mat-dialog-content>
+
 <mat-dialog-actions align="end">
   <button mat-button (click)="onCancel()">Cancelar</button>
   <button mat-flat-button color="primary" (click)="onSave()" [disabled]="productForm.invalid">

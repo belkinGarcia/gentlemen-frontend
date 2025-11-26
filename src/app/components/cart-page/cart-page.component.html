@@ -1,29 +1,41 @@
 <div class="cart-page-wrapper">
   <div *ngIf="cartItems.length > 0; else emptyCart" class="cart-container">
+    
     <div class="cart-items-list">
       <div *ngFor="let item of cartItems" class="cart-item">
         <img [src]="item.product.imageUrl" [alt]="item.product.name" class="cart-item-image">
+        
         <div class="cart-item-details">
           <a [routerLink]="['/producto', item.product.id]">{{ item.product.name }}</a>
           <p class="item-price">{{ item.product.price | currency:'S/ ' }}</p>
+          
+          <div *ngIf="item.quantity >= item.product.stock" class="stock-limit-msg">
+            Máx. stock alcanzado
+          </div>
         </div>
+
         <div class="cart-item-quantity">
-          <button mat-icon-button (click)="decreaseQuantity(item)">
+          <button mat-icon-button (click)="decreaseQuantity(item)" [disabled]="item.quantity <= 1">
             <mat-icon>remove</mat-icon>
           </button>
+          
           <span>{{ item.quantity }}</span>
-          <button mat-icon-button (click)="increaseQuantity(item)">
+          
+          <button mat-icon-button (click)="increaseQuantity(item)" [disabled]="item.quantity >= item.product.stock">
             <mat-icon>add</mat-icon>
           </button>
         </div>
+
         <strong class="cart-item-total">
           {{ (item.product.price * item.quantity) | currency:'S/ ' }}
         </strong>
+
         <button mat-icon-button (click)="removeItem(item)" class="cart-item-remove" aria-label="Eliminar item">
           <mat-icon>delete_outline</mat-icon>
         </button>
       </div>
     </div>
+
     <div class="order-summary">
       <h2>Resumen del Pedido</h2>
       <div class="summary-row">
@@ -43,8 +55,10 @@
       </button>
       <a mat-button routerLink="/tienda" class="continue-shopping-btn">Seguir Comprando</a>
     </div>
+
   </div>
 </div>
+
 <ng-template #emptyCart>
   <div class="empty-cart-view">
     <h2>Tu carrito está vacío</h2>

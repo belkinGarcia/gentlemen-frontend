@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,6 +9,12 @@ import { InfoSectionComponent } from '../../components/info-section/info-section
 import { TestimonialsComponent } from '../../components/testimonials/testimonials.component';
 import { ProductService } from '../../services/product.service';
 import { UiStateService } from '../../services/ui-state.service';
+import { Subscription, combineLatest } from 'rxjs';
+
+// 1. IMPORTAR SERVICIOS DE CATEGORÍA Y MARCA
+import { CategoryService } from '../../services/category.service';
+import { BrandService } from '../../services/brand.service';
+
 @Component({
   selector: 'app-shop',
   standalone: true,
@@ -25,70 +31,106 @@ import { UiStateService } from '../../services/ui-state.service';
   templateUrl: './shop.component.html',
   styleUrls: ['./shop.component.css']
 })
-export class ShopComponent implements OnInit {
+export class ShopComponent implements OnInit, OnDestroy {
   allProducts: any[] = [];
+  
+  // Listas para los filtros
   categories: string[] = [];
   brands: string[] = [];
+  
   selectedCategory: string | null = null;
   selectedBrand: string | null = null;
+  
   products: any[] = [];
   totalProducts = 0;
   pageSize = 12;
   currentPage = 1;
+
+  private dataSub: Subscription | undefined;
+
   constructor(
     private productService: ProductService,
-    private uiStateService: UiStateService
+    private uiStateService: UiStateService,
+    // 2. INYECTAR SERVICIOS
+    private categoryService: CategoryService,
+    private brandService: BrandService
   ) {}
+
   ngOnInit(): void {
     this.uiStateService.setHeroState({
       type: 'banner',
       title: 'TIENDA',
       imageUrl: 'https://cdn.midjourney.com/c0d03bc8-50cc-4dc3-9199-1abd30f85020/0_0.png'
     });
-    this.allProducts = this.productService.getAllProductsList();
-    this.buildFilters();
-    this.loadProducts();
+
+    // 3. CARGAR TODO AL MISMO TIEMPO (Productos + Categorías + Marcas)
+    this.dataSub = combineLatest([
+      this.productService.products$, // Productos (en vivo)
+      this.categoryService.getAll(), // Categorías (DB)
+      this.brandService.getAll()     // Marcas (DB)
+    ]).subscribe(([products, categoriesDB, brandsDB]) => {
+      
+      this.allProducts = products;
+
+      // Asignamos las categorías directamente de la base de datos
+      // Mapeamos a solo el nombre (string) para que coincida con tu lógica de filtrado actual
+      this.categories = categoriesDB.map(c => c.nombre).sort();
+
+      // Asignamos las marcas directamente de la base de datos
+      this.brands = brandsDB.map(b => b.nombre).sort();
+
+      // Cargamos la lista filtrada inicial
+      this.loadProducts();
+    });
   }
-  buildFilters(): void {
-    const categorySet = new Set<string>(this.allProducts.map(p => p.category));
-    const brandSet = new Set<string>(this.allProducts.map(p => p.brand));
-    this.categories = [...categorySet].sort();
-    this.brands = [...brandSet].sort();
+
+  ngOnDestroy(): void {
+    if (this.dataSub) {
+      this.dataSub.unsubscribe();
+    }
   }
+
   loadProducts(): void {
     let filteredProducts = this.allProducts;
+
+    // Filtro por Categoría
     if (this.selectedCategory) {
-      filteredProducts = filteredProducts.filter(p => p.category === this.selectedCategory);
+      // Comparamos el nombre que viene del producto ("category") con el seleccionado
+      filteredProducts = filteredProducts.filter(p => 
+        (p.category || 'Otros') === this.selectedCategory
+      );
     }
+
+    // Filtro por Marca
     if (this.selectedBrand) {
-      filteredProducts = filteredProducts.filter(p => p.brand === this.selectedBrand);
+      // Comparamos el nombre que viene del producto ("brand") con el seleccionado
+      filteredProducts = filteredProducts.filter(p => 
+        (p.brand || 'Genérico') === this.selectedBrand
+      );
     }
+
     this.totalProducts = filteredProducts.length;
+
     const startIndex = (this.currentPage - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
     this.products = filteredProducts.slice(startIndex, endIndex);
   }
+
   onPageChange(page: number): void {
     this.currentPage = page;
     this.loadProducts();
   }
-  /**
-   * Filtra la lista por una categoría.
-   * Si se pasa 'null', se limpia el filtro.
-   */
+
   selectCategory(category: string | null): void {
     this.selectedCategory = category;
-    this.selectedBrand = null;
+    this.selectedBrand = null; // Resetear marca al cambiar categoría (opcional)
     this.currentPage = 1;
     this.loadProducts();
   }
-  /**
-   * Filtra la lista por una marca.
-   * Si se pasa 'null', se limpia el filtro.
-   */
+
   selectBrand(brand: string | null): void {
     this.selectedBrand = brand;
-    this.selectedCategory = null;
+    this.selectedCategory = null; // Resetear categoría al cambiar marca (opcional)
     this.currentPage = 1;
     this.loadProducts();
   }

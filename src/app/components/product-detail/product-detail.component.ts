@@ -59,16 +59,39 @@ export class ProductDetailComponent implements OnInit {
       }
     });
   }
-  increaseQuantity(): void {
-    this.quantity++;
+increaseQuantity(): void {
+    // Solo aumenta si la cantidad actual es MENOR al stock
+    if (this.product && this.quantity < this.product.stock) {
+      this.quantity++;
+    }
   }
+
+  // MODIFICAR ESTE MÉTODO (Opcional, pero recomendado)
   decreaseQuantity(): void {
     if (this.quantity > 1) {
       this.quantity--;
     }
   }
+
+  validateInput(): void {
+    if (this.product) {
+      if (this.quantity > this.product.stock) {
+        this.quantity = this.product.stock; // Lo baja al máximo permitido
+      }
+      if (this.quantity < 1) {
+        this.quantity = 1;
+      }
+    }
+  }
+
   addToCart(): void {
     if (!this.product) return;
+
+    // Protección extra: No dejar agregar si no hay stock
+    if (this.product.stock === 0 || this.quantity > this.product.stock) {
+      alert('No hay suficiente stock disponible.');
+      return;
+    }
     this.cartService.addToCart(this.product, this.quantity);
     const dialogRef = this.dialog.open(AddToCartDialogComponent, {
       width: '90%',

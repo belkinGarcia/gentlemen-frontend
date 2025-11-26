@@ -33,6 +33,8 @@ import { ServiceManagementComponent } from './admin/pages/service-management/ser
 import { LocationManagementComponent } from './admin/pages/location-management/location-management.component';
 import { TestimonialManagementComponent } from './admin/pages/testimonial-management/testimonial-management.component';
 import { ContentManagementComponent } from './admin/pages/content-management/content-management.component';
+import { CategoryManagementComponent } from './admin/pages/category-management/category-management.component';
+import { BrandManagementComponent } from './admin/pages/brand-management/brand-management.component';
 export const routes: Routes = [
 {
     path: 'admin',
@@ -50,6 +52,8 @@ export const routes: Routes = [
       { path: 'productos', component: ProductManagementComponent },
       { path: 'servicios', component: ServiceManagementComponent },
       { path: 'sedes', component: LocationManagementComponent },
+      { path: 'categories', component: CategoryManagementComponent },
+      { path: 'brands', component: BrandManagementComponent },
       { path: 'testimonios', component: TestimonialManagementComponent },   
       { path: 'contenido', component: ContentManagementComponent }  
     ]

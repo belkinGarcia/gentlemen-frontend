@@ -6,25 +6,33 @@
       <mat-icon>close</mat-icon>
     </button>
   </div>
+
   <div mat-dialog-content class="dialog-content">
     <div class="added-product-summary">
       <img [src]="addedProduct.imageUrl" [alt]="addedProduct.name" class="product-thumb">
       <div class="product-details">
         <h3>{{ addedProduct.name }}</h3>
         <p class="product-price">{{ addedProduct.price | currency:'S/ ' }}</p>
+        <span *ngIf="addedQuantity >= addedProduct.stock" style="font-size: 0.8em; color: #ff6b6b;">
+          (Máx. stock alcanzado)
+        </span>
       </div>
+
       <div class="quantity-info">
         <div class="quantity-selector">
-          <button mat-icon-button (click)="decreaseQuantity()">
+          <button mat-icon-button (click)="decreaseQuantity()" [disabled]="addedQuantity <= 1">
             <mat-icon>remove</mat-icon>
           </button>
+          
           <span>{{ addedQuantity }}</span>
-          <button mat-icon-button (click)="increaseQuantity()">
+          
+          <button mat-icon-button (click)="increaseQuantity()" [disabled]="addedQuantity >= addedProduct.stock">
             <mat-icon>add</mat-icon>
           </button>
         </div>
       </div>
     </div>
+
     <div class="recommendations">
       <h3>Quizás también te interese</h3>
       <app-product-list 
@@ -37,7 +45,8 @@
         (click)="onCloseDialog()"> 
       </app-product-list>
     </div>
-    </div>
+  </div>
+
   <div mat-dialog-actions class="dialog-actions">
     <button mat-button (click)="onCloseDialog()">Seguir comprando</button>
     <button mat-flat-button class="go-to-cart-btn" (click)="onGoToCart()">Ir al Carrito</button>

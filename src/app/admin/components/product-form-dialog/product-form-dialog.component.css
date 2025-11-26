@@ -2,7 +2,27 @@
   display: flex;
   flex-direction: column;
   gap: 15px; 
+  padding-top: 10px;
 }
+
 mat-form-field {
   width: 100%;
+}
+
+/* Para poner 2 inputs en una linea */
+.form-row {
+  display: flex;
+  gap: 15px;
+}
+
+.half-width {
+  flex: 1;
+}
+
+/* Ajuste para móviles */
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+    gap: 15px;
+  }
 }

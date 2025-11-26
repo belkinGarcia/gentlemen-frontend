@@ -1,0 +1,14 @@
+.page-container {
+  padding: 20px;
+}
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+h2 { margin: 0; font-weight: 500; }
+p { margin: 5px 0 0 0; color: #666; font-size: 0.9em; }
+table { width: 100%; }
+.mat-column-id { width: 60px; color: #888; }
+.mat-column-actions { width: 100px; text-align: right; }

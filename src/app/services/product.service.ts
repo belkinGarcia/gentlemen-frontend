@@ -1,77 +1,109 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
-const MOCK_PRODUCTS = [
-  { id: 1, name: 'Cera Moldeadora Premium', price: 80.00, imageUrl: 'https://i.ibb.co/b3sWfK4/cera.png', description: 'Cera de fijación fuerte para un look natural.', category: 'Cuidado Capilar', brand: 'Gentlemen' },
-  { id: 2, name: 'Aceite para Barba "El Leñador"', price: 125.50, imageUrl: 'https://i.ibb.co/D7NmqjR/aceite.png', description: 'Nutre y suaviza la barba con aroma a cedro.', category: 'Cuidado de Barba', brand: 'Barba Larga' },
-  { id: 3, name: 'Shampoo Fortalecedor', price: 89.00, imageUrl: 'https://i.ibb.co/wJ5pLd5/shampoo.png', description: 'Limpia y fortalece el cabello desde la raíz.', category: 'Cuidado Capilar', brand: 'Gentlemen' },
-  { id: 4, name: 'Kit de Afeitado Clásico', price: 140.00, imageUrl: 'https://i.ibb.co/3sC6wzB/kit.png', description: 'Incluye brocha, navaja clásica y jabón de afeitar.', category: 'Afeitado', brand: 'BarberPro' }
-];
+
+// Mantenemos la interfaz en inglés tal cual la tenías (o implícita)
+export interface Product {
+  id: number;
+  name: string;
+  price: number;
+  imageUrl: string;
+  description: string;
+  category: string;
+  brand: string;
+}
+
 export interface PaginatedProducts {
   products: any[];
   total: number;
 }
+
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
-  private readonly PRODUCT_KEY = 'product_database';
+  // Apuntamos al endpoint del backend
+  private readonly API_URL = 'http://localhost:8080/api/v1/products';
+  
   private productsSubject = new BehaviorSubject<any[]>([]);
   public products$: Observable<any[]> = this.productsSubject.asObservable();
-  constructor() {
-    const productsFromStorage = localStorage.getItem(this.PRODUCT_KEY);
-    if (productsFromStorage) {
-      this.productsSubject.next(JSON.parse(productsFromStorage));
-    } else {
-      localStorage.setItem(this.PRODUCT_KEY, JSON.stringify(MOCK_PRODUCTS));
-      this.productsSubject.next(MOCK_PRODUCTS);
-    }
+
+  constructor(private http: HttpClient) {
+    // Al iniciar, cargamos los datos reales del backend
+    this.loadInitialData();
   }
-  private _saveToStorage(products: any[]): void {
-    localStorage.setItem(this.PRODUCT_KEY, JSON.stringify(products));
-    this.productsSubject.next(products);
+
+  private loadInitialData(): void {
+    this.http.get<any[]>(this.API_URL).subscribe({
+      next: (data) => {
+        console.log('Productos cargados (formato inglés):', data);
+        // Gracias a @JsonProperty en Java, 'data' ya viene con keys: id, name, price, etc.
+        this.productsSubject.next(data);
+      },
+      error: (error) => console.error('Error cargando productos:', error)
+    });
   }
+
   /**
-   * Obtiene productos con paginación y devuelve el objeto { products, total }
-   * que esperaban tus componentes.
-   * @param page Número de página (ej. 1, 2, 3...)
-   * @param limit Cantidad de elementos por página
+   * Mantiene tu lógica original de paginación en frontend.
+   * Tus componentes usan esto, así que no lo cambiamos.
    */
   getProducts(page: number = 1, limit: number = 10): PaginatedProducts {
     const allProducts = this.productsSubject.getValue();
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
+    
     const paginatedProducts = allProducts.slice(startIndex, endIndex);
+    
     return { 
       products: paginatedProducts, 
       total: allProducts.length 
     };
   }
+
   getAllProducts(): any[] {
-      return this.productsSubject.getValue();
-    }
+    return this.productsSubject.getValue();
+  }
+
   getAllProductsList(): any[] {
     return this.productsSubject.getValue();
   }
+
   getProductById(id: number): any {
     return this.getAllProductsList().find(p => p.id === id);
   }
+
   createProduct(product: any): void {
-    const currentProducts = this.getAllProductsList();
-    const maxId = currentProducts.length > 0 ? Math.max(...currentProducts.map(p => p.id)) : 0;
-    const newId = maxId + 1;
-    const newProduct = { ...product, id: newId };
-    this._saveToStorage([...currentProducts, newProduct]);
+    // Enviamos al backend. El backend espera un JSON.
+    // Como usamos @JsonProperty, el backend entenderá "name", "price", etc.
+    this.http.post(this.API_URL, product).subscribe({
+      next: (newProduct: any) => {
+        const currentProducts = this.getAllProductsList();
+        // Agregamos el nuevo producto a la lista local para ver el cambio inmediato
+        this.productsSubject.next([...currentProducts, newProduct]);
+      },
+      error: (e) => console.error('Error creando producto', e)
+    });
   }
+
   updateProduct(updatedProduct: any): void {
+    // Asumiendo que agregues PUT en el backend
+    // Por ahora actualizamos localmente para no romper la UI
     const currentProducts = this.getAllProductsList();
     const updatedProducts = currentProducts.map(p => 
       p.id === updatedProduct.id ? updatedProduct : p
     );
-    this._saveToStorage(updatedProducts);
+    this.productsSubject.next(updatedProducts);
   }
+
   deleteProduct(id: number): void {
-    const currentProducts = this.getAllProductsList();
-    const updatedProducts = currentProducts.filter(p => p.id !== id);
-    this._saveToStorage(updatedProducts);
+    this.http.delete(`${this.API_URL}/${id}`).subscribe({
+      next: () => {
+        const currentProducts = this.getAllProductsList();
+        const updatedProducts = currentProducts.filter(p => p.id !== id);
+        this.productsSubject.next(updatedProducts);
+      },
+      error: (e) => console.error('Error eliminando producto', e)
+    });
   }
 }

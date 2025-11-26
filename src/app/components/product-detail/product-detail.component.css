@@ -75,6 +75,28 @@
   font-size: 2em;
   margin-bottom: 40px;
 }
+
+.stock-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #aaa;
+  font-size: 0.9em;
+  margin-bottom: 10px;
+}
+
+.stock-label.out-of-stock {
+  color: #ff4444; /* Rojo si está agotado */
+  font-weight: bold;
+}
+
+/* Para deshabilitar visualmente el botón cuando está agotado */
+.add-to-cart-btn:disabled {
+  background-color: #555;
+  color: #888;
+  cursor: not-allowed;
+}
+
 @media (max-width: 768px) {
   .detail-container {
     flex-direction: column; 

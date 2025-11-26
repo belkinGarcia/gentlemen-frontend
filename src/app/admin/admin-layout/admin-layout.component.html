@@ -1,11 +1,11 @@
 <div class="admin-wrapper">
   <nav class="admin-sidebar">
     <ul class="nav-links">
-   <li>
-    <a routerLink="dashboard" routerLinkActive="active-link"> 
-        <mat-icon>dashboard</mat-icon> <span>Dashboard</span>
-    </a>
-</li>
+      <li>
+        <a routerLink="dashboard" routerLinkActive="active-link"> 
+            <mat-icon>dashboard</mat-icon> <span>Dashboard</span>
+        </a>
+      </li>
       <li>
         <a routerLink="/admin/reservas" routerLinkActive="active-link">
           <mat-icon>calendar_month</mat-icon>
@@ -14,14 +14,24 @@
       </li>
       <li>
           <a routerLink="/admin/productos" routerLinkActive="active-link"> 
-              <mat-icon>person_pin</mat-icon>
-              <span>Productos</span>
+              <mat-icon>inventory_2</mat-icon> <span>Productos</span>
           </a>
       </li>
+      
+      <li>
+        <a routerLink="/admin/categories" routerLinkActive="active-link"> 
+            <mat-icon>category</mat-icon> <span>Categorías</span>
+        </a>
+      </li>
+            <li>
+        <a routerLink="/admin/brands" routerLinkActive="active-link"> 
+            <mat-icon>category</mat-icon> <span>Marcas</span>
+        </a>
+      </li>
+      
       <li>
           <a routerLink="/admin/barberos" routerLinkActive="active-link"> 
-              <mat-icon>person_pin</mat-icon>
-              <span>Barberos</span>
+              <mat-icon>content_cut</mat-icon> <span>Barberos</span>
           </a>
       </li>
       <li>
@@ -55,7 +65,6 @@
         </a>
       </li>
       <li>
-      <li>
         <a routerLink="contenido" routerLinkActive="active-link">
           <mat-icon>rate_review</mat-icon>
           <span>Contenido</span>
@@ -67,7 +76,14 @@
         </a>
       </li>
     </ul>
-    </nav>
+    
+    <div class="sidebar-footer">
+       <button (click)="logout()">
+         <mat-icon>logout</mat-icon> Cerrar Sesión
+       </button>
+    </div>
+
+  </nav>
   <main class="admin-content">
     <router-outlet></router-outlet>
   </main>
