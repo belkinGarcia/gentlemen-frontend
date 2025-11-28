@@ -33,14 +33,14 @@ import { BrandService } from '../../services/brand.service';
 })
 export class ShopComponent implements OnInit, OnDestroy {
   allProducts: any[] = [];
-  
+
   // Listas para los filtros
   categories: string[] = [];
   brands: string[] = [];
-  
+
   selectedCategory: string | null = null;
   selectedBrand: string | null = null;
-  
+
   products: any[] = [];
   totalProducts = 0;
   pageSize = 12;
@@ -69,7 +69,7 @@ export class ShopComponent implements OnInit, OnDestroy {
       this.categoryService.getAll(), // Categorías (DB)
       this.brandService.getAll()     // Marcas (DB)
     ]).subscribe(([products, categoriesDB, brandsDB]) => {
-      
+
       this.allProducts = products;
 
       // Asignamos las categorías directamente de la base de datos
@@ -90,31 +90,47 @@ export class ShopComponent implements OnInit, OnDestroy {
     }
   }
 
+  // En shop.component.ts
   loadProducts(): void {
     let filteredProducts = this.allProducts;
 
-    // Filtro por Categoría
+    // 1. Filtro por Categoría (Robustecido)
     if (this.selectedCategory) {
-      // Comparamos el nombre que viene del producto ("category") con el seleccionado
-      filteredProducts = filteredProducts.filter(p => 
-        (p.category || 'Otros') === this.selectedCategory
-      );
+      filteredProducts = filteredProducts.filter(p => {
+        // Buscamos 'categoria' (backend) o 'category' (frontend)
+        const catVal = p.categoria || p.category;
+
+        // Si es objeto, sacamos el 'nombre', si no, usamos el valor directo
+        const catName = (catVal && typeof catVal === 'object') ? catVal.nombre : catVal;
+
+        return (catName || 'Otros') === this.selectedCategory;
+      });
     }
 
-    // Filtro por Marca
+    // 2. Filtro por Marca (CORREGIDO)
     if (this.selectedBrand) {
-      // Comparamos el nombre que viene del producto ("brand") con el seleccionado
-      filteredProducts = filteredProducts.filter(p => 
-        (p.brand || 'Genérico') === this.selectedBrand
-      );
+      filteredProducts = filteredProducts.filter(p => {
+        // AQUI ESTABA EL ERROR:
+        // Tu backend devuelve 'marca', pero tu interfaz decía 'brand'.
+        // Usamos || para que funcione con ambos casos.
+        const brandVal = p.marca || p.brand;
+
+        // Verificamos si es un Objeto (ej: {id:1, nombre: 'Nike'})
+        // En 'brand-form-dialog' confirmamos que la propiedad es 'nombre'.
+        const brandName = (brandVal && typeof brandVal === 'object')
+                          ? brandVal.nombre
+                          : brandVal;
+
+        return (brandName || 'Genérico') === this.selectedBrand;
+      });
     }
 
-    this.totalProducts = filteredProducts.length;
-
-    const startIndex = (this.currentPage - 1) * this.pageSize;
-    const endIndex = startIndex + this.pageSize;
-    this.products = filteredProducts.slice(startIndex, endIndex);
-  }
+  // Paginación normal
+  this.totalProducts = filteredProducts.length;
+  const startIndex = (this.currentPage - 1) * this.pageSize;
+  const endIndex = startIndex + this.pageSize;
+  this.products = filteredProducts.slice(startIndex, endIndex);
+}
 
   onPageChange(page: number): void {
     this.currentPage = page;

@@ -4,16 +4,16 @@
       <h1>{{ product.name }}</h1>
     </div>
   </div>
-<div class="detail-container">
+  <div class="detail-container">
     <div class="product-image">
       <img [src]="product.imageUrl" [alt]="product.name">
     </div>
-    
+
     <div class="product-info">
       <p class="price">{{ product.price | currency:'S/ ' }}</p>
 
       <p class="stock-label" [ngClass]="{'out-of-stock': product.stock === 0}">
-        <mat-icon>inventory_2</mat-icon> 
+        <mat-icon>inventory_2</mat-icon>
         Stock disponible: <strong>{{ product.stock }}</strong> unidades
       </p>
 
@@ -21,30 +21,24 @@
         <button mat-icon-button (click)="decreaseQuantity()" [disabled]="quantity <= 1">
           <mat-icon>remove</mat-icon>
         </button>
-        
-        <input type="number" 
-               [(ngModel)]="quantity" 
-               (change)="validateInput()"
-               min="1" 
-               [max]="product.stock" 
-               class="quantity-input">
+
+        <input type="number" [(ngModel)]="quantity" (change)="validateInput()" min="1" [max]="product.stock"
+          class="quantity-input">
 
         <button mat-icon-button (click)="increaseQuantity()" [disabled]="quantity >= product.stock">
           <mat-icon>add</mat-icon>
         </button>
       </div>
 
-      <button mat-flat-button 
-              color="accent" 
-              class="add-to-cart-btn" 
-              (click)="addToCart()"
-              [disabled]="product.stock === 0">
+      <button mat-flat-button color="accent" class="add-to-cart-btn" (click)="addToCart()"
+        [disabled]="product.stock === 0">
         {{ product.stock > 0 ? 'AGREGAR AL CARRITO' : 'AGOTADO' }}
       </button>
 
       <div class="meta-info">
-        <p><strong>Categoría:</strong> {{ product.category }}</p>
-        <p><strong>Marca:</strong> {{ product.brand }}</p>
+        <p><strong>Categoría:</strong> {{ product.categoria?.nombre || product.category }}</p>
+
+        <p><strong>Marca:</strong> {{ product.marca?.nombre || product.brand }}</p>
       </div>
     </div>
   </div>
@@ -52,14 +46,11 @@
     <h3>DESCRIPCIÓN</h3>
     <p>{{ product.description }}</p>
   </div>
-<div class="related-products">
-  <h2>PRODUCTOS RELACIONADOS</h2>
-  <app-product-list 
-    [showFilterBar]="false"
-    [isCarousel]="true"
-    [products]="relatedProducts">
-  </app-product-list>
-</div>
-<app-testimonials></app-testimonials>
+  <div class="related-products">
+    <h2>PRODUCTOS RELACIONADOS</h2>
+    <app-product-list [showFilterBar]="false" [isCarousel]="true" [products]="relatedProducts">
+    </app-product-list>
+  </div>
+  <app-testimonials></app-testimonials>
 </div>
 <app-info-section></app-info-section>
