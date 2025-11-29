@@ -1,10 +1,19 @@
 <div class="content-wrapper">
+
   <div *ngIf="view === 'categories'" class="services-grid">
-    <div class="category-card" *ngFor="let categoryGroup of servicesByCategory" (click)="selectCategory(categoryGroup)">
-      <h3>{{ categoryGroup.category }}</h3>
-      <p>{{ categoryGroup.items.length }} servicios disponibles</p>
-    </div>
+    <ng-container *ngIf="servicesByCategory$ | async as categories">
+      <div
+        class="category-card"
+        *ngFor="let categoryGroup of categories"
+        (click)="selectCategory(categoryGroup)"
+      >
+        <h3>{{ categoryGroup.category }}</h3>
+        <p>{{ categoryGroup.items.length }} servicios disponibles</p>
+      </div>
+    </ng-container>
+
   </div>
+
   <div *ngIf="view === 'services' && selectedCategory">
     <button mat-stroked-button (click)="backToCategories()" class="back-button">
       <mat-icon>arrow_back</mat-icon>

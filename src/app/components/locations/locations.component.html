@@ -1,5 +1,5 @@
 <div class="locations-container">
-  <div class="location-card" *ngFor="let location of locations" (click)="showBarbers(location)">
+  <div class="location-card" *ngFor="let location of locations$ | async" (click)="showBarbers(location)">
     <img [src]="location.imageUrl" [alt]="'Foto de ' + location.name">
     <div class="card-content">
       <h3>{{ location.name }}</h3>
