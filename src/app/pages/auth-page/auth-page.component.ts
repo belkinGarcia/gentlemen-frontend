@@ -83,18 +83,25 @@ export class AuthPageComponent implements OnInit {
       });
     }
   }
-  onSubmitRegister(): void {
+onSubmitRegister(): void {
     if (this.registerForm.valid) {
       const formData = this.registerForm.value;
+      
+      // AQUÍ ESTÁ LA MAGIA: Traducimos del Formulario al Backend
       const registerPayload = {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
+        // Backend (Usuario.java)  <--  Frontend (Formulario)
+        firstName: formData.firstName, // Antes decía 'nombres', debe ser 'firstName'
+        lastName: formData.lastName,   // Antes decía 'apellidos', debe ser 'lastName'
         dni: formData.dni,
         email: formData.email,
-        password: formData.password,
-        phone: formData.phone,
-        district: formData.district
+        password: formData.password,   // Correcto (coincide con RegisterRequest)
+        phone: formData.phone,     // Java espera 'celular', no 'phone'
+        
+        // IMPORTANTE: Tu controlador revisa el tipo de usuario para crear la tabla Cliente
+        // Si no envías esto, la base de datos dará error (nullable=false)
+        tipoUsuario: 'CLIENTE'         
       };
+
       this.authService.register(registerPayload).subscribe({
         next: response => {
           console.log('Respuesta del registro:', response);
@@ -102,7 +109,7 @@ export class AuthPageComponent implements OnInit {
             alert('¡Registro exitoso! Por favor, inicia sesión.');
             this.setActiveView('login');
           } else {
-            this.registerSuccess.emit(response.user);
+            this.registerSuccess.emit(response); // Emitimos la respuesta completa
             this.setActiveView('login');
           }
         },

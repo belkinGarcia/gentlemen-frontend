@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http'; // 1. Importar HttpClient
+import { HttpClient, HttpHeaders } from '@angular/common/http'; // Importamos HttpHeaders
 import { Observable, BehaviorSubject, of, throwError } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators'; // 2. Importar operadores
+import { tap, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -12,25 +12,26 @@ export class AuthService {
   private readonly ROLE_KEY = 'user_role';
   private readonly USER_KEY = 'auth_user';
   
-  // 3. Define la URL de tu backend
+  // URL específica para Auth (Login/Register)
   private readonly API_URL = 'http://localhost:8080/api/v1/auth';
+  
+  // NUEVA: URL base para otros recursos (como Usuarios)
+  private readonly BASE_API_URL = 'http://localhost:8080/api/v1';
 
   private loggedInStatus = new BehaviorSubject<boolean>(this.isLoggedIn());
   public loggedIn$ = this.loggedInStatus.asObservable();
 
   constructor(
     private router: Router,
-    private http: HttpClient // 4. Inyectar HttpClient
+    private http: HttpClient
   ) {}
 
   /**
    * Realiza el login contra el Backend Spring Boot.
    */
   login(credentials: any): Observable<any> {
-    // El backend espera { username: "...", password: "..." }
     return this.http.post<any>(`${this.API_URL}/login`, credentials).pipe(
       tap(response => {
-        // Si el backend responde OK, guardamos la sesión
         console.log('Respuesta del Backend:', response);
         this.setSession(response);
       }),
@@ -45,14 +46,26 @@ export class AuthService {
    * Registra un nuevo usuario en el Backend.
    */
   register(userData: any): Observable<any> {
-    // Nota: Asegúrate de tener este endpoint creado en tu AuthController de Java
-    // Si no lo tienes aún, el login funcionará pero el registro dará error 404.
     return this.http.post<any>(`${this.API_URL}/register`, userData).pipe(
       tap(response => {
-         // Opcional: Podrías hacer login automático aquí si el backend devuelve token
          console.log('Usuario registrado:', response);
       })
     );
+  }
+
+  /**
+   * NUEVO MÉTODO: Obtiene el perfil completo del usuario desde la BD.
+   * Se usa para recuperar datos faltantes (DNI, Celular) que no estén en el localStorage.
+   */
+  getCompleteUserProfile(id: number): Observable<any> {
+    const token = this.getToken();
+    // Preparamos el header con el token para que Spring Security nos deje pasar
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    // Llamamos al endpoint GET /usuarios/{id} definido en tu UsuarioController
+    return this.http.get<any>(`${this.BASE_API_URL}/usuarios/${id}`, { headers });
   }
 
   /**
@@ -62,12 +75,10 @@ export class AuthService {
     if (response && response.token) { 
       localStorage.setItem(this.TOKEN_KEY, response.token);
       
-      // Guardar el rol (Viene como "ADMINISTRADOR" o "CLIENTE" desde Java)
       if (response.role) {
         localStorage.setItem(this.ROLE_KEY, response.role);
       }
 
-      // Guardar datos del usuario
       if (response.user) {
         localStorage.setItem(this.USER_KEY, JSON.stringify(response.user));
       }
@@ -93,7 +104,6 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     const token = localStorage.getItem(this.TOKEN_KEY);
-    // Aquí podrías agregar lógica extra para validar si el token expiró (usando jwt-decode)
     return !!token;
   }
 
@@ -109,9 +119,7 @@ export class AuthService {
   }
 
   /**
-   * Actualiza los datos del usuario.
-   * NOTA: Actualmente solo actualiza localStorage.
-   * Para ser persistente, deberías crear un endpoint PUT /api/v1/usuarios en Java.
+   * Actualiza los datos del usuario localmente.
    */
   updateUser(updatedData: any): Observable<any> {
     const currentUser = this.getCurrentUser();
@@ -126,17 +134,14 @@ export class AuthService {
     localStorage.setItem(this.USER_KEY, JSON.stringify(updatedUser));
     console.log("AuthService: Usuario actualizado localmente", updatedUser);
     
-    // Retornamos un Observable inmediato (sin delay)
     return of(updatedUser);
   }
 
   /**
    * Verifica si el usuario es administrador.
-   * Ajustado para coincidir con el Enum de Java: 'ADMINISTRADOR'
    */
   isAdmin(): boolean {
     const role = localStorage.getItem(this.ROLE_KEY);
-    // Tu backend devuelve "ADMINISTRADOR", así que validamos eso.
     return role === 'ADMINISTRADOR'; 
   }
 }

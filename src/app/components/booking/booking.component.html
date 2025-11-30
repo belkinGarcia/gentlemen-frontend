@@ -202,7 +202,7 @@
       <button mat-button matStepperNext [disabled]="!selectedTime">Siguiente</button>
     </div>
   </mat-step>
-  <mat-step label="Información">
+<mat-step label="Información" [completed]="informationForm.valid">
     <div class="step-container">
       <div class="step-info" *ngIf="contentService.content$ | async as guide">
         <mat-icon>person</mat-icon>
@@ -216,11 +216,62 @@
           </a>
         </div>
       </div>
+      
       <div class="step-content">
-        <app-auth-page [displayMode]="'tabs'" (loginSuccess)="handleAuthentication($event)"
-          (registerSuccess)="handleAuthentication($event)">
-        </app-auth-page>
+        
+        <div *ngIf="!isLoggedIn">
+           <app-auth-page [displayMode]="'tabs'" 
+                          (loginSuccess)="handleAuthentication($event)"
+                          (registerSuccess)="handleAuthentication($event)">
+           </app-auth-page>
+        </div>
+
+        <div *ngIf="isLoggedIn && !informationForm.valid" class="manual-completion-form">
+            <div class="alert-box" style="background: #fff3cd; color: #856404; padding: 10px; margin-bottom: 15px; border-radius: 4px; display: flex; align-items: center;">
+              <mat-icon style="margin-right: 8px;">warning</mat-icon>
+              <span>Faltan algunos datos. Por favor complétalos para continuar.</span>
+            </div>
+            
+            <form [formGroup]="informationForm" class="booking-form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <mat-form-field appearance="outline">
+                <mat-label>Nombre</mat-label>
+                <input matInput formControlName="firstName">
+                <mat-error *ngIf="informationForm.get('firstName')?.hasError('required')">Requerido</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Apellido</mat-label>
+                <input matInput formControlName="lastName">
+                 <mat-error *ngIf="informationForm.get('lastName')?.hasError('required')">Requerido</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>DNI</mat-label>
+                <input matInput formControlName="dni" placeholder="Ingresa tu DNI">
+                <mat-error *ngIf="informationForm.get('dni')?.hasError('required')">Requerido</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Celular</mat-label>
+                <input matInput formControlName="phone" placeholder="999 999 999">
+                <mat-error *ngIf="informationForm.get('phone')?.hasError('required')">Requerido</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" style="grid-column: 1 / -1; width: 100%;">
+                <mat-label>Correo electrónico</mat-label>
+                <input matInput formControlName="email" readonly>
+              </mat-form-field>
+            </form>
+        </div>
+
+        <div *ngIf="isLoggedIn && informationForm.valid" class="authenticated-loading-view" style="text-align: center; padding: 2rem;">
+            <h3>Usuario autenticado: {{ informationForm.get('firstName')?.value }}</h3>
+            <p>Datos verificados. Creando reserva...</p>
+            <mat-spinner diameter="40" style="margin: 0 auto;"></mat-spinner>
+        </div>
+
       </div>
+
       <div class="step-summary" *ngIf="contentService.content$ | async as guide">
         <h4>RESUMEN</h4>
         <div class="summary-item">
@@ -251,9 +302,15 @@
         <mat-divider></mat-divider>
       </div>
     </div>
+
     <div class="step-actions">
       <button mat-button matStepperPrevious>Atrás</button>
-      <button mat-button (click)="confirmAppointment()">Siguiente</button>
+      
+      <button mat-button (click)="confirmAppointment()" 
+              [disabled]="informationForm.invalid" 
+              *ngIf="isLoggedIn">
+        Siguiente
+      </button>
     </div>
   </mat-step>
   <mat-step label="Confirmación">

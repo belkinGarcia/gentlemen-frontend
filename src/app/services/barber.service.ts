@@ -3,10 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, map } from 'rxjs';
 import { LocationService } from './location.service';
 
-// Actualizamos la interfaz para que coincida exactamente con tu nuevo Java
 export interface WorkSchedule {
   day: 'Lunes' | 'Martes' | 'Miércoles' | 'Jueves' | 'Viernes' | 'Sábado' | 'Domingo';
-  hours: string[]; // Ahora es un array de strings directo desde el backend
+  hours: string[]; 
 }
 
 export interface Barber {
@@ -38,7 +37,7 @@ export class BarberService {
     this.loadAllBarbers();
   }
 
-  private loadAllBarbers(): void {
+  public loadAllBarbers(): void {
     this.http.get<any[]>(this.API_URL).pipe(
       map(backendBarbers => backendBarbers.map(b => this.mapBackendToFrontend(b)))
     ).subscribe({
@@ -49,25 +48,115 @@ export class BarberService {
     });
   }
 
-  /**
-   * Mapeo de datos Backend -> Frontend
-   */
+  // --- MAPEO BACKEND -> FRONTEND ---
   private mapBackendToFrontend(backendBarber: any): Barber {
+    const formatDayName = (dbDay: string): any => {
+      const map: { [key: string]: string } = {
+        'LUNES': 'Lunes', 'MARTES': 'Martes', 'MIERCOLES': 'Miércoles',
+        'JUEVES': 'Jueves', 'VIERNES': 'Viernes', 'SABADO': 'Sábado',
+        'DOMINGO': 'Domingo', 'NINGUNO': 'Ninguno'
+      };
+      return map[dbDay] || dbDay;
+    };
+
+    const formattedSchedule = backendBarber.workSchedule 
+      ? backendBarber.workSchedule.map((ws: any) => ({
+          hours: ws.hours,
+          day: formatDayName(ws.day)
+        }))
+      : [];
+
     return {
       id: backendBarber.id,
       name: backendBarber.name,
-      // Extracción segura del ID de la sede
       locationId: backendBarber.locationId ? (backendBarber.locationId.id || backendBarber.locationId.idSede) : 0,
       rating: backendBarber.rating,
       imageUrl: backendBarber.imageUrl,
       bio: backendBarber.bio,
       isActive: backendBarber.isActive,
-      // Aquí ya no transformamos nada, tomamos el array tal cual viene del backend
-      workSchedule: backendBarber.workSchedule,
-      dayOff: backendBarber.dayOff,
+      workSchedule: formattedSchedule,
+      dayOff: formatDayName(backendBarber.dayOff),
       shift: backendBarber.shift
     };
   }
+
+  // --- MAPEO FRONTEND -> BACKEND ---
+  private mapFrontendToBackend(frontendBarber: any): any {
+    
+    const translateDay = (uiDay: string): string => {
+      const map: { [key: string]: string } = {
+        'Lunes': 'LUNES', 'Martes': 'MARTES', 'Miércoles': 'MIERCOLES',
+        'Jueves': 'JUEVES', 'Viernes': 'VIERNES', 'Sábado': 'SABADO',
+        'Domingo': 'DOMINGO', 'Ninguno': 'NINGUNO'
+      };
+      return map[uiDay] || uiDay.toUpperCase();
+    };
+
+    const translateShift = (uiShift: string): string => {
+      const map: { [key: string]: string } = {
+        'Full Time': 'FULL_TIME',
+        'Part Time - Mañana': 'PART_TIME_MANANA',
+        'Part Time - Tarde': 'PART_TIME_TARDE'
+      };
+      return map[uiShift] || uiShift;
+    };
+
+    let backendSchedule;
+
+    // LÓGICA HÍBRIDA IMPORTANTE:
+    // 1. Si el frontend envía un horario manual (length > 0), RESPETAMOS ese horario.
+    // 2. Si el frontend NO envía horario (es nuevo o vacío), GENERAMOS uno automático basado en el turno.
+    
+    if (frontendBarber.workSchedule && frontendBarber.workSchedule.length > 0) {
+        // Opción 1: Traducir el horario manual existente
+        backendSchedule = frontendBarber.workSchedule.map((ws: any) => ({
+            hours: ws.hours,
+            day: translateDay(ws.day)
+        }));
+    } else {
+        // Opción 2: Generar automático (para nuevos barberos)
+        const generatedSchedule = this.generateScheduleForShift(
+            frontendBarber.shift, 
+            frontendBarber.dayOff
+        );
+        backendSchedule = generatedSchedule.map(ws => ({
+            hours: ws.hours,
+            day: translateDay(ws.day)
+        }));
+    }
+
+    return {
+      ...frontendBarber,
+      locationId: { id: frontendBarber.locationId },
+      dayOff: translateDay(frontendBarber.dayOff),
+      shift: translateShift(frontendBarber.shift),
+      workSchedule: backendSchedule
+    };
+  }
+
+  // --- GENERADOR DE HORARIOS ---
+  private generateScheduleForShift(shift: string, dayOff: string): WorkSchedule[] {
+    const days: any[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+    let hours: string[] = [];
+
+    if (shift === 'Full Time') {
+      hours = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'];
+    } else if (shift === 'Part Time - Mañana') {
+      hours = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00'];
+    } else if (shift === 'Part Time - Tarde') {
+      hours = ['14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'];
+    }
+
+    const schedule: WorkSchedule[] = [];
+    days.forEach(day => {
+      if (day !== dayOff) {
+        schedule.push({ day: day, hours: [...hours] });
+      }
+    });
+    return schedule;
+  }
+
+  // --- CRUD ---
 
   getBarbersByLocationId(locationId: number, includeInactive: boolean = false): Barber[] {
     return this.barbersSubject.getValue().filter(b =>
@@ -91,11 +180,7 @@ export class BarberService {
   }
 
   createBarber(barber: Omit<Barber, 'id'>): void {
-    const payload = {
-      ...barber,
-      locationId: { id: barber.locationId }
-    };
-
+    const payload = this.mapFrontendToBackend(barber);
     this.http.post<any>(this.API_URL, payload).subscribe({
       next: (newBarberBackend) => {
         const newBarber = this.mapBackendToFrontend(newBarberBackend);
@@ -107,11 +192,7 @@ export class BarberService {
   }
 
   updateBarber(updatedBarber: Barber): void {
-    const payload = {
-      ...updatedBarber,
-      locationId: { id: updatedBarber.locationId }
-    };
-
+    const payload = this.mapFrontendToBackend(updatedBarber);
     this.http.put<any>(`${this.API_URL}/${updatedBarber.id}`, payload).subscribe({
       next: (responseBarber) => {
         const mappedBarber = this.mapBackendToFrontend(responseBarber);
@@ -136,22 +217,20 @@ export class BarberService {
     });
   }
 
-  // --- LÓGICA DE HORARIOS ---
-
-  // Ahora es directo: simplemente buscamos el día y devolvemos las horas que ya vienen calculadas
   getFixedHoursForDay(barberId: number, dayName: string): string[] {
       const barber = this.getBarberById(barberId);
       if (!barber || !barber.workSchedule) return [];
-
       const daySchedule = barber.workSchedule.find((s: any) => s.day === dayName);
-
-      // Si existe el horario, devolvemos el array 'hours' directamente
       return daySchedule ? daySchedule.hours : [];
   }
 
+  // --- MÉTODO RESTAURADO PARA EL COMPONENTE DE GESTIÓN DE HORARIOS ---
   saveBarberWorkSchedule(barberId: number, newSchedule: WorkSchedule[]): void {
     const barber = this.getBarberById(barberId);
     if(barber) {
+      // Al actualizar el objeto aquí y llamar a updateBarber,
+      // la lógica de mapFrontendToBackend verá que 'newSchedule' tiene datos
+      // y los usará en lugar de generar el horario automático.
       const updatedBarber = { ...barber, workSchedule: newSchedule };
       this.updateBarber(updatedBarber);
     }
