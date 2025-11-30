@@ -25,6 +25,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 declare var html2canvas: any;
 
+// Componente Principal de Reserva de Citas
 @Component({
   selector: 'app-booking',
   standalone: true,
