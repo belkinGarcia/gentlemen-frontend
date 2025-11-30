@@ -23,12 +23,24 @@
                  <span>{{ res.service?.price | currency:'S/ ' }}</span>
               </div>
             </mat-card-content>
-            <mat-card-actions align="end">
-              <button mat-button (click)="cancelReservation(res.confirmationNumber)">CANCELAR</button>
-              <button mat-flat-button color="primary" (click)="reschedule(res)">
-                REAGENDAR
-              </button>
-            </mat-card-actions>
+          <mat-card-actions align="end">
+            
+            <span *ngIf="!canModify(res)" class="locked-msg">
+              Ya no se puede modificar (menos de 2h)
+            </span>
+
+            <button mat-button color="warn" 
+                    (click)="cancelReservation(res.confirmationNumber)"
+                    [disabled]="!canModify(res)">
+              CANCELAR
+            </button>
+
+            <button mat-flat-button color="primary" 
+                    (click)="reschedule(res)"
+                    [disabled]="!canModify(res)">
+              REAGENDAR
+            </button>
+          </mat-card-actions>
           </mat-card>
           <div *ngIf="upcomingReservations.length === 0" class="empty-state">
             <mat-icon>event_busy</mat-icon>

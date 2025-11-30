@@ -27,17 +27,22 @@ export class ReservasComponent implements OnInit, OnDestroy {
   allReservations: Reservation[] = [];
   upcomingReservations: Reservation[] = [];
   pastReservations: Reservation[] = [];
+  readonly MIN_HOURS_TO_MODIFY = 2;
   private reservationSub: Subscription | undefined;
   constructor(
     private reservationService: ReservationService,
     private dialog: MatDialog
   ) {}
   ngOnInit(): void {
-    this.reservationSub = this.reservationService.getReservations().subscribe(reservations => {
-      this.allReservations = reservations;
-      this.filterReservations();
-    });
-  }
+      // 1. Pedimos al servicio que traiga los datos frescos del backend
+      this.reservationService.loadReservationsFromBackend();
+
+      // 2. Nos suscribimos para recibir los datos cuando lleguen
+      this.reservationSub = this.reservationService.getReservations().subscribe(reservations => {
+        this.allReservations = reservations;
+        this.filterReservations();
+      });
+    }
   ngOnDestroy(): void {
     this.reservationSub?.unsubscribe();
   }
@@ -61,15 +66,27 @@ export class ReservasComponent implements OnInit, OnDestroy {
     this.reservationService.cancelReservation(confirmationId);
   }
   reschedule(reservation: Reservation): void {
-    console.log("Reagendando:", reservation);
-    this.dialog.open(BookingComponent, {
-      width: '90%',
-      maxWidth: '1200px',
-      data: {
-        isReschedule: true,
-        reservationData: reservation
-      }
-    });
+    const mensajeAdvertencia = `
+      ⚠️ IMPORTANTE: REAGENDAR CITA
+
+      1. Estás a punto de modificar tu reserva actual.
+      2. Se cancelará la cita actual (#${reservation.confirmationNumber}) y se creará una nueva.
+      3. Podrás modificar la ubicación, servicio, barbero, fecha y hora desde cero.
+
+      ¿Deseas continuar?`;
+      
+      if (confirm(mensajeAdvertencia)) {
+      console.log("Reagendando:", reservation);
+      
+      this.dialog.open(BookingComponent, {
+        width: '90%',
+        maxWidth: '1200px',
+        data: {
+          isReschedule: true,
+          reservationData: reservation
+        }
+      });
+    }
   }
   getStatusChip(status: 'upcoming' | 'completed' | 'canceled'): string {
     switch (status) {
@@ -84,5 +101,24 @@ export class ReservasComponent implements OnInit, OnDestroy {
       case 'canceled': return 'warn';
       default: return 'primary';
     }
+  }
+  canModify(reservation: Reservation): boolean {
+    if (!reservation.date || !reservation.time) return false;
+
+    // Combinar fecha y hora en un objeto Date
+    // Asumimos formato time "HH:mm"
+    const dateStr = new Date(reservation.date).toISOString().split('T')[0]; // "2025-12-16"
+    const dateTimeStr = `${dateStr}T${reservation.time}:00`;
+    
+    const appointmentDate = new Date(dateTimeStr);
+    const now = new Date();
+
+    // Calculamos diferencia en milisegundos
+    const diffMs = appointmentDate.getTime() - now.getTime();
+    
+    // Convertimos a horas (ms / 1000 / 60 / 60)
+    const diffHours = diffMs / (1000 * 60 * 60);
+
+    return diffHours >= this.MIN_HOURS_TO_MODIFY;
   }
 }

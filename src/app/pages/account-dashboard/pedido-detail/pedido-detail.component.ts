@@ -34,22 +34,35 @@ export class PedidoDetailComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     const orderId = this.route.snapshot.paramMap.get('id');
+    
     if (orderId) {
-      this.order = this.orderService.getOrderById(orderId);
-    }
-    this.isLoading = false;
-    if (!this.order) {
-      console.error("No se encontró el pedido con ID:", orderId);
+      this.isLoading = true; // Mostrar carga
+      
+      // CAMBIO: Ahora nos suscribimos al Observable del servicio
+      this.orderService.getOrderById(orderId).subscribe({
+        next: (order) => {
+          this.order = order;
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error("No se encontró el pedido:", err);
+          this.isLoading = false;
+        }
+      });
+    } else {
+      this.isLoading = false;
     }
   }
   goBack(): void {
     this.router.navigate(['/mi-cuenta/pedidos']);
   }
-  getStatusChipColor(status: 'Procesando' | 'Enviado' | 'Entregado'): string {
+  getStatusChipColor(status: string): string {
     switch (status) {
       case 'Procesando': return 'warn';
       case 'Enviado': return 'primary';
       case 'Entregado': return 'accent';
+      case 'Cancelado': return 'warn'; // Agregamos este caso
+      default: return 'primary';
     }
   }
 }

@@ -123,25 +123,55 @@ export class AuthService {
    */
   updateUser(updatedData: any): Observable<any> {
     const currentUser = this.getCurrentUser();
-    if (!currentUser) {
-      return of(null);
+    // Obtenemos el ID de manera segura
+    const userId = currentUser.id || currentUser.idUsuario || currentUser.id_usuario;
+
+    if (!userId) {
+        console.error("No se encontró ID de usuario para actualizar");
+        return of(null);
     }
     
-    // Fusionar datos actuales con los nuevos
-    const updatedUser = { ...currentUser, ...updatedData };
-    
-    // Actualizar localStorage
-    localStorage.setItem(this.USER_KEY, JSON.stringify(updatedUser));
-    console.log("AuthService: Usuario actualizado localmente", updatedUser);
-    
-    return of(updatedUser);
-  }
+    // NOTA: Aquí no mapeamos todavía, asumimos que 'updatedData' ya viene 
+    // con los nombres de campos que espera Java (nombres, apellidos, etc.)
+    // O lo mapeamos en el componente. Lo haremos en el componente para ser más claros.
 
+    return this.http.put(`${this.BASE_API_URL}/usuarios/${userId}`, updatedData).pipe(
+      tap((response: any) => {
+        console.log("Usuario actualizado en BD:", response);
+        
+        // Actualizamos el localStorage con la respuesta del servidor
+        // Mapeamos la respuesta de Java (nombres) a Angular (firstName) para la sesión local
+        const userForLocal = {
+            ...currentUser,
+            firstName: response.nombres,
+            lastName: response.apellidos,
+            phone: response.celular,
+            email: response.email || response.correo
+        };
+        
+        localStorage.setItem(this.USER_KEY, JSON.stringify(userForLocal));
+      })
+    );
+  }
   /**
    * Verifica si el usuario es administrador.
    */
   isAdmin(): boolean {
     const role = localStorage.getItem(this.ROLE_KEY);
     return role === 'ADMINISTRADOR'; 
+  }
+
+  changePassword(currentPassword: string, newPassword: string): Observable<any> {
+    const currentUser = this.getCurrentUser();
+    const userId = currentUser.id || currentUser.idUsuario;
+
+    if (!userId) return throwError(() => 'No hay usuario logueado');
+
+    const payload = {
+      currentPassword: currentPassword,
+      newPassword: newPassword
+    };
+
+    return this.http.put(`${this.BASE_API_URL}/usuarios/${userId}/cambiar-password`, payload);
   }
 }

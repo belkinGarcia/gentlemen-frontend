@@ -44,3 +44,9 @@ h2 {
   height: 50px;
   width: 50px;
 }
+.locked-msg {
+  font-size: 0.75rem;
+  color: #f44336; /* Rojo alerta */
+  margin-right: 10px;
+  font-weight: 500;
+}

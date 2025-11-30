@@ -22,7 +22,7 @@ import { MatDividerModule } from '@angular/material/divider';
 export class ContentManagementComponent implements OnInit, OnDestroy {
   mainForm!: FormGroup; 
   contentData: ContentData = {}; 
-  activeStepKey: string = 'contact'; 
+  activeStepKey: string = 'contact';
   private contentSub: Subscription | undefined;
   currentStepData: StepGuide = { title: '', description: '' }; 
   isContactView: boolean = true; 
@@ -30,16 +30,21 @@ export class ContentManagementComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private contentService: ContentService
   ) {}
-  ngOnInit(): void {
+ngOnInit(): void {
     this.mainForm = this.fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
       whatsappNumber: [''],
       whatsappLink: ['']
     });
-    this.contentSub = this.contentService.content$.subscribe(data => {
-      this.contentData = data;
-      this.loadStepForm('step3'); 
+
+    this.contentService.loadFromBackend();
+
+this.contentSub = this.contentService.content$.subscribe(data => {
+      if (data && Object.keys(data).length > 0) {
+        this.contentData = data;
+        this.loadStepForm(this.activeStepKey); 
+      }
     });
   }
   ngOnDestroy(): void {

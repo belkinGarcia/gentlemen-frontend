@@ -6,11 +6,10 @@
         <h2>{{ guide['step1']?.title }}</h2>
         <p>{{ guide['step1']?.description }}</p>
         <div class="whatsapp-contact-box">
-          <h3>{{ guide['contact'].title }}</h3>
-          <p>{{ guide['contact'].description }}</p>
-          <a [href]="guide['contact'].whatsappLink" mat-flat-button color="accent">
-            📞 {{ guide['contact'].whatsappNumber
-            }}
+          <h3>{{ guide['contact']?.title }}</h3>
+          <p>{{ guide['contact']?.description }}</p>
+          <a [href]="guide['contact']?.whatsappLink" mat-flat-button color="accent">
+            📞 {{ guide['contact']?.whatsappNumber }}
           </a>
         </div>
       </div>
@@ -38,10 +37,10 @@
         <h2>{{ guide['step2']?.title }}</h2>
         <p>{{ guide['step2']?.description }}</p>
         <div class="whatsapp-contact-box">
-          <h3>{{ guide['contact'].title }}</h3>
-          <p>{{ guide['contact'].description }}</p>
-          <a [href]="guide['contact'].whatsappLink" mat-flat-button color="accent">
-            📞 {{ guide['contact'].whatsappNumber }}
+          <h3>{{ guide['contact']?.title }}</h3>
+          <p>{{ guide['contact']?.description }}</p>
+          <a [href]="guide['contact']?.whatsappLink" mat-flat-button color="accent">
+            📞 {{ guide['contact']?.whatsappNumber }}
           </a>
         </div>
       </div>
@@ -99,10 +98,10 @@
         <h2>{{ guide['step3']?.title }}</h2>
         <p>{{ guide['step3']?.description }}</p>
         <div class="whatsapp-contact-box">
-          <h3>{{ guide['contact'].title }}</h3>
-          <p>{{ guide['contact'].description }}</p>
-          <a [href]="guide['contact'].whatsappLink" mat-flat-button color="accent">
-            📞 {{ guide['contact'].whatsappNumber }}
+          <h3>{{ guide['contact']?.title }}</h3>
+          <p>{{ guide['contact']?.description }}</p>
+          <a [href]="guide['contact']?.whatsappLink" mat-flat-button color="accent">
+            📞 {{ guide['contact']?.whatsappNumber }}
           </a>
         </div>
       </div>
@@ -145,12 +144,12 @@
         <h2>{{ guide['step4']?.title }}</h2>
         <p>{{ guide['step4']?.description }}</p>
         <div class="whatsapp-contact-box">
-          <h3>{{ guide['contact'].title }}</h3>
-          <p>{{ guide['contact'].description }}</p>
-          <a [href]="guide['contact'].whatsappLink" mat-flat-button color="accent">
-            📞 {{ guide['contact'].whatsappNumber }}
+          <h3>{{ guide['contact']?.title }}</h3>
+          <p>{{ guide['contact']?.description }}</p>
+          <a [href]="guide['contact']?.whatsappLink" mat-flat-button color="accent">
+            📞 {{ guide['contact']?.whatsappNumber }}
           </a>
-        </div>
+        </div>  
       </div>
       <div class="step-content">
         <mat-calendar [selected]="selectedDate" (selectedChange)="onDateSelect($event)" [dateClass]="dateClass"
@@ -209,10 +208,10 @@
         <h2>{{ guide['step5']?.title }}</h2>
         <p>{{ guide['step5']?.description }}</p>
         <div class="whatsapp-contact-box">
-          <h3>{{ guide['contact'].title }}</h3>
-          <p>{{ guide['contact'].description }}</p>
-          <a [href]="guide['contact'].whatsappLink" mat-flat-button color="accent">
-            📞 {{ guide['contact'].whatsappNumber }}
+          <h3>{{ guide['contact']?.title }}</h3>
+          <p>{{ guide['contact']?.description }}</p>
+          <a [href]="guide['contact']?.whatsappLink" mat-flat-button color="accent">
+            📞 {{ guide['contact']?.whatsappNumber }}
           </a>
         </div>
       </div>

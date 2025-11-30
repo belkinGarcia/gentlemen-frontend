@@ -1,74 +1,102 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, map } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, map, tap } from 'rxjs';
+
 export interface Testimonial {
-  id: number;
+  id?: number;
   clientName: string;
-  rating: 1 | 2 | 3 | 4 | 5;
+  rating: number;
   comment: string;
-  date: Date;
-  status: 'pending' | 'approved' | 'rejected';
+  date?: Date;
+  status?: 'pending' | 'approved' | 'rejected';
 }
+
 @Injectable({
   providedIn: 'root'
 })
 export class TestimonialService {
-  private readonly TESTIMONIAL_KEY = 'testimonial_database';
-  private testimonialsSubject = new BehaviorSubject<Testimonial[]>(this.loadFromStorage());
-  public testimonials$: Observable<Testimonial[]> = this.testimonialsSubject.asObservable();
-  public approvedTestimonials$: Observable<Testimonial[]>;
- constructor() {
-    this.approvedTestimonials$ = this.testimonials$.pipe(
-      map(testimonials => testimonials.filter(t => t.status === 'approved'))
-    );
+  private API_URL = 'http://localhost:8080/api/v1/testimonios';
+
+  // Subject solo para la web pública (aprobados)
+  private testimonialsSubject = new BehaviorSubject<Testimonial[]>([]);
+  public testimonials$ = this.testimonialsSubject.asObservable();
+  public approvedTestimonials$ = this.testimonials$; 
+
+  constructor(private http: HttpClient) {
+    this.loadApprovedTestimonials();
   }
-  private loadFromStorage(): Testimonial[] {
-    const data = localStorage.getItem(this.TESTIMONIAL_KEY);
-    const initialData: Testimonial[] = data ? JSON.parse(data) : [
-        { id: 1, clientName: 'Juan P.', rating: 5, comment: 'Excelente servicio y puntualidad. ¡Volveré!', date: new Date(), status: 'approved' },
-        { id: 2, clientName: 'María G.', rating: 4, comment: 'El corte quedó muy bien, aunque tardaron un poco.', date: new Date(), status: 'pending' },
-    ];
-    return initialData.map(t => ({ ...t, date: new Date(t.date) }));
+
+  // --- WEB PÚBLICA ---
+
+  loadApprovedTestimonials(): void {
+    this.http.get<any[]>(`${this.API_URL}/aprobados`).pipe(
+      map(javaList => javaList.map(t => this.mapJavaToAngular(t)))
+    ).subscribe({
+      next: (data) => this.testimonialsSubject.next(data),
+      error: (err) => console.error('Error cargando testimonios', err)
+    });
   }
-  private _saveToStorage(testimonials: Testimonial[]): void {
-    localStorage.setItem(this.TESTIMONIAL_KEY, JSON.stringify(testimonials));
-    this.testimonialsSubject.next(testimonials);
-  }
-  /**
-   * Crea un nuevo testimonio (siempre en estado 'pending').
-   */
-  createTestimonial(testimonialData: Omit<Testimonial, 'id' | 'status' | 'date'>): void {
-    const currentTestimonials = this.testimonialsSubject.getValue();
-    const newId = Math.max(...currentTestimonials.map(t => t.id), 0) + 1;
-    const newTestimonial: Testimonial = { 
-        ...testimonialData as Testimonial, 
-        id: newId, 
-        date: new Date(), 
-        status: 'pending' 
+
+  createTestimonial(data: Testimonial): void {
+    const payload = {
+        nombreCliente: data.clientName,
+        comentario: data.comment,
+        calificacion: data.rating,
+        estado: 'PENDIENTE'
     };
-    this._saveToStorage([...currentTestimonials, newTestimonial]);
+    this.http.post(this.API_URL, payload).subscribe();
   }
+
+  // --- PANEL DE ADMIN (Métodos restaurados) ---
+
   /**
-   * Obtiene todos los testimonios (para la tabla de admin).
+   * Obtiene TODOS los testimonios para el admin.
+   * Retorna un Observable directo (sin caché local) para tener datos frescos.
    */
   getAllTestimonials(): Observable<Testimonial[]> {
-    return this.testimonials$;
-  }
-  /**
-   * Actualiza el estado de un testimonio (Aprobar/Rechazar).
-   */
-  updateTestimonialStatus(id: number, status: 'pending' | 'approved' | 'rejected'): void {
-    const currentTestimonials = this.testimonialsSubject.getValue();
-    const updatedList = currentTestimonials.map(t => 
-        t.id === id ? { ...t, status: status } : t
+    return this.http.get<any[]>(this.API_URL).pipe(
+      map(javaList => javaList.map(t => this.mapJavaToAngular(t)))
     );
-    this._saveToStorage(updatedList);
   }
-  /**
-   * Elimina un testimonio.
-   */
-  deleteTestimonial(id: number): void {
-    const currentTestimonials = this.testimonialsSubject.getValue();
-    const updatedList = currentTestimonials.filter(t => t.id !== id);
-    this._saveToStorage(updatedList);
+
+updateTestimonialStatus(id: number, status: 'pending' | 'approved' | 'rejected'): Observable<any> {
+    let javaStatus = '';
+
+    // Traducción manual para coincidir con el Enum de Java
+    switch (status) {
+      case 'approved':
+        javaStatus = 'APROBADO';
+        break;
+      case 'rejected':
+        javaStatus = 'RECHAZADO';
+        break;
+      default:
+        javaStatus = 'PENDIENTE';
+        break;
+    }
+
+    // Ahora enviamos ?estado=APROBADO en lugar de APPROVED
+    return this.http.put(`${this.API_URL}/${id}/estado?estado=${javaStatus}`, {});
+  }
+
+  deleteTestimonial(id: number): Observable<any> {
+    return this.http.delete(`${this.API_URL}/${id}`);
+  }
+
+  // --- HELPER ---
+  private mapJavaToAngular(t: any): Testimonial {
+    // Mapeo seguro del estado
+    let statusAngular: 'pending' | 'approved' | 'rejected' = 'pending';
+    if (t.estado === 'APROBADO') statusAngular = 'approved';
+    if (t.estado === 'RECHAZADO') statusAngular = 'rejected';
+
+    return {
+      id: t.idTestimonio,
+      clientName: t.nombreCliente,
+      comment: t.comentario,
+      rating: t.calificacion,
+      date: new Date(t.fecha),
+      status: statusAngular
+    };
   }
 }

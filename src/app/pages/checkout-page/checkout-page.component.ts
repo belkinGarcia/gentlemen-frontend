@@ -100,18 +100,46 @@ export class CheckoutPageComponent implements OnInit {
       return total + (item.product.price * item.quantity);
     }, 0);
   }
-  proceedToPayment(): void {
+  // ASÍ DEBE QUEDAR:
+proceedToPayment(): void {
     if (this.step2_shippingForm.invalid) {
       this.step2_shippingForm.markAllAsTouched();
       return;
     }
+    
     const finalTotal = this.subtotal + this.shippingCost; 
-    const newOrder = this.orderService.createOrder(
-      this.cartItems,
-      finalTotal,
-      this.step2_shippingForm.value
-    );
-    this.cartService.clearCart(); 
-    this.stepper.next();
+    
+    // 1. Preparamos datos para guardar en TU base de datos
+    const orderData = {
+        items: this.cartItems,
+        total: finalTotal,
+        shippingInfo: this.step2_shippingForm.value
+        // El estado se guardará como 'PROCESANDO' por defecto en el backend
+    };
+
+    // 2. Guardamos el pedido en MySQL
+    this.orderService.createOrder(orderData).subscribe({
+      next: (res: any) => { 
+        console.log("Pedido guardado en BD local:", res);
+        
+        // 3. ¡AHORA LA MAGIA! Pedimos el link a Mercado Pago
+        this.orderService.createPaymentPreference(this.cartItems, this.shippingCost).subscribe({
+          next: (urlMercadoPago: string) => {
+             console.log("Redirigiendo a Mercado Pago:", urlMercadoPago);
+             
+             // Limpiamos el carrito antes de irnos
+             this.cartService.clearCart(); 
+             
+             // Redirigimos al usuario a la pasarela segura
+             window.location.href = urlMercadoPago;
+          },
+          error: (err: any) => console.error("Error al conectar con Mercado Pago", err)
+        });
+      },
+      error: (err: any) => { 
+        console.error("Error al guardar pedido en BD", err);
+        alert("Hubo un error al procesar tu pedido. Inténtalo de nuevo.");
+      }
+    });
   }
 }

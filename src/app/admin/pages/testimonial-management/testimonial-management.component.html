@@ -40,8 +40,8 @@
         <button mat-icon-button color="accent" *ngIf="t.status !== 'rejected'" (click)="reject(t)" matTooltip="Rechazar/Ocultar">
           <mat-icon>thumb_down</mat-icon>
         </button>
-        <button mat-icon-button color="warn" (click)="delete(t.id)" matTooltip="Eliminar permanentemente">
-          <mat-icon>delete</mat-icon>
+        <button mat-icon-button color="warn" (click)="deleteTestimonial(t.id)" matTooltip="Eliminar">
+            <mat-icon>delete</mat-icon>
         </button>
       </td>
     </ng-container>

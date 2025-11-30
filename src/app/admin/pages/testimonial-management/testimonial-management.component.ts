@@ -1,63 +1,80 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Subscription } from 'rxjs';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { TestimonialService, Testimonial } from '../../../services/testimonial.service'; 
-import { Router } from '@angular/router';
+import { MatMenuModule } from '@angular/material/menu';
+import { TestimonialService, Testimonial } from '../../../services/testimonial.service';
+
 @Component({
   selector: 'app-testimonial-management',
   standalone: true,
   imports: [
-    CommonModule,
-    MatTableModule,
-    MatButtonModule,
-    MatIconModule,
-    MatChipsModule,
-    MatTooltipModule
+    CommonModule, MatTableModule, MatButtonModule, 
+    MatIconModule, MatChipsModule, MatMenuModule
   ],
   templateUrl: './testimonial-management.component.html',
   styleUrls: ['./testimonial-management.component.css']
 })
-export class TestimonialManagementComponent implements OnInit, OnDestroy {
+export class TestimonialManagementComponent implements OnInit {
   displayedColumns: string[] = ['clientName', 'rating', 'comment', 'date', 'status', 'actions'];
   dataSource: Testimonial[] = [];
-  private testimonialSub: Subscription | undefined;
-  constructor(
-    private testimonialService: TestimonialService,
-    private router: Router
-  ) {}
+
+  constructor(private testimonialService: TestimonialService) {}
+
   ngOnInit(): void {
-    this.testimonialSub = this.testimonialService.getAllTestimonials().subscribe(testimonials => {
-      this.dataSource = testimonials.sort((a, b) => {
-        if (a.status === 'pending' && b.status !== 'pending') return -1;
-        if (a.status !== 'pending' && b.status === 'pending') return 1;
-        return b.date.getTime() - a.date.getTime();
+    this.loadData();
+  }
+
+  loadData(): void {
+    // Solución error TS7006: Tipamos explícitamente (data: Testimonial[])
+    this.testimonialService.getAllTestimonials().subscribe((data: Testimonial[]) => {
+      // Solución error TS7006: Tipamos (a, b) en el sort
+      this.dataSource = data.sort((a: Testimonial, b: Testimonial) => {
+        // Ordenar por fecha descendente (lo más nuevo primero)
+        const dateA = a.date ? new Date(a.date).getTime() : 0;
+        const dateB = b.date ? new Date(b.date).getTime() : 0;
+        return dateB - dateA;
       });
     });
   }
-  ngOnDestroy(): void {
-    this.testimonialSub?.unsubscribe();
-  }
+
   approve(testimonial: Testimonial): void {
-    this.testimonialService.updateTestimonialStatus(testimonial.id, 'approved');
-  }
-  reject(testimonial: Testimonial): void {
-    this.testimonialService.updateTestimonialStatus(testimonial.id, 'rejected');
-  }
-  delete(id: number): void {
-    if (confirm('¿Estás seguro de eliminar permanentemente este testimonio?')) {
-      this.testimonialService.deleteTestimonial(id);
+    if (testimonial.id) {
+      this.testimonialService.updateTestimonialStatus(testimonial.id, 'approved')
+        .subscribe(() => this.loadData()); // Recargamos la tabla al terminar
     }
   }
-  getStatusColor(status: 'pending' | 'approved' | 'rejected'): 'primary' | 'warn' | 'accent' {
-    switch (status) {
-      case 'approved': return 'primary'; 
-      case 'rejected': return 'warn';   
-      default: return 'accent';         
+
+  reject(testimonial: Testimonial): void {
+    if (testimonial.id) {
+      this.testimonialService.updateTestimonialStatus(testimonial.id, 'rejected')
+        .subscribe(() => this.loadData());
+    }
+  }
+
+  deleteTestimonial(id: number): void {
+    if(confirm('¿Estás seguro de eliminar este testimonio?')) {
+      this.testimonialService.deleteTestimonial(id)
+        .subscribe(() => this.loadData());
+    }
+  }
+
+  // Helpers para el HTML
+  getStatusColor(status: string): string {
+    switch(status) {
+      case 'approved': return 'primary'; // Verde/Azul
+      case 'rejected': return 'warn';    // Rojo
+      default: return 'accent';          // Amarillo/Naranja (Pending)
+    }
+  }
+
+  getStatusLabel(status: string): string {
+    switch(status) {
+      case 'approved': return 'Aprobado';
+      case 'rejected': return 'Rechazado';
+      default: return 'Pendiente';
     }
   }
 }

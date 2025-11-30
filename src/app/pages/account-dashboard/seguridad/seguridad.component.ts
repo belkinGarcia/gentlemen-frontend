@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { AuthService } from '../../../services/auth.service';
 export function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
   const newPassword = control.get('newPassword');
   const confirmPassword = control.get('confirmPassword');
@@ -34,7 +35,8 @@ export class SeguridadComponent {
   hideConfirm = true;
   successMessage: string | null = null;
   errorMessage: string | null = null;
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private authService: AuthService) {
+
     this.passwordForm = this.fb.group({
       currentPassword: ['', Validators.required],
       newPassword: ['', [Validators.required, Validators.minLength(8)]],
@@ -43,22 +45,35 @@ export class SeguridadComponent {
       validators: passwordMatchValidator
     });
   }
-  updatePassword(): void {
+updatePassword(): void {
     this.successMessage = null;
     this.errorMessage = null;
+
     if (this.passwordForm.valid) {
-      console.log('Cambiando contraseña (simulación):', this.passwordForm.value);
-             this.successMessage = '¡Contraseña actualizada con éxito!';
-             this.passwordForm.reset();
-      setTimeout(() => {
-        this.successMessage = '¡Contraseña actualizada con éxito!';
-        this.passwordForm.reset();
-        Object.keys(this.passwordForm.controls).forEach(key => {
-          this.passwordForm.get(key)?.setErrors(null) ;
-        });
-      }, 1000);
-    } else {
-      console.log('Formulario inválido');
+      const { currentPassword, newPassword } = this.passwordForm.value;
+
+      // LLAMADA REAL AL BACKEND
+      this.authService.changePassword(currentPassword, newPassword).subscribe({
+        next: (response) => {
+          console.log("Contraseña cambiada en BD:", response);
+          this.successMessage = '¡Contraseña actualizada con éxito!';
+          this.passwordForm.reset();
+          
+          // Limpiar errores visuales del formulario
+          Object.keys(this.passwordForm.controls).forEach(key => {
+            this.passwordForm.get(key)?.setErrors(null);
+          });
+        },
+        error: (err) => {
+          console.error("Error cambiando contraseña", err);
+          // Si el backend devuelve "La contraseña actual es incorrecta"
+          if (err.error && err.error.error) {
+             this.errorMessage = err.error.error;
+          } else {
+             this.errorMessage = "Error al actualizar. Verifica tu contraseña actual.";
+          }
+        }
+      });
     }
   }
   get confirmPasswordControl() {

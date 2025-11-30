@@ -94,11 +94,13 @@ export class BookingComponent implements OnInit {
       const oldRes: Reservation = this.data.reservationData;
       this.oldReservationIdToCancel = oldRes.confirmationNumber;
       this.selectedLocation = oldRes.location;
-      this.selectedService = oldRes.service as Service;
+      if (this.selectedService) {
+        this.totalDuration = this.selectedService.duration || 30; 
+      }
       this.selectedBarber = oldRes.barber;
       this.totalDuration = (oldRes.service as Service).duration;
       setTimeout(() => {
-        this.stepper.selectedIndex = 3;
+        this.stepper.selectedIndex = 0;
       }, 0);
     }
   }
@@ -289,15 +291,27 @@ export class BookingComponent implements OnInit {
     if (!this.confirmationNumber) {
         this.confirmationNumber = Math.floor(100000 + Math.random() * 900000).toString();
     }
-    
+
+    const currentUser = this.authService.getCurrentUser();
+
     const newReservationData: ReservationData = {
       location: this.selectedLocation,
       service: this.selectedService,
       barber: this.selectedBarber,
       date: this.selectedDate,
       time: this.selectedTime,
-      user: this.informationForm.value,
+      user: {
+          firstName: this.informationForm.value.firstName,
+          lastName: this.informationForm.value.lastName,
+          dni: this.informationForm.value.dni,
+          email: this.informationForm.value.email,
+          phone: this.informationForm.value.phone,
+          // IMPORTANTE: Enviar el ID del usuario logueado
+          id: currentUser ? (currentUser.id || currentUser.idUsuario) : null 
+      },      
       confirmationNumber: this.confirmationNumber
+
+
     };
     
     this.reservationService.createReservation(newReservationData);
