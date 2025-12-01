@@ -15,7 +15,6 @@ export interface Location {
   providedIn: 'root'
 })
 export class LocationService {
-    // URL basada en tu SedeController @RequestMapping("/api/v1") + @GetMapping("/sedes")
     private readonly API_URL = 'http://localhost:8080/api/v1/sedes';
 
     private locationsSubject = new BehaviorSubject<Location[]>([]);

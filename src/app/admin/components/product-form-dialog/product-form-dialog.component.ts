@@ -5,7 +5,7 @@ import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/materia
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select'; // <--- NUEVO
+import { MatSelectModule } from '@angular/material/select';
 import { forkJoin } from 'rxjs';
 
 import { CategoryService } from '../../../services/category.service';
@@ -21,7 +21,7 @@ import { BrandService } from '../../../services/brand.service';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatSelectModule // <--- AGREGARLO AQUÍ
+    MatSelectModule
   ],
   templateUrl: './product-form-dialog.component.html',
   styleUrls: ['./product-form-dialog.component.css']
@@ -40,14 +40,14 @@ export class ProductFormDialogComponent implements OnInit {
     private brandService: BrandService
   ) {
     this.isEditMode = !!this.data;
-    
+
     // Inicializamos el formulario con los nuevos campos
     this.productForm = this.fb.group({
       name: ['', Validators.required],
-      brandId: [null, Validators.required], // <--- NUEVO: Marca
-      categoryId: [null, Validators.required], // <--- CAMBIO: Usamos ID numérico
+      brandId: [null, Validators.required],
+      categoryId: [null, Validators.required],
       price: [0, [Validators.required, Validators.min(0)]],
-      stock: [10, [Validators.required, Validators.min(0)]], // <--- NUEVO: Stock
+      stock: [10, [Validators.required, Validators.min(0)]],
       imagenUrl: ['', Validators.required],
       description: ['']
     });
@@ -72,10 +72,10 @@ export class ProductFormDialogComponent implements OnInit {
             stock: this.data.stock,
             imagenUrl: this.data.imagenUrl || this.data.imageUrl,
             description: this.data.description,
-            
+
             // Mapeamos los Objetos anidados a sus IDs
             categoryId: this.data.categoria ? this.data.categoria.idCategoria : null,
-            brandId: this.data.marca ? this.data.marca.idMarca : null 
+            brandId: this.data.marca ? this.data.marca.idMarca : null
           });
         }
       },
@@ -94,13 +94,13 @@ export class ProductFormDialogComponent implements OnInit {
         stock: formValue.stock,
         imagenUrl: formValue.imagenUrl,
         description: formValue.description,
-        
+
         // Enviamos el objeto Categoria completo con su ID
         categoria: {
           idCategoria: formValue.categoryId
         },
 
-        // NUEVO: Enviamos el objeto Marca completo con su ID
+        // Enviamos el objeto Marca completo con su ID
         marca: {
           idMarca: formValue.brandId
         }

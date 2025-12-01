@@ -18,13 +18,13 @@ export class AdminGuard implements CanActivate {
 
     // 2. Si no es admin, denegar acceso y redirigir
     console.warn('AdminGuard: Acceso denegado. Usuario no es ADMINISTRADOR.');
-    
-    // Opcional: Si está logueado pero no es admin, mándalo a "Mi Cuenta"
+
+    // Si está logueado pero no es admin, mándalo a "Mi Cuenta"
     if (this.authService.isLoggedIn()) {
         return this.router.createUrlTree(['/mi-cuenta']);
     }
 
     // Si no está logueado, al login
-    return this.router.createUrlTree(['/auth']); 
+    return this.router.createUrlTree(['/auth']);
   }
 }

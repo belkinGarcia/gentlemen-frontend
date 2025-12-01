@@ -63,7 +63,7 @@ export class OrderService {
         idUsuario: userId, // ID directo (int)
         total: orderData.total,
         direccion: orderData.shippingInfo.address,
-        
+
         // Mapeamos detalles simple
         detalles: orderData.items.map((item: any) => ({
             idProducto: item.product.id,
@@ -74,7 +74,7 @@ export class OrderService {
 
     return this.http.post<any>(this.API_URL, payload);
   }
-  
+
   // --- HELPERS ---
   private mapJavaToAngular(p: any): Order {
     return {
@@ -86,7 +86,7 @@ export class OrderService {
         firstName: p.cliente?.nombres || 'Cliente',
         lastName: p.cliente?.apellidos || '',
         address: p.direccion || '',
-        city: 'Lima', 
+        city: 'Lima',
         region: 'Lima',
         phone: p.cliente?.celular || ''
       },

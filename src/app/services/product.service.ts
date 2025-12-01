@@ -22,9 +22,8 @@ export interface PaginatedProducts {
   providedIn: 'root'
 })
 export class ProductService {
-  // Apuntamos al endpoint del backend
   private readonly API_URL = 'http://localhost:8080/api/v1/products';
-  
+
   private productsSubject = new BehaviorSubject<any[]>([]);
   public products$: Observable<any[]> = this.productsSubject.asObservable();
 
@@ -52,12 +51,12 @@ export class ProductService {
     const allProducts = this.productsSubject.getValue();
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
-    
+
     const paginatedProducts = allProducts.slice(startIndex, endIndex);
-    
-    return { 
-      products: paginatedProducts, 
-      total: allProducts.length 
+
+    return {
+      products: paginatedProducts,
+      total: allProducts.length
     };
   }
 
@@ -90,7 +89,7 @@ export class ProductService {
     // Asumiendo que agregues PUT en el backend
     // Por ahora actualizamos localmente para no romper la UI
     const currentProducts = this.getAllProductsList();
-    const updatedProducts = currentProducts.map(p => 
+    const updatedProducts = currentProducts.map(p =>
       p.id === updatedProduct.id ? updatedProduct : p
     );
     this.productsSubject.next(updatedProducts);

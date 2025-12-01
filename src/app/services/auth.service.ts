@@ -11,7 +11,7 @@ export class AuthService {
   private readonly TOKEN_KEY = 'auth_token';
   private readonly ROLE_KEY = 'user_role';
   private readonly USER_KEY = 'auth_user';
-  
+
   // URL específica para Auth (asegúrate de que coincida con tu Controller)
   private readonly API_URL = 'http://localhost:8080/api/v1/usuarios'; // Ajustado al controller que vimos antes
   private readonly BASE_API_URL = 'http://localhost:8080/api/v1';
@@ -24,10 +24,6 @@ export class AuthService {
     private http: HttpClient
   ) {}
 
-  /**
-   * Realiza el login.
-   * CORRECCIÓN: El backend devuelve un objeto Usuario, no un {token, user}.
-   */
   login(credentials: any): Observable<any> {
     // Usamos el endpoint /login que creamos en el UsuarioController
     return this.http.post<any>(`${this.API_URL}/login`, credentials).pipe(
@@ -60,10 +56,6 @@ export class AuthService {
     return this.http.get<any>(`${this.API_URL}/${id}`, { headers });
   }
 
-  /**
-   * Guarda la sesión.
-   * CORRECCIÓN: Adaptado para recibir el objeto Usuario directo.
-   */
   private setSession(usuario: any): void {
     if (usuario) {
       // 1. Guardar el usuario completo
@@ -77,9 +69,9 @@ export class AuthService {
       // 3. Simular Token (IMPORTANTE): Como el backend no manda JWT todavía,
       // creamos un token ficticio para que isLoggedIn() devuelva true y los Guards funcionen.
       // Cuando implementes JWT real en Java, usa usuario.token aquí.
-      const fakeToken = 'session-token-' + usuario.idUsuario; 
+      const fakeToken = 'session-token-' + usuario.idUsuario;
       localStorage.setItem(this.TOKEN_KEY, fakeToken);
-      
+
       this.loggedInStatus.next(true);
     }
   }
@@ -114,7 +106,6 @@ export class AuthService {
 
   updateUser(updatedData: any): Observable<any> {
     const currentUser = this.getCurrentUser();
-    // Aseguramos compatibilidad de ID (backend usa idUsuario)
     const userId = currentUser.idUsuario || currentUser.id;
 
     if (!userId) {
@@ -125,14 +116,12 @@ export class AuthService {
     return this.http.put(`${this.API_URL}/${userId}`, updatedData).pipe(
       tap((response: any) => {
         console.log("Usuario actualizado:", response);
-        
-        // CORRECCIÓN: Mantener nombres de variables consistentes (nombres, apellidos)
-        // No mapear a firstName/lastName para evitar errores en las vistas.
+
         const userForLocal = {
             ...currentUser,
-            ...response // Sobrescribimos con lo que devuelva el servidor
+            ...response
         };
-        
+
         localStorage.setItem(this.USER_KEY, JSON.stringify(userForLocal));
       })
     );
@@ -140,7 +129,7 @@ export class AuthService {
 
   isAdmin(): boolean {
     const role = localStorage.getItem(this.ROLE_KEY);
-    return role === 'ADMINISTRADOR'; 
+    return role === 'ADMINISTRADOR';
   }
 
   changePassword(currentPassword: string, newPassword: string): Observable<any> {

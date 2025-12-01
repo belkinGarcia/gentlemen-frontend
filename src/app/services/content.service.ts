@@ -32,9 +32,9 @@ const DEFAULT_GUIDES: ContentData = {
 })
 export class ContentService {
   private readonly API_URL = 'http://localhost:8080/api/v1/content';
-  
+
   // Inicializamos vacío, se llenará al cargar la APP
-  private contentSubject = new BehaviorSubject<ContentData>({}); 
+  private contentSubject = new BehaviorSubject<ContentData>({});
   public content$: Observable<ContentData> = this.contentSubject.asObservable();
 
   constructor(private http: HttpClient) {
@@ -45,7 +45,7 @@ export class ContentService {
   public loadFromBackend(): void {
     this.http.get<any[]>(this.API_URL).pipe(
       map(items => {
-        // TRANSFORMACIÓN: Convertimos el Array de Java [{},{}] 
+        // TRANSFORMACIÓN: Convertimos el Array de Java [{},{}]
         // al Objeto de Angular { key: {}, key2: {} }
         const dataMap: ContentData = {};
         items.forEach(item => {

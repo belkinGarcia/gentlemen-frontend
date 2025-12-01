@@ -14,14 +14,14 @@ import { Service, ServiceService, Category } from '../../../services/service.ser
   selector: 'app-service-form-dialog',
   standalone: true,
   imports: [
-    CommonModule, 
-    ReactiveFormsModule, 
-    MatDialogModule, 
-    MatFormFieldModule, 
-    MatInputModule, 
-    MatButtonModule, 
+    CommonModule,
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
     MatDividerModule,
-    MatSelectModule, // Agregado para el dropdown
+    MatSelectModule,
     MatIconModule
   ],
   templateUrl: './service-form-dialog.component.html',
@@ -39,32 +39,27 @@ export class ServiceFormDialogComponent implements OnInit {
     private serviceService: ServiceService
   ) {
     this.isEditMode = !!this.data;
-    
+
     this.serviceForm = this.fb.group({
       id: [this.data ? this.data.id : null],
       name: [this.data ? this.data.name : '', Validators.required],
       price: [this.data ? this.data.price : '', [Validators.required, Validators.min(0)]],
-      // Aquí es donde se define la duración. Al cambiar esto, el ScheduleService
-      // recalculará los bloques de tiempo automáticamente.
-      duration: [this.data ? this.data.duration : 30, [Validators.required, Validators.min(10)]], 
+      duration: [this.data ? this.data.duration : 30, [Validators.required, Validators.min(10)]],
       description: [this.data ? this.data.description : ''],
-      // Cambiamos 'category' (string) por 'idTipoServicio' (number)
-      idTipoServicio: ['', Validators.required], 
+      idTipoServicio: ['', Validators.required],
       imageUrl: [this.data ? this.data.imageUrl : '']
     });
   }
 
   ngOnInit(): void {
-    // 1. Obtener las categorías reales del servicio
     this.serviceService.categories$.subscribe(cats => {
       this.categories = cats;
-      
-      // 2. Si es modo edición, buscar a qué categoría pertenece este servicio
+
       if (this.isEditMode && this.data) {
-        const parentCategory = this.categories.find(cat => 
+        const parentCategory = this.categories.find(cat =>
           cat.items.some(item => item.id === this.data.id)
         );
-        
+
         if (parentCategory) {
           this.serviceForm.patchValue({
             idTipoServicio: parentCategory.idTipoServicio
@@ -77,7 +72,7 @@ export class ServiceFormDialogComponent implements OnInit {
   onSave(): void {
     if (this.serviceForm.valid) {
       // Devolvemos el objeto completo incluyendo el ID de la categoría
-      this.dialogRef.close(this.serviceForm.value); 
+      this.dialogRef.close(this.serviceForm.value);
     }
   }
 

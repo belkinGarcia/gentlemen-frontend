@@ -13,7 +13,7 @@ export interface Reservation {
   user: any;
   confirmationNumber: string;
   status: 'upcoming' | 'completed' | 'canceled';
-  id?: number; 
+  id?: number;
 }
 
 export type ReservationData = Omit<Reservation, 'status'>;
@@ -49,11 +49,11 @@ export class ReservationService {
       map(citasJava => {
         return citasJava.map(cita => ({
           id: cita.idCita,
-          date: new Date(cita.fecha + 'T00:00:00.000'), 
+          date: new Date(cita.fecha + 'T00:00:00.000'),
           time: cita.hora,
           confirmationNumber: cita.codigoConfirmacion,
           status: this.mapStatus(cita.estado),
-          
+
           service: {
             id: cita.servicio.idServicio,
             name: cita.servicio.nombre,
@@ -67,8 +67,8 @@ export class ReservationService {
           location: {
             id: cita.sede ? cita.sede.idSede : 0,
             // Ajusta 'nombre' o 'name' según como se llame en tu entidad Java Sede
-            name: cita.sede ? (cita.sede.nombre || cita.sede.name) : 'Sede no especificada', 
-            address: cita.sede ? (cita.sede.direccion || cita.sede.address) : '' 
+            name: cita.sede ? (cita.sede.nombre || cita.sede.name) : 'Sede no especificada',
+            address: cita.sede ? (cita.sede.direccion || cita.sede.address) : ''
           },
           user: user
         } as Reservation));
@@ -86,7 +86,7 @@ export class ReservationService {
   private mapStatus(javaStatus: string): 'upcoming' | 'completed' | 'canceled' {
     if (javaStatus === 'CANCELADO') return 'canceled';
     if (javaStatus === 'ATENDIDO') return 'completed';
-    return 'upcoming'; 
+    return 'upcoming';
   }
 
   public getReservations(): Observable<Reservation[]> {
@@ -96,7 +96,7 @@ export class ReservationService {
   // --- CREAR RESERVA (CORREGIDO: Validación de Sede) ---
 public createReservation(newReservationData: ReservationData): void {
     const currentUser = this.authService.getCurrentUser();
-    
+
     // 1. Formato de fecha corregido (YYYY-MM-DD)
     const dateObj = new Date(newReservationData.date!);
     const formattedDate = dateObj.toISOString().split('T')[0];
@@ -118,19 +118,19 @@ public createReservation(newReservationData: ReservationData): void {
       hora: newReservationData.time, // Java: hora
       codigoConfirmacion: newReservationData.confirmationNumber, // Java: codigoConfirmacion
       estado: 'POR_ATENDER',         // Java: estado (Es bueno enviarlo explícito)
-      
+
       // RELACIONES (Solo enviamos el ID para evitar errores de deserialización)
-      cliente: { 
-        idUsuario: userId 
+      cliente: {
+        idUsuario: userId
       },
-      barbero: { 
+      barbero: {
         idBarbero: newReservationData.barber.id // Asegúrate que en el front 'id' tenga el valor correcto
       },
-      servicio: { 
-        idServicio: newReservationData.service.id 
+      servicio: {
+        idServicio: newReservationData.service.id
       },
-      sede: { 
-        idSede: newReservationData.location.id 
+      sede: {
+        idSede: newReservationData.location.id
       }
     };
 
@@ -139,7 +139,7 @@ public createReservation(newReservationData: ReservationData): void {
     this.http.post(this.API_URL, payload).subscribe({
       next: () => {
         console.log("Cita creada correctamente.");
-        this.loadReservationsFromBackend(); 
+        this.loadReservationsFromBackend();
       },
       error: (err) => {
         console.error("Error guardando cita en Backend:", err);
@@ -158,10 +158,10 @@ public createReservation(newReservationData: ReservationData): void {
       },
       error: (err) => console.error("Error al cancelar reserva", err)
     });
-     
+
      // Actualización optimista local
      const current = this.reservationsSubject.value;
-     const updated = current.map(r => 
+     const updated = current.map(r =>
         r.confirmationNumber === confirmationId ? { ...r, status: 'canceled' as const } : r
      );
      this.reservationsSubject.next(updated);
@@ -177,7 +177,7 @@ public createReservation(newReservationData: ReservationData): void {
             time: cita.hora,
             confirmationNumber: cita.codigoConfirmacion,
             status: this.mapStatus(cita.estado),
-            
+
             service: {
               name: cita.servicio ? (cita.servicio.nombre || cita.servicio.name) : 'Servicio no esp.',
               price: cita.servicio ? cita.servicio.precio : 0
@@ -186,7 +186,7 @@ public createReservation(newReservationData: ReservationData): void {
               name: cita.barbero ? (cita.barbero.nombre || cita.barbero.name) : 'Cualquiera'
             },
             location: {
-              name: cita.sede ? (cita.sede.nombre || cita.sede.name) : 'Sede no encontrada' 
+              name: cita.sede ? (cita.sede.nombre || cita.sede.name) : 'Sede no encontrada'
             },
             user: {
               firstName: cita.cliente?.nombres || 'Cliente',

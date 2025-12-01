@@ -72,8 +72,6 @@ export class ShopComponent implements OnInit, OnDestroy {
 
       this.allProducts = products;
 
-      // Asignamos las categorías directamente de la base de datos
-      // Mapeamos a solo el nombre (string) para que coincida con tu lógica de filtrado actual
       this.categories = categoriesDB.map(c => c.nombre).sort();
 
       // Asignamos las marcas directamente de la base de datos
@@ -90,17 +88,14 @@ export class ShopComponent implements OnInit, OnDestroy {
     }
   }
 
-  // En shop.component.ts
   loadProducts(): void {
     let filteredProducts = this.allProducts;
 
     // 1. Filtro por Categoría (Robustecido)
     if (this.selectedCategory) {
       filteredProducts = filteredProducts.filter(p => {
-        // Buscamos 'categoria' (backend) o 'category' (frontend)
         const catVal = p.categoria || p.category;
 
-        // Si es objeto, sacamos el 'nombre', si no, usamos el valor directo
         const catName = (catVal && typeof catVal === 'object') ? catVal.nombre : catVal;
 
         return (catName || 'Otros') === this.selectedCategory;
@@ -110,13 +105,8 @@ export class ShopComponent implements OnInit, OnDestroy {
     // 2. Filtro por Marca (CORREGIDO)
     if (this.selectedBrand) {
       filteredProducts = filteredProducts.filter(p => {
-        // AQUI ESTABA EL ERROR:
-        // Tu backend devuelve 'marca', pero tu interfaz decía 'brand'.
-        // Usamos || para que funcione con ambos casos.
         const brandVal = p.marca || p.brand;
 
-        // Verificamos si es un Objeto (ej: {id:1, nombre: 'Nike'})
-        // En 'brand-form-dialog' confirmamos que la propiedad es 'nombre'.
         const brandName = (brandVal && typeof brandVal === 'object')
                           ? brandVal.nombre
                           : brandVal;
