@@ -8,7 +8,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { UiStateService } from '../../services/ui-state.service';
+// IMPORTANTE: Usamos AuthService para el login, no solo UserService
 import { AuthService } from '../../services/auth.service';
+import { UserService, Usuario } from '../../services/user.service';
+
 @Component({
   selector: 'app-auth-page',
   standalone: true,
@@ -20,31 +23,35 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./auth-page.component.css']
 })
 export class AuthPageComponent implements OnInit {
+  errorMessage: string = '';
   loginForm!: FormGroup;
   registerForm!: FormGroup;
   hidePassword = true;
+
   @Output() loginSuccess = new EventEmitter<any>();
   @Output() registerSuccess = new EventEmitter<any>();
   @Input() displayMode: 'tabs' | 'grid' = 'grid';
-  activeView: 'register' | 'login' = 'register';
-  @HostBinding('class.tabs-mode') get isTabsMode() {
-    return this.displayMode === 'tabs';
-  }
-  @HostBinding('class.grid-mode') get isGridMode() {
-    return this.displayMode === 'grid';
-  }
+  
+  activeView: 'register' | 'login' = 'login'; 
+
+  @HostBinding('class.tabs-mode') get isTabsMode() { return this.displayMode === 'tabs'; }
+  @HostBinding('class.grid-mode') get isGridMode() { return this.displayMode === 'grid'; }
+
   constructor(
+    private authService: AuthService, // <--- INYECTAMOS AUTH SERVICE
+    private userService: UserService, // Mantenemos este para el registro si quieres
     private fb: FormBuilder,
     private uiStateService: UiStateService,
-    private authService: AuthService,
     private router: Router
   ) {}
+
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      username: ['', Validators.required],
+      username: ['', Validators.required], // Quitamos validación de email para permitir DNI
       password: ['', Validators.required],
       rememberMe: [false]
     });
+
     this.registerForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -52,10 +59,11 @@ export class AuthPageComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required],
-      phone: [''],
+      phone: ['', Validators.required],
       district: [''],
       terms: [false, Validators.requiredTrue]
     });
+
     if (this.displayMode === 'grid') {
       this.uiStateService.setHeroState({
         type: 'banner',
@@ -64,60 +72,94 @@ export class AuthPageComponent implements OnInit {
       });
     }
   }
+
+  // --- LOGIN CORREGIDO ---
   onSubmitLogin(): void {
     if (this.loginForm.valid) {
-      const loginPayload = {
-        username: this.loginForm.value.username,
+      const credentials = {
+        email: this.loginForm.value.username, // El backend espera 'email' aunque mandes DNI
         password: this.loginForm.value.password
       };
-      this.authService.login(loginPayload).subscribe({
-        next: response => {
-          console.log('Respuesta del login:', response);
+
+      // CAMBIO CLAVE: Usamos authService.login()
+      // Este método ya se encarga de guardar 'user_role' y 'auth_token' en localStorage
+      this.authService.login(credentials).subscribe({
+        next: (response) => { 
+          // La respuesta ya viene procesada por el AuthService (tap)
+          // El AuthService ya guardó la sesión, así que solo verificamos el rol aquí.
+          
+          // Recuperamos el usuario guardado para ver su rol y redirigir
+          const user = this.authService.getCurrentUser();
+          
           if (this.displayMode === 'grid') {
-            this.router.navigate(['/']); 
+            if (this.authService.isAdmin()) {
+              console.log('Redirigiendo a Admin...');
+              this.router.navigate(['/admin']);
+            } else {
+              console.log('Redirigiendo a Mi Cuenta...');
+              this.router.navigate(['/mi-cuenta']);
+            }
           } else {
-            this.loginSuccess.emit(response.user);
+            this.loginSuccess.emit(user);
           }
         },
-        error: error => console.error('Error al realizar login:', error)
+        error: error => {
+          console.error('Error login:', error);
+          this.errorMessage = 'Credenciales incorrectas o usuario no encontrado.';
+        }
       });
     }
   }
-onSubmitRegister(): void {
+
+  onSubmitRegister(): void {
     if (this.registerForm.valid) {
       const formData = this.registerForm.value;
       
-      // AQUÍ ESTÁ LA MAGIA: Traducimos del Formulario al Backend
-      const registerPayload = {
-        // Backend (Usuario.java)  <--  Frontend (Formulario)
-        firstName: formData.firstName, // Antes decía 'nombres', debe ser 'firstName'
-        lastName: formData.lastName,   // Antes decía 'apellidos', debe ser 'lastName'
+      if (formData.password !== formData.confirmPassword) {
+        this.errorMessage = 'Las contraseñas no coinciden.';
+        return;
+      }
+
+      const usuarioParaBackend: Usuario = {
+        nombres: formData.firstName,
+        apellidos: formData.lastName,
         dni: formData.dni,
         email: formData.email,
-        password: formData.password,   // Correcto (coincide con RegisterRequest)
-        phone: formData.phone,     // Java espera 'celular', no 'phone'
-        
-        // IMPORTANTE: Tu controlador revisa el tipo de usuario para crear la tabla Cliente
-        // Si no envías esto, la base de datos dará error (nullable=false)
-        tipoUsuario: 'CLIENTE'         
+        celular: formData.phone,
+        contrasena: formData.password,
+        tipoUsuario: 'CLIENTE'
       };
 
-      this.authService.register(registerPayload).subscribe({
-        next: response => {
-          console.log('Respuesta del registro:', response);
-          if (this.displayMode === 'grid') {
-            alert('¡Registro exitoso! Por favor, inicia sesión.');
-            this.setActiveView('login');
-          } else {
-            this.registerSuccess.emit(response); // Emitimos la respuesta completa
-            this.setActiveView('login');
-          }
+      this.userService.register(usuarioParaBackend).subscribe({
+        next: (user: Usuario) => {
+          // AUTO-LOGIN TRAS REGISTRO
+          const credentials = {
+            email: formData.dni, 
+            password: formData.password
+          };
+
+          this.authService.login(credentials).subscribe({
+            next: () => {
+              if (this.displayMode === 'grid') {
+                 this.router.navigate(['/mi-cuenta']);
+              } else {
+                 this.registerSuccess.emit(user);
+              }
+            }
+          });
         },
-        error: error => console.error('Error al realizar registro:', error)
+        error: error => {
+          console.error('Error registro:', error);
+          this.errorMessage = 'Error al registrar. Verifica datos duplicados.';
+        }
       });
+    } else {
+      this.errorMessage = 'Completa todos los campos.';
     }
   }
+
   setActiveView(view: 'register' | 'login'): void {
     this.activeView = view;
+    this.errorMessage = '';
   }
 }

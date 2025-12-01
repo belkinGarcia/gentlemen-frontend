@@ -1,11 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatButtonModule } from '@angular/material/button'; // Faltaba este import para el botón
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip'; // Y este para el tooltip
-import { Subscription } from 'rxjs';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ReservationService, Reservation } from '../../../services/reservation.service';
 
 @Component({
@@ -18,7 +17,7 @@ import { ReservationService, Reservation } from '../../../services/reservation.s
   templateUrl: './reservation-management.component.html',
   styleUrls: ['./reservation-management.component.css']
 })
-export class ReservationManagementComponent implements OnInit { // Quitamos OnDestroy si no usamos suscripción persistente
+export class ReservationManagementComponent implements OnInit {
   
   displayedColumns: string[] = ['status', 'dateTime', 'client', 'service', 'barber', 'location', 'actions'];
   dataSource: Reservation[] = [];
@@ -32,12 +31,14 @@ export class ReservationManagementComponent implements OnInit { // Quitamos OnDe
   }
 
   loadData(): void {
-    // CAMBIO: Usamos el método específico de Admin
     this.reservationService.getAllReservationsAdmin().subscribe({
       next: (reservations) => {
-        this.dataSource = reservations.sort((a, b) => 
-          new Date(b.date!).getTime() - new Date(a.date!).getTime()
-        );
+        // Ordenar: Las más recientes primero
+        this.dataSource = reservations.sort((a, b) => {
+          const dateA = a.date ? new Date(a.date).getTime() : 0;
+          const dateB = b.date ? new Date(b.date).getTime() : 0;
+          return dateB - dateA;
+        });
       },
       error: (err) => console.error("Error cargando citas admin:", err)
     });
@@ -45,26 +46,45 @@ export class ReservationManagementComponent implements OnInit { // Quitamos OnDe
 
   cancelReservation(reservation: Reservation): void {
     if (confirm(`¿Estás seguro de que quieres cancelar la cita de ${reservation.user.firstName}?`)) {
-      // Usamos el servicio. Como cancelReservation no retorna Observable en tu versión actual,
-      // asumimos que actualiza y recargamos manualmente tras un pequeño delay o modificando la lista local.
       
+      // 1. Llamada al servicio
       this.reservationService.cancelReservation(reservation.confirmationNumber);
       
-      // Truco visual rápido: Cambiar estado en la tabla localmente
+      // 2. Actualización Optimista (Visual inmediata)
+      // Cambiamos el estado localmente para que el usuario vea el cambio ya mismo
       const index = this.dataSource.indexOf(reservation);
       if (index >= 0) {
-        this.dataSource[index].status = 'canceled';
-        // Forzamos actualización de tabla (Angular Material a veces requiere reasignar array)
-        this.dataSource = [...this.dataSource];
+        // Creamos una copia del objeto para que Angular detecte el cambio en la tabla
+        const updatedReservation = { ...reservation, status: 'canceled' as const };
+        
+        // Actualizamos el array
+        const newDataSource = [...this.dataSource];
+        newDataSource[index] = updatedReservation;
+        this.dataSource = newDataSource;
       }
+
+      // Opcional: Recargar desde el servidor después de 1 segundo para confirmar
+      setTimeout(() => this.loadData(), 1000);
     }
   }
 
+  // --- CORRECCIÓN 1: Typos y Colores ---
   getStatusColor(status: string): string {
     switch (status) {
-      case 'completed': return 'accent'; // APROBADO/ATENDIDO
-      case 'canceled': return 'warn';
-      default: return 'primary'; // UPCOMING/PENDIENTE
+      case 'completed': return 'accent'; // Verde o color secundario
+      case 'canceled': return 'warn';    // Rojo (CORREGIDO: decía 'canceleda')
+      case 'upcoming': return 'primary'; // Azul
+      default: return 'primary';
+    }
+  }
+
+  // --- MEJORA 2: Traducción al Español ---
+  getStatusLabel(status: string): string {
+    switch (status) {
+      case 'completed': return 'Atendido';
+      case 'canceled': return 'Cancelado';
+      case 'upcoming': return 'Por Atender';
+      default: return status;
     }
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http'; // Importamos HttpHeaders
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject, of, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -12,10 +12,8 @@ export class AuthService {
   private readonly ROLE_KEY = 'user_role';
   private readonly USER_KEY = 'auth_user';
   
-  // URL específica para Auth (Login/Register)
-  private readonly API_URL = 'http://localhost:8080/api/v1/auth';
-  
-  // NUEVA: URL base para otros recursos (como Usuarios)
+  // URL específica para Auth (asegúrate de que coincida con tu Controller)
+  private readonly API_URL = 'http://localhost:8080/api/v1/usuarios'; // Ajustado al controller que vimos antes
   private readonly BASE_API_URL = 'http://localhost:8080/api/v1';
 
   private loggedInStatus = new BehaviorSubject<boolean>(this.isLoggedIn());
@@ -27,13 +25,15 @@ export class AuthService {
   ) {}
 
   /**
-   * Realiza el login contra el Backend Spring Boot.
+   * Realiza el login.
+   * CORRECCIÓN: El backend devuelve un objeto Usuario, no un {token, user}.
    */
   login(credentials: any): Observable<any> {
+    // Usamos el endpoint /login que creamos en el UsuarioController
     return this.http.post<any>(`${this.API_URL}/login`, credentials).pipe(
-      tap(response => {
-        console.log('Respuesta del Backend:', response);
-        this.setSession(response);
+      tap(usuario => {
+        console.log('Login exitoso (Backend):', usuario);
+        this.setSession(usuario);
       }),
       catchError(error => {
         console.error('Error en login:', error);
@@ -42,54 +42,48 @@ export class AuthService {
     );
   }
 
-  /**
-   * Registra un nuevo usuario en el Backend.
-   */
   register(userData: any): Observable<any> {
-    return this.http.post<any>(`${this.API_URL}/register`, userData).pipe(
+    // El backend usa POST /api/v1/usuarios para crear
+    return this.http.post<any>(`${this.API_URL}`, userData).pipe(
       tap(response => {
          console.log('Usuario registrado:', response);
       })
     );
   }
 
-  /**
-   * NUEVO MÉTODO: Obtiene el perfil completo del usuario desde la BD.
-   * Se usa para recuperar datos faltantes (DNI, Celular) que no estén en el localStorage.
-   */
   getCompleteUserProfile(id: number): Observable<any> {
     const token = this.getToken();
-    // Preparamos el header con el token para que Spring Security nos deje pasar
+    // Enviamos el token aunque por ahora el backend lo ignore (útil para el futuro)
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-
-    // Llamamos al endpoint GET /usuarios/{id} definido en tu UsuarioController
-    return this.http.get<any>(`${this.BASE_API_URL}/usuarios/${id}`, { headers });
+    return this.http.get<any>(`${this.API_URL}/${id}`, { headers });
   }
 
   /**
-   * Guarda la sesión completa en localStorage y notifica a la app.
+   * Guarda la sesión.
+   * CORRECCIÓN: Adaptado para recibir el objeto Usuario directo.
    */
-  private setSession(response: any): void {
-    if (response && response.token) { 
-      localStorage.setItem(this.TOKEN_KEY, response.token);
-      
-      if (response.role) {
-        localStorage.setItem(this.ROLE_KEY, response.role);
+  private setSession(usuario: any): void {
+    if (usuario) {
+      // 1. Guardar el usuario completo
+      localStorage.setItem(this.USER_KEY, JSON.stringify(usuario));
+
+      // 2. Guardar el ROL (usando la propiedad correcta de Java: tipoUsuario)
+      if (usuario.tipoUsuario) {
+        localStorage.setItem(this.ROLE_KEY, usuario.tipoUsuario);
       }
 
-      if (response.user) {
-        localStorage.setItem(this.USER_KEY, JSON.stringify(response.user));
-      }
+      // 3. Simular Token (IMPORTANTE): Como el backend no manda JWT todavía,
+      // creamos un token ficticio para que isLoggedIn() devuelva true y los Guards funcionen.
+      // Cuando implementes JWT real en Java, usa usuario.token aquí.
+      const fakeToken = 'session-token-' + usuario.idUsuario; 
+      localStorage.setItem(this.TOKEN_KEY, fakeToken);
       
       this.loggedInStatus.next(true);
     }
   }
 
-  /**
-   * Limpia la sesión de localStorage y notifica a la app.
-   */
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.ROLE_KEY);
@@ -118,44 +112,32 @@ export class AuthService {
     }
   }
 
-  /**
-   * Actualiza los datos del usuario localmente.
-   */
   updateUser(updatedData: any): Observable<any> {
     const currentUser = this.getCurrentUser();
-    // Obtenemos el ID de manera segura
-    const userId = currentUser.id || currentUser.idUsuario || currentUser.id_usuario;
+    // Aseguramos compatibilidad de ID (backend usa idUsuario)
+    const userId = currentUser.idUsuario || currentUser.id;
 
     if (!userId) {
-        console.error("No se encontró ID de usuario para actualizar");
+        console.error("No ID de usuario para actualizar");
         return of(null);
     }
-    
-    // NOTA: Aquí no mapeamos todavía, asumimos que 'updatedData' ya viene 
-    // con los nombres de campos que espera Java (nombres, apellidos, etc.)
-    // O lo mapeamos en el componente. Lo haremos en el componente para ser más claros.
 
-    return this.http.put(`${this.BASE_API_URL}/usuarios/${userId}`, updatedData).pipe(
+    return this.http.put(`${this.API_URL}/${userId}`, updatedData).pipe(
       tap((response: any) => {
-        console.log("Usuario actualizado en BD:", response);
+        console.log("Usuario actualizado:", response);
         
-        // Actualizamos el localStorage con la respuesta del servidor
-        // Mapeamos la respuesta de Java (nombres) a Angular (firstName) para la sesión local
+        // CORRECCIÓN: Mantener nombres de variables consistentes (nombres, apellidos)
+        // No mapear a firstName/lastName para evitar errores en las vistas.
         const userForLocal = {
             ...currentUser,
-            firstName: response.nombres,
-            lastName: response.apellidos,
-            phone: response.celular,
-            email: response.email || response.correo
+            ...response // Sobrescribimos con lo que devuelva el servidor
         };
         
         localStorage.setItem(this.USER_KEY, JSON.stringify(userForLocal));
       })
     );
   }
-  /**
-   * Verifica si el usuario es administrador.
-   */
+
   isAdmin(): boolean {
     const role = localStorage.getItem(this.ROLE_KEY);
     return role === 'ADMINISTRADOR'; 
@@ -163,7 +145,7 @@ export class AuthService {
 
   changePassword(currentPassword: string, newPassword: string): Observable<any> {
     const currentUser = this.getCurrentUser();
-    const userId = currentUser.id || currentUser.idUsuario;
+    const userId = currentUser.idUsuario || currentUser.id;
 
     if (!userId) return throwError(() => 'No hay usuario logueado');
 
@@ -172,6 +154,6 @@ export class AuthService {
       newPassword: newPassword
     };
 
-    return this.http.put(`${this.BASE_API_URL}/usuarios/${userId}/cambiar-password`, payload);
+    return this.http.put(`${this.API_URL}/${userId}/cambiar-password`, payload);
   }
 }

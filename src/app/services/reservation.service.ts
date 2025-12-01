@@ -49,7 +49,7 @@ export class ReservationService {
       map(citasJava => {
         return citasJava.map(cita => ({
           id: cita.idCita,
-          date: new Date(cita.fecha + 'T00:00:00'), 
+          date: new Date(cita.fecha + 'T00:00:00.000'), 
           time: cita.hora,
           confirmationNumber: cita.codigoConfirmacion,
           status: this.mapStatus(cita.estado),
@@ -94,43 +94,56 @@ export class ReservationService {
   }
 
   // --- CREAR RESERVA (CORREGIDO: Validación de Sede) ---
-  public createReservation(newReservationData: ReservationData): void {
+public createReservation(newReservationData: ReservationData): void {
     const currentUser = this.authService.getCurrentUser();
+    
+    // 1. Formato de fecha corregido (YYYY-MM-DD)
     const dateObj = new Date(newReservationData.date!);
     const formattedDate = dateObj.toISOString().split('T')[0];
 
-    // Validación de seguridad: La sede es obligatoria
+    // 2. Validación de seguridad
     if (!newReservationData.location || !newReservationData.location.id) {
-        console.error("Error crítico: Intentando enviar cita sin ID de Sede.");
         alert("Error: Por favor selecciona una sede válida.");
         return;
     }
 
+    // 3. Obtener el ID del usuario de forma segura
+    const userId = currentUser?.id || currentUser?.idUsuario || currentUser?.id_usuario;
+
+    // 4. PAYLOAD CORREGIDO PARA JAVA
+    // Usamos los nombres exactos de las relaciones en Cita.java (cliente, barbero, servicio, sede)
+    // Y usamos los nombres exactos de los IDs (idUsuario, idBarbero, idServicio, idSede)
     const payload = {
-      date: formattedDate,
-      time: newReservationData.time,
-      confirmationNumber: newReservationData.confirmationNumber,
-      barber: { id: newReservationData.barber.id },
-      service: { id: newReservationData.service.id },
-      location: { id: newReservationData.location.id }, // ID validado
-      user: {
-        id: currentUser?.id || currentUser?.id_usuario || 0,
-        firstName: newReservationData.user.firstName,
-        lastName: newReservationData.user.lastName,
-        dni: newReservationData.user.dni,
-        email: newReservationData.user.email,
-        phone: newReservationData.user.phone
+      fecha: formattedDate,          // Java: fecha
+      hora: newReservationData.time, // Java: hora
+      codigoConfirmacion: newReservationData.confirmationNumber, // Java: codigoConfirmacion
+      estado: 'POR_ATENDER',         // Java: estado (Es bueno enviarlo explícito)
+      
+      // RELACIONES (Solo enviamos el ID para evitar errores de deserialización)
+      cliente: { 
+        idUsuario: userId 
+      },
+      barbero: { 
+        idBarbero: newReservationData.barber.id // Asegúrate que en el front 'id' tenga el valor correcto
+      },
+      servicio: { 
+        idServicio: newReservationData.service.id 
+      },
+      sede: { 
+        idSede: newReservationData.location.id 
       }
     };
 
+    console.log("Enviando JSON a Java:", payload); // Para depurar
+
     this.http.post(this.API_URL, payload).subscribe({
       next: () => {
-        console.log("Cita creada correctamente. Actualizando lista...");
+        console.log("Cita creada correctamente.");
         this.loadReservationsFromBackend(); 
       },
       error: (err) => {
         console.error("Error guardando cita en Backend:", err);
-        // Aquí podrías mostrar un mensaje al usuario si falla
+        // Tip: Si sale error 500, mira la consola de Java (STS)
       }
     });
   }

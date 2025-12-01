@@ -3,7 +3,7 @@
     <mat-sidenav mode="side" opened class="side-menu">
       <div class="user-greet">
         Hola,
-        <strong>{{ (currentUser$ | async)?.firstName || 'Usuario' }}</strong>
+        <strong>{{ (currentUser$ | async)?.nombres || 'Usuario' }}</strong>
       </div>
       <mat-nav-list>
         <ng-container *ngIf="isAdmin$ | async">
